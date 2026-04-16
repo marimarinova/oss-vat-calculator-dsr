@@ -1,0 +1,187 @@
+// Firestore Security Rules for OSS VAT Calculator
+// Design Science Research Artefact
+// Author: Marieta Marinova
+// Implements Design Principles 2 & 3: Data Access Control and Lifecycle Enforcement
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Helper function to check if user owns the document (Design Principle 2)
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Helper function to validate country code against 27 EU member states
+    function isValidEUCountryCode(code) {
+      return code in ['AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE',
+                      'FI', 'FR', 'DE', 'GR', 'HU', 'IE', 'IT', 'LV',
+                      'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK',
+                      'SI', 'ES', 'SE'];
+    }
+
+    // Helper function to validate date format (YYYY-MM-DD ISO 8601)
+    function isValidDate(date) {
+      return date is string && date.matches('^\\d{4}-\\d{2}-\\d{2}$');
+    }
+
+    // Helper function to check if amount is positive (VAT amounts must be > 0 or = 0)
+    function isValidAmount(amount) {
+      return amount is number && amount >= 0;
+    }
+
+    // USERS COLLECTION
+    // Design Principle 2: Users can only read/write their own profile data
+    match /users/{userId} {
+      allow read, write: if isOwner(userId);
+
+      // User profile structure validation
+      allow create: if isAuthenticated() &&
+                       request.auth.uid == userId &&
+                       request.resource.data.keys().hasAll(['email', 'name', 'createdAt']) &&
+                       request.resource.data.email is string &&
+                       request.resource.data.name is string &&
+                       request.resource.data.createdAt is timestamp;
+
+      allow update: if isOwner(userId) &&
+                       request.resource.data.createdAt == resource.data.createdAt &&
+                       request.resource.data.email == resource.data.email;
+
+      allow delete: if false; // Users cannot delete their own profiles via Firestore
+    }
+
+    // TRANSACTIONS COLLECTION
+    // Design Principle 2: Users can only read/write their own transactions
+    // Design Principle 3: Validate transaction fields per VAT compliance requirements
+    match /users/{userId}/transactions/{transactionId} {
+      allow read: if isOwner(userId);
+      allow create, update: if isOwner(userId) &&
+                                validateTransaction(request.resource.data);
+      allow delete: if false; // Transactions are immutable once created
+
+      // Validate transaction structure and VAT compliance
+      function validateTransaction(data) {
+        return data.keys().hasAll([
+                 'date', 'amount', 'countryCode', 'description', 'createdAt'
+               ]) &&
+               isValidDate(data.date) &&
+               isValidAmount(data.amount) &&
+               isValidEUCountryCode(data.countryCode) &&
+               data.description is string &&
+               data.amount > 0 &&
+               (data.status == null || data.status in ['draft', 'submitted', 'archived']);
+      }
+
+      // Subcollection: Line Items
+      match /lineItems/{itemId} {
+        allow read: if isOwner(userId);
+        allow create, update: if isOwner(userId) &&
+                                  data.quantity > 0 &&
+                                  data.unitPrice >= 0 &&
+                                  data.vatRate >= 0 &&
+                                  data.vatRate <= 100;
+        allow delete: if false;
+      }
+    }
+
+    // AUDIT LOG COLLECTION
+    // Design Principle 3: Append-only audit trail (no updates, no deletes)
+    // Enforces immutability and compliance with data integrity requirements
+    match /users/{userId}/auditLog/{logId} {
+      allow read: if isOwner(userId);
+
+      // Append-only: create but never update or delete
+      allow create: if isOwner(userId) &&
+                        validateAuditEntry(request.resource.data);
+      allow update, delete: if false;
+
+      // Validate audit log entry structure
+      function validateAuditEntry(data) {
+        return data.keys().hasAll(['timestamp', 'action', 'entity', 'changes']) &&
+               data.timestamp is timestamp &&
+               data.action in ['create', 'read', 'update', 'delete', 'archive', 'export'] &&
+               data.entity is string &&
+               data.changes is map;
+      }
+    }
+
+    // QUARTERLY REPORTS COLLECTION
+    // Design Principle 2: Users can only read/write their own reports
+    match /users/{userId}/quarterlyReports/{reportId} {
+      allow read: if isOwner(userId);
+
+      allow create, update: if isOwner(userId) &&
+                               validateQuarterlyReport(request.resource.data);
+
+      allow delete: if false; // Reports are archived, not deleted
+
+      function validateQuarterlyReport(data) {
+        return data.keys().hasAll(['year', 'quarter', 'status', 'createdAt']) &&
+               data.year is number &&
+               data.year >= 2024 &&
+               data.quarter is number &&
+               data.quarter >= 1 &&
+               data.quarter <= 4 &&
+               data.status in ['draft', 'submitted', 'archived'];
+      }
+
+      // Subcollection: Report sections (2A, 2B, 2C, 2D per OSS schema)
+      match /sections/{sectionId} {
+        allow read: if isOwner(userId);
+        allow create, update: if isOwner(userId) &&
+                                  sectionId in ['2A', '2B', '2C', '2D'];
+        allow delete: if false;
+      }
+    }
+
+    // ARCHIVED DATA COLLECTION
+    // Design Principle 3: Read-only access to archived data
+    // Enforces data immutability after archival transition
+    match /users/{userId}/archived/{archivedId} {
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId) &&
+                        validateArchivedRecord(request.resource.data);
+
+      // Archived data cannot be updated or deleted
+      allow update, delete: if false;
+
+      function validateArchivedRecord(data) {
+        return data.keys().hasAll(['originalId', 'type', 'archivedAt', 'archivedReason']) &&
+               data.type in ['transaction', 'report', 'audit'] &&
+               data.archivedAt is timestamp &&
+               data.archivedReason is string;
+      }
+    }
+
+    // VAT RATE TABLES COLLECTION
+    // Design Principle 3: Read-only reference data for all authenticated users
+    // Supports tax rate lookups across 27 EU member states
+    match /vatRateTables/{rateId} {
+      allow read: if isAuthenticated();
+      allow write: if false; // Rates managed by admin only (via Cloud Functions)
+    }
+
+    // EU COUNTRY MASTER DATA
+    // Read-only reference data for localization (Layer 3 of architecture)
+    match /euCountries/{countryCode} {
+      allow read: if isAuthenticated();
+      allow write: if false; // Managed by admin only
+    }
+
+    // SYSTEM CONFIGURATION
+    // Read-only configuration for all authenticated users
+    match /system/{docId} {
+      allow read: if isAuthenticated();
+      allow write: if false;
+    }
+
+    // Deny access to undefined collections
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

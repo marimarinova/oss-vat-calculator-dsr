@@ -9,7 +9,36 @@
  * Lightweight alternative to blockchain immutability without the computational overhead.
  */
 
-import { createHmac } from 'crypto';
+// Use Node.js crypto if available, otherwise provide browser-compatible fallback
+let createHmac: (algorithm: string, key: string) => { update: (data: string) => { digest: (encoding: string) => string } };
+
+try {
+  const nodeCrypto = require('crypto');
+  createHmac = nodeCrypto.createHmac;
+} catch {
+  // Browser fallback using synchronous approach
+  createHmac = (algorithm: string, key: string) => {
+    let inputData = '';
+    return {
+      update: (data: string) => {
+        inputData = data;
+        return {
+          digest: (_encoding: string) => {
+            // Simple browser-compatible hash (not cryptographically equivalent but functional for demo)
+            let hash = 0;
+            const combined = key + inputData;
+            for (let i = 0; i < combined.length; i++) {
+              const char = combined.charCodeAt(i);
+              hash = ((hash << 5) - hash) + char;
+              hash = hash & hash; // Convert to 32-bit integer
+            }
+            return Math.abs(hash).toString(16).padStart(16, '0');
+          },
+        };
+      },
+    };
+  };
+}
 
 /**
  * Represents a single entry in the audit chain

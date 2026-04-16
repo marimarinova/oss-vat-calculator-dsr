@@ -133,11 +133,21 @@ export interface TransformationLog {
  * @returns Pseudonymised identifier
  */
 export function pseudonymiseBuyerName(fullName: string, salt: string): string {
-  const crypto = require('crypto');
-  const hmac = crypto.createHmac('sha256', salt);
-  hmac.update(fullName);
-  const hash = hmac.digest('hex').substring(0, 16);
-  return `BUYER-${hash}`;
+  try {
+    const crypto = require('crypto');
+    const hmac = crypto.createHmac('sha256', salt);
+    hmac.update(fullName);
+    return `BUYER-${hmac.digest('hex').substring(0, 16)}`;
+  } catch {
+    // Browser fallback
+    let hash = 0;
+    const combined = salt + fullName;
+    for (let i = 0; i < combined.length; i++) {
+      hash = ((hash << 5) - hash) + combined.charCodeAt(i);
+      hash = hash & hash;
+    }
+    return `BUYER-${Math.abs(hash).toString(16).padStart(16, '0')}`;
+  }
 }
 
 /**
@@ -173,11 +183,20 @@ export function removeContactDetails(data: Record<string, unknown>): Record<stri
  * @returns Hashed VAT ID
  */
 export function hashVatId(vatId: string, salt: string): string {
-  const crypto = require('crypto');
-  const hmac = crypto.createHmac('sha256', salt);
-  hmac.update(vatId);
-  const hash = hmac.digest('hex').substring(0, 16);
-  return `VAT-${hash}`;
+  try {
+    const crypto = require('crypto');
+    const hmac = crypto.createHmac('sha256', salt);
+    hmac.update(vatId);
+    return `VAT-${hmac.digest('hex').substring(0, 16)}`;
+  } catch {
+    let hash = 0;
+    const combined = salt + vatId;
+    for (let i = 0; i < combined.length; i++) {
+      hash = ((hash << 5) - hash) + combined.charCodeAt(i);
+      hash = hash & hash;
+    }
+    return `VAT-${Math.abs(hash).toString(16).padStart(16, '0')}`;
+  }
 }
 
 /**

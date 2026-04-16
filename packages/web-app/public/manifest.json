@@ -1,0 +1,42 @@
+{
+  "name": "OSS VAT Calculator",
+  "short_name": "VAT Calc",
+  "description": "Automated cross-border VAT compliance for European micro-enterprises",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0066cc",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64",
+      "type": "image/x-icon"
+    }
+  ],
+  "categories": [
+    "business",
+    "finance",
+    "productivity"
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/narrow.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/screenshots/wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ],
+  "author": {
+    "name": "Marieta Marinova",
+    "url": "https://www.github.com/marimarinova"
+  },
+  "version": "0.0.1",
+  "scope": "/",
+  "orientation": "any"
+}

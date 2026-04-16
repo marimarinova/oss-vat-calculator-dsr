@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "default": "oss-vat-calculator-dev",
+    "production": "oss-vat-calculator"
+  }
+}

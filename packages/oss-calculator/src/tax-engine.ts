@@ -64,7 +64,7 @@ export interface TaxEngineConfig {
  * Main VAT tax calculation engine
  */
 export class TaxEngine {
-  private config: Required<TaxEngineConfig>;
+  private config: TaxEngineConfig & { defaultCurrency: string };
 
   constructor(config: TaxEngineConfig = {}) {
     this.config = {
