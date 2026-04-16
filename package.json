@@ -1,0 +1,28 @@
+{
+  "name": "oss-vat-calculator",
+  "version": "0.0.0",
+  "private": true,
+  "description": "DSR artefact for automated cross-border VAT OSS compliance for EU micro-enterprises",
+  "author": "Marieta Marinova <kavaznia@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/marimarinova/oss-vat-calculator.git"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.15.4",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "check-format": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\""
+  },
+  "devDependencies": {
+    "vitest": "^2.0.0"
+  }
+}
