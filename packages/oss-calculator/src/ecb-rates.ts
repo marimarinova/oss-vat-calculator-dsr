@@ -122,10 +122,11 @@ export class ECBRateProvider {
     };
 
     for (const rate of rates) {
-      const effectiveFrom = new Date(rate.year, quarterDates[rate.quarter], 1);
+      const effectiveFrom = new Date(Date.UTC(rate.year, quarterDates[rate.quarter], 1));
       const nextQuarter = (rate.quarter % 4) + 1;
       const nextYear = nextQuarter === 1 ? rate.year + 1 : rate.year;
-      const effectiveTo = new Date(nextYear, quarterDates[nextQuarter], 1);
+      // Day 0 of next quarter month = last day of current quarter (inclusive)
+      const effectiveTo = new Date(Date.UTC(nextYear, quarterDates[nextQuarter], 0));
 
       this.registerRate(rate.source, rate.target, rate.rate, effectiveFrom, effectiveTo);
     }
