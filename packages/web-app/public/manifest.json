@@ -13,11 +13,7 @@
       "type": "image/x-icon"
     }
   ],
-  "categories": [
-    "business",
-    "finance",
-    "productivity"
-  ],
+  "categories": ["business", "finance", "productivity"],
   "screenshots": [
     {
       "src": "/screenshots/narrow.png",
