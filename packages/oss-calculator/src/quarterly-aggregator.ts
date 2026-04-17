@@ -116,8 +116,7 @@ export class QuarterlyAggregator {
 
     // Aggregate results
     for (const result of results) {
-      const isFromSupplier =
-        result.supplierCountryCode === this.supplierCountryCode;
+      const isFromSupplier = result.supplierCountryCode === this.supplierCountryCode;
       const isGoods = result.isGoods;
       const key = result.customerCountryCode;
 
@@ -160,26 +159,28 @@ export class QuarterlyAggregator {
         section2A: this.buildSection(
           '2A',
           'Services supplied from ' + this.supplierCountryCode,
-          section2A
+          section2A,
         ),
         section2B: this.buildSection(
           '2B',
           'Goods supplied from ' + this.supplierCountryCode,
-          section2B
+          section2B,
         ),
-        section2C: this.buildSection(
-          '2C',
-          'Services supplied from other MS',
-          section2C
-        ),
-        section2D: this.buildSection(
-          '2D',
-          'Goods supplied from other MS',
-          section2D
-        ),
+        section2C: this.buildSection('2C', 'Services supplied from other MS', section2C),
+        section2D: this.buildSection('2D', 'Goods supplied from other MS', section2D),
       },
-      totalVAT: this.calculateTotalVAT([...section2A.values(), ...section2B.values(), ...section2C.values(), ...section2D.values()]),
-      totalBase: this.calculateTotalBase([...section2A.values(), ...section2B.values(), ...section2C.values(), ...section2D.values()]),
+      totalVAT: this.calculateTotalVAT([
+        ...section2A.values(),
+        ...section2B.values(),
+        ...section2C.values(),
+        ...section2D.values(),
+      ]),
+      totalBase: this.calculateTotalBase([
+        ...section2A.values(),
+        ...section2B.values(),
+        ...section2C.values(),
+        ...section2D.values(),
+      ]),
     };
   }
 
@@ -189,22 +190,18 @@ export class QuarterlyAggregator {
   private buildSection(
     name: string,
     description: string,
-    items: Map<string, ReturnLineItem>
+    items: Map<string, ReturnLineItem>,
   ): ReturnSection {
     const itemList = Array.from(items.values()).sort((a, b) =>
-      a.memberState.localeCompare(b.memberState)
+      a.memberState.localeCompare(b.memberState),
     );
 
     return {
       name,
       description,
       items: itemList,
-      totalVAT: this.roundToEURCents(
-        itemList.reduce((sum, item) => sum + item.vatAmount, 0)
-      ),
-      totalBase: this.roundToEURCents(
-        itemList.reduce((sum, item) => sum + item.baseAmount, 0)
-      ),
+      totalVAT: this.roundToEURCents(itemList.reduce((sum, item) => sum + item.vatAmount, 0)),
+      totalBase: this.roundToEURCents(itemList.reduce((sum, item) => sum + item.baseAmount, 0)),
       totalSupplies: itemList.reduce((sum, item) => sum + item.supplyCount, 0),
     };
   }

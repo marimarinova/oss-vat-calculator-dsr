@@ -33,10 +33,10 @@ describe('ECB Rate Provider', () => {
       const q2Start = new Date('2026-04-01');
 
       provider.registerRate('EUR', 'USD', 1.09, q1Start, q1End);
-      provider.registerRate('EUR', 'USD', 1.10, q2Start);
+      provider.registerRate('EUR', 'USD', 1.1, q2Start);
 
       expect(provider.getRate('EUR', 'USD', new Date('2026-02-01'))).toBe(1.09);
-      expect(provider.getRate('EUR', 'USD', new Date('2026-05-01'))).toBe(1.10);
+      expect(provider.getRate('EUR', 'USD', new Date('2026-05-01'))).toBe(1.1);
     });
 
     it('should return null for unregistered rate', () => {
@@ -45,13 +45,7 @@ describe('ECB Rate Provider', () => {
     });
 
     it('should return null for date outside effective range', () => {
-      provider.registerRate(
-        'EUR',
-        'USD',
-        1.09,
-        new Date('2026-01-01'),
-        new Date('2026-03-31')
-      );
+      provider.registerRate('EUR', 'USD', 1.09, new Date('2026-01-01'), new Date('2026-03-31'));
 
       expect(provider.getRate('EUR', 'USD', new Date('2025-12-31'))).toBeNull();
       expect(provider.getRate('EUR', 'USD', new Date('2026-04-01'))).toBeNull();
@@ -62,24 +56,24 @@ describe('ECB Rate Provider', () => {
     it('should register quarterly rates batch', () => {
       provider.registerQuarterlyRates([
         { source: 'EUR', target: 'USD', rate: 1.09, quarter: 1, year: 2026 },
-        { source: 'EUR', target: 'USD', rate: 1.10, quarter: 2, year: 2026 },
+        { source: 'EUR', target: 'USD', rate: 1.1, quarter: 2, year: 2026 },
       ]);
 
       expect(provider.getRate('EUR', 'USD', new Date('2026-01-15'))).toBe(1.09);
-      expect(provider.getRate('EUR', 'USD', new Date('2026-04-15'))).toBe(1.10);
+      expect(provider.getRate('EUR', 'USD', new Date('2026-04-15'))).toBe(1.1);
     });
 
     it('should transition correctly between quarters', () => {
       provider.registerQuarterlyRates([
         { source: 'EUR', target: 'USD', rate: 1.09, quarter: 1, year: 2026 },
-        { source: 'EUR', target: 'USD', rate: 1.10, quarter: 2, year: 2026 },
+        { source: 'EUR', target: 'USD', rate: 1.1, quarter: 2, year: 2026 },
       ]);
 
       // March 31 should have Q1 rate
       expect(provider.getRate('EUR', 'USD', new Date('2026-03-31'))).toBe(1.09);
 
       // April 1 should have Q2 rate
-      expect(provider.getRate('EUR', 'USD', new Date('2026-04-01'))).toBe(1.10);
+      expect(provider.getRate('EUR', 'USD', new Date('2026-04-01'))).toBe(1.1);
     });
   });
 });
@@ -137,9 +131,9 @@ describe('Currency Converter', () => {
       const testProvider = new ECBRateProvider();
       const testConverter = new CurrencyConverter(testProvider);
 
-      expect(() =>
-        testConverter.convert(100, 'EUR', 'XYZ', new Date())
-      ).toThrow(ECBRateNotFoundError);
+      expect(() => testConverter.convert(100, 'EUR', 'XYZ', new Date())).toThrow(
+        ECBRateNotFoundError,
+      );
     });
 
     it('should throw CurrencyRoundingError if rounding diverges from ECB convention', () => {

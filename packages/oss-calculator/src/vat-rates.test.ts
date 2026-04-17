@@ -138,9 +138,33 @@ describe('VAT Rates Module', () => {
     it('should include all EU Member State codes', () => {
       const codes = getAllCountryCodes();
       const expected = [
-        'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DE', 'DK', 'EE', 'FI', 'FR',
-        'EL', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT',
-        'RO', 'SK', 'SI', 'ES', 'SE'
+        'AT',
+        'BE',
+        'BG',
+        'HR',
+        'CY',
+        'CZ',
+        'DE',
+        'DK',
+        'EE',
+        'FI',
+        'FR',
+        'EL',
+        'HU',
+        'IE',
+        'IT',
+        'LV',
+        'LT',
+        'LU',
+        'MT',
+        'NL',
+        'PL',
+        'PT',
+        'RO',
+        'SK',
+        'SI',
+        'ES',
+        'SE',
       ];
       for (const code of expected) {
         expect(codes).toContain(code);

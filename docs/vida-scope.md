@@ -4,34 +4,34 @@
 
 ## Included in v1.0 (Pre-Defence)
 
-| Feature | Regulatory basis | Rationale |
-|---|---|---|
-| OSS special scheme (Union, Non-Union, iOSS) | Art 369a-369x VAT Directive | Primary thesis scope |
-| GDPR Art 17 x Art 63c reconciliation | Reg 282/2011 + GDPR | Paper A core contribution |
-| HMAC audit chain + Sigstore anchoring | eIDAS Reg 910/2014, Art 63c | Paper B foundation |
-| Platform Economy deemed supplier flag | Art 14a VAT Directive (ViDA) | Minimal ViDA readiness |
-| ViDA-forward data model (schema extensibility) | Directive 2025/516 | Paper C foundation |
+| Feature                                        | Regulatory basis             | Rationale                 |
+| ---------------------------------------------- | ---------------------------- | ------------------------- |
+| OSS special scheme (Union, Non-Union, iOSS)    | Art 369a-369x VAT Directive  | Primary thesis scope      |
+| GDPR Art 17 x Art 63c reconciliation           | Reg 282/2011 + GDPR          | Paper A core contribution |
+| HMAC audit chain + Sigstore anchoring          | eIDAS Reg 910/2014, Art 63c  | Paper B foundation        |
+| Platform Economy deemed supplier flag          | Art 14a VAT Directive (ViDA) | Minimal ViDA readiness    |
+| ViDA-forward data model (schema extensibility) | Directive 2025/516           | Paper C foundation        |
 
 ## Included in v2.0 (Post-Defence, Pre-SVR July 2028)
 
-| Feature | Regulatory basis | Rationale |
-|---|---|---|
-| SVR expanded transaction types | Art 369a expanded by Directive 2025/516 | Paper F core exhibit |
-| Own-goods transfers between MS warehouses | SVR Art 17(1) amendment | SVR scope expansion |
-| Call-off stock simplification expansion | Art 17a amendment | SVR scope expansion |
-| B2C domestic sales in other MS | SVR expansion | New OSS-covered transactions |
-| Platform facilitator ID tracking | Art 14a implementing measures | Deemed supplier support |
+| Feature                                   | Regulatory basis                        | Rationale                    |
+| ----------------------------------------- | --------------------------------------- | ---------------------------- |
+| SVR expanded transaction types            | Art 369a expanded by Directive 2025/516 | Paper F core exhibit         |
+| Own-goods transfers between MS warehouses | SVR Art 17(1) amendment                 | SVR scope expansion          |
+| Call-off stock simplification expansion   | Art 17a amendment                       | SVR scope expansion          |
+| B2C domestic sales in other MS            | SVR expansion                           | New OSS-covered transactions |
+| Platform facilitator ID tracking          | Art 14a implementing measures           | Deemed supplier support      |
 
 ## NOT Included (Explicit Exclusions)
 
-| Feature | Reason for exclusion |
-|---|---|
-| **Peppol BIS 3.0 integration** | Infrastructure burden disproportionate to micro-enterprise; recommend shared Access Point providers |
-| **EN 16931 e-invoice generation** | B2B focused; outside OSS B2C core scope |
-| **Full DRR 2-day real-time reporting** | 2030+ regulatory phase; requires near-real-time pipeline infrastructure |
-| **SME exemption regime** | Separate artefact (`@oss-vat/sme-exemption`), post-defence (Paper G) |
-| **Domestic-only VAT returns** | Outside cross-border scope; existing tools sufficient |
-| **Customs declarations (import VAT)** | Outside OSS scope; iOSS covers import scheme only up to EUR 150 |
+| Feature                                | Reason for exclusion                                                                                |
+| -------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| **Peppol BIS 3.0 integration**         | Infrastructure burden disproportionate to micro-enterprise; recommend shared Access Point providers |
+| **EN 16931 e-invoice generation**      | B2B focused; outside OSS B2C core scope                                                             |
+| **Full DRR 2-day real-time reporting** | 2030+ regulatory phase; requires near-real-time pipeline infrastructure                             |
+| **SME exemption regime**               | Separate artefact (`@oss-vat/sme-exemption`), post-defence (Paper G)                                |
+| **Domestic-only VAT returns**          | Outside cross-border scope; existing tools sufficient                                               |
+| **Customs declarations (import VAT)**  | Outside OSS scope; iOSS covers import scheme only up to EUR 150                                     |
 
 ## Scope Evolution Timeline
 

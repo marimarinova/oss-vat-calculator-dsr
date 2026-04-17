@@ -5,6 +5,7 @@
 **Update frequency:** Daily (automated) + weekly manual review
 
 **Relevance tiers:**
+
 - **Tier 1** — Directly affects artefact implementation (schema, logic, UI)
 - **Tier 2** — Affects publication strategy (Paper A/B/C/F/G content)
 - **Tier 3** — General context (policy direction, political signals)
@@ -33,4 +34,4 @@
 
 ---
 
-*Newer entries will be prepended above this line by n8n workflow.*
+_Newer entries will be prepended above this line by n8n workflow._

@@ -1,13 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import {
-  TaxEngine,
-  Transaction,
-  VATCalculationResult,
-} from './tax-engine';
-import {
-  MissingCountryCodeError,
-  RateMismatchError,
-} from './errors';
+import { TaxEngine, Transaction, VATCalculationResult } from './tax-engine';
+import { MissingCountryCodeError, RateMismatchError } from './errors';
 import { ECBRateProvider, CurrencyConverter, createDefaultECBProvider } from './ecb-rates';
 
 describe('Tax Engine', () => {
@@ -124,9 +117,7 @@ describe('Tax Engine', () => {
         isGoods: true,
       };
 
-      expect(() => engine.calculateVAT(transaction)).toThrow(
-        MissingCountryCodeError
-      );
+      expect(() => engine.calculateVAT(transaction)).toThrow(MissingCountryCodeError);
     });
 
     it('should throw MissingCountryCodeError for undefined country code', () => {
@@ -140,9 +131,7 @@ describe('Tax Engine', () => {
         isGoods: true,
       };
 
-      expect(() => engine.calculateVAT(transaction)).toThrow(
-        MissingCountryCodeError
-      );
+      expect(() => engine.calculateVAT(transaction)).toThrow(MissingCountryCodeError);
     });
 
     it('should throw error when rate type does not exist in country', () => {
@@ -195,7 +184,7 @@ describe('Tax Engine', () => {
       };
 
       expect(() => engineNoCurrency.calculateVAT(transaction)).toThrow(
-        /Currency converter not configured/
+        /Currency converter not configured/,
       );
     });
   });
@@ -232,9 +221,33 @@ describe('Tax Engine', () => {
 
     it('should maintain transaction order in batch results', () => {
       const transactions: Transaction[] = [
-        { id: 'TX013', date: new Date('2026-01-15'), customerCountryCode: 'DE', amount: 100, currency: 'EUR', rateType: 'standard', isGoods: true },
-        { id: 'TX014', date: new Date('2026-01-15'), customerCountryCode: 'FR', amount: 200, currency: 'EUR', rateType: 'standard', isGoods: false },
-        { id: 'TX015', date: new Date('2026-01-15'), customerCountryCode: 'IT', amount: 300, currency: 'EUR', rateType: 'standard', isGoods: true },
+        {
+          id: 'TX013',
+          date: new Date('2026-01-15'),
+          customerCountryCode: 'DE',
+          amount: 100,
+          currency: 'EUR',
+          rateType: 'standard',
+          isGoods: true,
+        },
+        {
+          id: 'TX014',
+          date: new Date('2026-01-15'),
+          customerCountryCode: 'FR',
+          amount: 200,
+          currency: 'EUR',
+          rateType: 'standard',
+          isGoods: false,
+        },
+        {
+          id: 'TX015',
+          date: new Date('2026-01-15'),
+          customerCountryCode: 'IT',
+          amount: 300,
+          currency: 'EUR',
+          rateType: 'standard',
+          isGoods: true,
+        },
       ];
 
       const results = engine.calculateBatch(transactions);

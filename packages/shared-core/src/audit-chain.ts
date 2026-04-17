@@ -10,7 +10,10 @@
  */
 
 // Use Node.js crypto if available, otherwise provide browser-compatible fallback
-let createHmac: (algorithm: string, key: string) => { update: (data: string) => { digest: (encoding: string) => string } };
+let createHmac: (
+  algorithm: string,
+  key: string,
+) => { update: (data: string) => { digest: (encoding: string) => string } };
 
 try {
   const nodeCrypto = require('crypto');
@@ -29,7 +32,7 @@ try {
             const combined = key + inputData;
             for (let i = 0; i < combined.length; i++) {
               const char = combined.charCodeAt(i);
-              hash = ((hash << 5) - hash) + char;
+              hash = (hash << 5) - hash + char;
               hash = hash & hash; // Convert to 32-bit integer
             }
             return Math.abs(hash).toString(16).padStart(16, '0');
@@ -86,7 +89,7 @@ function serializeForHashing(
   id: string,
   data: Record<string, unknown>,
   timestamp: number,
-  previousHash: string
+  previousHash: string,
 ): string {
   return JSON.stringify({
     id,
@@ -108,7 +111,7 @@ export function createAuditEntry(
   data: Record<string, unknown>,
   previousHash: string,
   key: string,
-  id?: string
+  id?: string,
 ): AuditEntry {
   const entryId = id || generateEntryId();
   const timestamp = Date.now();
@@ -157,7 +160,7 @@ export function verifyChain(entries: AuditEntry[], key: string): VerificationRes
     firstEntry.id,
     firstEntry.data,
     firstEntry.timestamp,
-    firstEntry.previousHash
+    firstEntry.previousHash,
   );
   const firstComputedHash = computeHmac(firstSerialized, key);
   if (firstComputedHash !== firstEntry.hash) {
@@ -187,7 +190,7 @@ export function verifyChain(entries: AuditEntry[], key: string): VerificationRes
       current.id,
       current.data,
       current.timestamp,
-      current.previousHash
+      current.previousHash,
     );
     const computedHash = computeHmac(serialized, key);
 
@@ -223,12 +226,7 @@ function generateEntryId(): string {
  * @returns True if the entry's hash is valid, false otherwise
  */
 export function verifySingleEntry(entry: AuditEntry, key: string): boolean {
-  const serialized = serializeForHashing(
-    entry.id,
-    entry.data,
-    entry.timestamp,
-    entry.previousHash
-  );
+  const serialized = serializeForHashing(entry.id, entry.data, entry.timestamp, entry.previousHash);
   const computedHash = computeHmac(serialized, key);
   return computedHash === entry.hash;
 }

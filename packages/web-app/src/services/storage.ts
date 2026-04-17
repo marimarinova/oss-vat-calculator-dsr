@@ -82,9 +82,7 @@ class LocalStorageService {
     return transactions.filter((tx) => {
       const date = new Date(tx.date);
       return (
-        date.getFullYear() === year &&
-        date.getMonth() >= startMonth &&
-        date.getMonth() < endMonth
+        date.getFullYear() === year && date.getMonth() >= startMonth && date.getMonth() < endMonth
       );
     });
   }
@@ -126,7 +124,7 @@ class LocalStorageService {
         exportedAt: new Date().toISOString(),
       },
       null,
-      2
+      2,
     );
   }
 
@@ -135,8 +133,7 @@ class LocalStorageService {
     if (data.seller) localStorage.setItem(this.SELLER_KEY, JSON.stringify(data.seller));
     if (data.transactions)
       localStorage.setItem(this.TRANSACTIONS_KEY, JSON.stringify(data.transactions));
-    if (data.filings)
-      localStorage.setItem(this.FILINGS_KEY, JSON.stringify(data.filings));
+    if (data.filings) localStorage.setItem(this.FILINGS_KEY, JSON.stringify(data.filings));
   }
 }
 

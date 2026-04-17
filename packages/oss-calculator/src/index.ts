@@ -43,12 +43,7 @@ export {
 } from './ecb-rates';
 
 // Tax calculation engine
-export {
-  Transaction,
-  VATCalculationResult,
-  TaxEngineConfig,
-  TaxEngine,
-} from './tax-engine';
+export { Transaction, VATCalculationResult, TaxEngineConfig, TaxEngine } from './tax-engine';
 
 // Threshold monitoring
 export {

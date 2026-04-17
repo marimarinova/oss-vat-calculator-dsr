@@ -28,7 +28,7 @@ export const Filing: React.FC = () => {
     const netTotal = quarterlyTransactions.reduce((sum, tx) => sum + tx.amount, 0);
     const vatTotal = quarterlyTransactions.reduce(
       (sum, tx) => sum + (tx.amount * (tx.vatRate || 19)) / 100,
-      0
+      0,
     );
     return { netTotal, vatTotal, transactionCount: quarterlyTransactions.length };
   }, [quarterlyTransactions]);
@@ -38,7 +38,7 @@ export const Filing: React.FC = () => {
       'PDF generation would call packages/oss-calculator/output/pdf-invoice\n\n' +
         `Q${selectedQuarter} ${selectedYear}\n` +
         `Transactions: ${stats.transactionCount}\n` +
-        `VAT: ${stats.vatTotal.toFixed(2)} EUR`
+        `VAT: ${stats.vatTotal.toFixed(2)} EUR`,
     );
   };
 
@@ -47,7 +47,7 @@ export const Filing: React.FC = () => {
       'CSV export would call packages/oss-calculator/output/csv-nap-export\n\n' +
         `Q${selectedQuarter} ${selectedYear}\n` +
         `Format: NAP Bulgaria Sections 2A–2D\n` +
-        `Transactions: ${stats.transactionCount}`
+        `Transactions: ${stats.transactionCount}`,
     );
   };
 
@@ -63,7 +63,9 @@ export const Filing: React.FC = () => {
   };
 
   const historicalFilings = filings.filter((f) => {
-    const [year, quarter] = f.period.split('-Q').map((x, i) => (i === 0 ? parseInt(x) : parseInt(x)));
+    const [year, quarter] = f.period
+      .split('-Q')
+      .map((x, i) => (i === 0 ? parseInt(x) : parseInt(x)));
     return year === selectedYear || year === selectedYear - 1;
   });
 
@@ -81,9 +83,7 @@ export const Filing: React.FC = () => {
       <div className="bg-white rounded-lg border border-gray-200 p-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Year
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Year</label>
             <select
               value={selectedYear}
               onChange={(e) => setSelectedYear(parseInt(e.target.value))}
@@ -97,9 +97,7 @@ export const Filing: React.FC = () => {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Quarter
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Quarter</label>
             <select
               value={selectedQuarter}
               onChange={(e) => setSelectedQuarter(parseInt(e.target.value))}
@@ -113,8 +111,7 @@ export const Filing: React.FC = () => {
           </div>
           <div className="flex items-end">
             <div className="text-sm text-gray-600">
-              <span className="font-semibold">{stats.transactionCount}</span> transactions
-              · VAT:{' '}
+              <span className="font-semibold">{stats.transactionCount}</span> transactions · VAT:{' '}
               <span className="font-semibold text-blue-600">
                 {stats.vatTotal.toLocaleString('en-US', {
                   minimumFractionDigits: 2,
@@ -192,16 +189,16 @@ export const Filing: React.FC = () => {
                 </h3>
                 <ul className="text-sm text-blue-800 space-y-2">
                   <li>
-                    <strong>CSV Format:</strong> Compatible with NAP Bulgaria sections
-                    2A–2D (intra-community supplies)
+                    <strong>CSV Format:</strong> Compatible with NAP Bulgaria sections 2A–2D
+                    (intra-community supplies)
                   </li>
                   <li>
-                    <strong>PDF Output:</strong> Article 226 TFEU compliant invoice
-                    format with audit trail
+                    <strong>PDF Output:</strong> Article 226 TFEU compliant invoice format with
+                    audit trail
                   </li>
                   <li>
-                    <strong>UBL 2.1/EN 16931:</strong> XML structure for forward
-                    compatibility with ViDA (2025) reforms
+                    <strong>UBL 2.1/EN 16931:</strong> XML structure for forward compatibility with
+                    ViDA (2025) reforms
                   </li>
                 </ul>
               </div>

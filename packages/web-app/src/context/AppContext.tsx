@@ -5,7 +5,12 @@
  */
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { storageService, StorageTransaction, StorageSellerInfo, StorageFiling } from '../services/storage';
+import {
+  storageService,
+  StorageTransaction,
+  StorageSellerInfo,
+  StorageFiling,
+} from '../services/storage';
 import { firebaseService } from '../services/firebase';
 
 export interface User {
@@ -186,14 +191,9 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     setTransactions([...transactions, newTx]);
   };
 
-  const updateTransactionLocal = (
-    id: string,
-    updates: Partial<StorageTransaction>
-  ) => {
+  const updateTransactionLocal = (id: string, updates: Partial<StorageTransaction>) => {
     storageService.updateTransaction(id, updates);
-    setTransactions(
-      transactions.map((t) => (t.id === id ? { ...t, ...updates } : t))
-    );
+    setTransactions(transactions.map((t) => (t.id === id ? { ...t, ...updates } : t)));
   };
 
   const deleteTransactionLocal = (id: string) => {
@@ -201,10 +201,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     setTransactions(transactions.filter((t) => t.id !== id));
   };
 
-  const getTransactionsByQuarter = (
-    year: number,
-    quarter: number
-  ): StorageTransaction[] => {
+  const getTransactionsByQuarter = (year: number, quarter: number): StorageTransaction[] => {
     return storageService.getTransactionsByQuarter(year, quarter);
   };
 

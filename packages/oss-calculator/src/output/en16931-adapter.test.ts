@@ -6,36 +6,36 @@
  * @license MIT
  */
 
-import { describe, it, expect } from "vitest";
-import { generateUBLInvoice, convertToUBL } from "./en16931-adapter";
-import { UBLInvoiceAdapter } from "./types";
+import { describe, it, expect } from 'vitest';
+import { generateUBLInvoice, convertToUBL } from './en16931-adapter';
+import { UBLInvoiceAdapter } from './types';
 
-describe("EN 16931 / UBL 2.1 Adapter", () => {
+describe('EN 16931 / UBL 2.1 Adapter', () => {
   const mockUBLInvoice: UBLInvoiceAdapter = {
-    customizationID: "urn:cen.eu:en16931:2017#compliance#T0",
-    profileID: "urn:fdc:peppol.eu:2017:poacc:billing:01:1.0",
-    id: "INV-2024-001",
-    issueDate: new Date("2024-01-15"),
-    documentCurrencyCode: "EUR",
+    customizationID: 'urn:cen.eu:en16931:2017#compliance#T0',
+    profileID: 'urn:fdc:peppol.eu:2017:poacc:billing:01:1.0',
+    id: 'INV-2024-001',
+    issueDate: new Date('2024-01-15'),
+    documentCurrencyCode: 'EUR',
     seller: {
-      name: "TechCorp Bulgaria",
-      address: "ul. Aleksandar Batenberg 57",
-      city: "Sofia",
-      postalCode: "1000",
-      country: "Bulgaria",
-      vatNumber: "BG202024680",
+      name: 'TechCorp Bulgaria',
+      address: 'ul. Aleksandar Batenberg 57',
+      city: 'Sofia',
+      postalCode: '1000',
+      country: 'Bulgaria',
+      vatNumber: 'BG202024680',
     },
     buyer: {
-      name: "GmbH Company",
-      address: "Hauptstraße 100",
-      city: "Berlin",
-      postalCode: "10115",
-      country: "Germany",
-      vatNumber: "DE123456789",
+      name: 'GmbH Company',
+      address: 'Hauptstraße 100',
+      city: 'Berlin',
+      postalCode: '10115',
+      country: 'Germany',
+      vatNumber: 'DE123456789',
     },
     lineItems: [
       {
-        description: "Web Development Services",
+        description: 'Web Development Services',
         quantity: 40,
         unitPrice: 50,
         netAmount: 2000,
@@ -49,131 +49,131 @@ describe("EN 16931 / UBL 2.1 Adapter", () => {
     totalGrossAmount: 2380,
   };
 
-  it("should generate valid UBL XML structure", () => {
+  it('should generate valid UBL XML structure', () => {
     const result = generateUBLInvoice(mockUBLInvoice);
 
     expect(result.success).toBe(true);
     if (result.success) {
-      expect(result.xml).toContain("<?xml version");
-      expect(result.xml).toContain("<Invoice");
-      expect(result.xml).toContain("</Invoice>");
-      expect(result.mimeType).toBe("application/xml");
+      expect(result.xml).toContain('<?xml version');
+      expect(result.xml).toContain('<Invoice');
+      expect(result.xml).toContain('</Invoice>');
+      expect(result.mimeType).toBe('application/xml');
     }
   });
 
-  it("should include UBL 2.1 version declaration", () => {
+  it('should include UBL 2.1 version declaration', () => {
     const result = generateUBLInvoice(mockUBLInvoice);
 
     if (result.success) {
-      expect(result.xml).toContain("<cbc:UBLVersionID>2.1</cbc:UBLVersionID>");
+      expect(result.xml).toContain('<cbc:UBLVersionID>2.1</cbc:UBLVersionID>');
     }
   });
 
-  it("should include EN 16931 customization ID", () => {
+  it('should include EN 16931 customization ID', () => {
     const result = generateUBLInvoice(mockUBLInvoice);
 
     if (result.success) {
-      expect(result.xml).toContain("urn:cen.eu:en16931:2017#compliance#T0");
+      expect(result.xml).toContain('urn:cen.eu:en16931:2017#compliance#T0');
     }
   });
 
-  it("should include PEPPOL profile ID", () => {
+  it('should include PEPPOL profile ID', () => {
     const result = generateUBLInvoice(mockUBLInvoice);
 
     if (result.success) {
-      expect(result.xml).toContain("urn:fdc:peppol.eu:2017:poacc:billing");
+      expect(result.xml).toContain('urn:fdc:peppol.eu:2017:poacc:billing');
     }
   });
 
-  it("should include invoice ID and date", () => {
+  it('should include invoice ID and date', () => {
     const result = generateUBLInvoice(mockUBLInvoice);
 
     if (result.success) {
       expect(result.xml).toContain(mockUBLInvoice.id);
-      expect(result.xml).toContain("2024-01-15");
+      expect(result.xml).toContain('2024-01-15');
     }
   });
 
-  it("should include seller party information", () => {
+  it('should include seller party information', () => {
     const result = generateUBLInvoice(mockUBLInvoice);
 
     if (result.success) {
-      expect(result.xml).toContain("AccountingSupplierParty");
-      expect(result.xml).toContain("TechCorp Bulgaria");
-      expect(result.xml).toContain("BG202024680");
+      expect(result.xml).toContain('AccountingSupplierParty');
+      expect(result.xml).toContain('TechCorp Bulgaria');
+      expect(result.xml).toContain('BG202024680');
     }
   });
 
-  it("should include buyer party information", () => {
+  it('should include buyer party information', () => {
     const result = generateUBLInvoice(mockUBLInvoice);
 
     if (result.success) {
-      expect(result.xml).toContain("AccountingCustomerParty");
-      expect(result.xml).toContain("GmbH Company");
-      expect(result.xml).toContain("DE123456789");
+      expect(result.xml).toContain('AccountingCustomerParty');
+      expect(result.xml).toContain('GmbH Company');
+      expect(result.xml).toContain('DE123456789');
     }
   });
 
-  it("should include line items with tax details", () => {
+  it('should include line items with tax details', () => {
     const result = generateUBLInvoice(mockUBLInvoice);
 
     if (result.success) {
-      expect(result.xml).toContain("InvoiceLine");
-      expect(result.xml).toContain("Web Development Services");
-      expect(result.xml).toContain("40"); // quantity
-      expect(result.xml).toContain("2000"); // netAmount
+      expect(result.xml).toContain('InvoiceLine');
+      expect(result.xml).toContain('Web Development Services');
+      expect(result.xml).toContain('40'); // quantity
+      expect(result.xml).toContain('2000'); // netAmount
     }
   });
 
-  it("should include VAT tax totals", () => {
+  it('should include VAT tax totals', () => {
     const result = generateUBLInvoice(mockUBLInvoice);
 
     if (result.success) {
-      expect(result.xml).toContain("TaxTotal");
-      expect(result.xml).toContain("380"); // totalVATAmount
-      expect(result.xml).toContain("19"); // VAT rate
+      expect(result.xml).toContain('TaxTotal');
+      expect(result.xml).toContain('380'); // totalVATAmount
+      expect(result.xml).toContain('19'); // VAT rate
     }
   });
 
-  it("should include legal monetary totals", () => {
+  it('should include legal monetary totals', () => {
     const result = generateUBLInvoice(mockUBLInvoice);
 
     if (result.success) {
-      expect(result.xml).toContain("LegalMonetaryTotal");
-      expect(result.xml).toContain("2000"); // netAmount
-      expect(result.xml).toContain("2380"); // grossAmount
+      expect(result.xml).toContain('LegalMonetaryTotal');
+      expect(result.xml).toContain('2000'); // netAmount
+      expect(result.xml).toContain('2380'); // grossAmount
     }
   });
 
-  it("should properly escape XML special characters", () => {
+  it('should properly escape XML special characters', () => {
     const specialCharInvoice: UBLInvoiceAdapter = {
       ...mockUBLInvoice,
       seller: {
         ...mockUBLInvoice.seller,
-        name: "Company & Co. <Limited>",
+        name: 'Company & Co. <Limited>',
       },
     };
 
     const result = generateUBLInvoice(specialCharInvoice);
 
     if (result.success) {
-      expect(result.xml).toContain("&amp;");
-      expect(result.xml).toContain("&lt;");
-      expect(result.xml).toContain("&gt;");
-      expect(result.xml).not.toContain("<Limited>");
+      expect(result.xml).toContain('&amp;');
+      expect(result.xml).toContain('&lt;');
+      expect(result.xml).toContain('&gt;');
+      expect(result.xml).not.toContain('<Limited>');
     }
   });
 
-  it("should use ISO currency codes", () => {
+  it('should use ISO currency codes', () => {
     const result = generateUBLInvoice(mockUBLInvoice);
 
     if (result.success) {
-      expect(result.xml).toContain("EUR");
+      expect(result.xml).toContain('EUR');
       expect(result.xml).toContain('currencyID="EUR"');
     }
   });
 
-  it("should generate filename with invoice ID", () => {
+  it('should generate filename with invoice ID', () => {
     const result = generateUBLInvoice(mockUBLInvoice);
 
     if (result.success) {
@@ -182,21 +182,21 @@ describe("EN 16931 / UBL 2.1 Adapter", () => {
     }
   });
 
-  it("should include due date when provided", () => {
+  it('should include due date when provided', () => {
     const invoiceWithDueDate: UBLInvoiceAdapter = {
       ...mockUBLInvoice,
-      dueDate: new Date("2024-02-15"),
+      dueDate: new Date('2024-02-15'),
     };
 
     const result = generateUBLInvoice(invoiceWithDueDate);
 
     if (result.success) {
-      expect(result.xml).toContain("DueDate");
-      expect(result.xml).toContain("2024-02-15");
+      expect(result.xml).toContain('DueDate');
+      expect(result.xml).toContain('2024-02-15');
     }
   });
 
-  it("should omit due date when not provided", () => {
+  it('should omit due date when not provided', () => {
     const result = generateUBLInvoice(mockUBLInvoice);
 
     if (result.success) {
@@ -206,19 +206,19 @@ describe("EN 16931 / UBL 2.1 Adapter", () => {
     }
   });
 
-  it("should validate invoice ID is required", () => {
+  it('should validate invoice ID is required', () => {
     const invalidInvoice: UBLInvoiceAdapter = {
       ...mockUBLInvoice,
-      id: "",
+      id: '',
     };
 
     const result = generateUBLInvoice(invalidInvoice);
 
     expect(result.success).toBe(false);
-    expect(result.error).toContain("validation failed");
+    expect(result.error).toContain('validation failed');
   });
 
-  it("should validate issue date is required", () => {
+  it('should validate issue date is required', () => {
     const invalidInvoice: UBLInvoiceAdapter = {
       ...mockUBLInvoice,
       issueDate: undefined as any,
@@ -229,10 +229,10 @@ describe("EN 16931 / UBL 2.1 Adapter", () => {
     expect(result.success).toBe(false);
   });
 
-  it("should validate currency code is required", () => {
+  it('should validate currency code is required', () => {
     const invalidInvoice: UBLInvoiceAdapter = {
       ...mockUBLInvoice,
-      documentCurrencyCode: "",
+      documentCurrencyCode: '',
     };
 
     const result = generateUBLInvoice(invalidInvoice);
@@ -240,10 +240,10 @@ describe("EN 16931 / UBL 2.1 Adapter", () => {
     expect(result.success).toBe(false);
   });
 
-  it("should validate customization ID is required", () => {
+  it('should validate customization ID is required', () => {
     const invalidInvoice: UBLInvoiceAdapter = {
       ...mockUBLInvoice,
-      customizationID: "",
+      customizationID: '',
     };
 
     const result = generateUBLInvoice(invalidInvoice);
@@ -251,7 +251,7 @@ describe("EN 16931 / UBL 2.1 Adapter", () => {
     expect(result.success).toBe(false);
   });
 
-  it("should validate at least one line item", () => {
+  it('should validate at least one line item', () => {
     const invalidInvoice: UBLInvoiceAdapter = {
       ...mockUBLInvoice,
       lineItems: [],
@@ -262,12 +262,12 @@ describe("EN 16931 / UBL 2.1 Adapter", () => {
     expect(result.success).toBe(false);
   });
 
-  it("should handle multiple line items", () => {
+  it('should handle multiple line items', () => {
     const multiLineInvoice: UBLInvoiceAdapter = {
       ...mockUBLInvoice,
       lineItems: [
         {
-          description: "Service A",
+          description: 'Service A',
           quantity: 10,
           unitPrice: 100,
           netAmount: 1000,
@@ -276,7 +276,7 @@ describe("EN 16931 / UBL 2.1 Adapter", () => {
           grossAmount: 1190,
         },
         {
-          description: "Service B",
+          description: 'Service B',
           quantity: 5,
           unitPrice: 200,
           netAmount: 1000,
@@ -298,7 +298,7 @@ describe("EN 16931 / UBL 2.1 Adapter", () => {
     }
   });
 
-  it("should set correct generated timestamp", () => {
+  it('should set correct generated timestamp', () => {
     const beforeGen = new Date();
     const result = generateUBLInvoice(mockUBLInvoice);
     const afterGen = new Date();
@@ -309,20 +309,20 @@ describe("EN 16931 / UBL 2.1 Adapter", () => {
     }
   });
 
-  it("should use invoice type code 380 (Commercial Invoice)", () => {
+  it('should use invoice type code 380 (Commercial Invoice)', () => {
     const result = generateUBLInvoice(mockUBLInvoice);
 
     if (result.success) {
-      expect(result.xml).toContain("<cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>");
+      expect(result.xml).toContain('<cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>');
     }
   });
 
-  it("should handle zero VAT rate", () => {
+  it('should handle zero VAT rate', () => {
     const zeroVATInvoice: UBLInvoiceAdapter = {
       ...mockUBLInvoice,
       lineItems: [
         {
-          description: "Zero-rated service",
+          description: 'Zero-rated service',
           quantity: 1,
           unitPrice: 1000,
           netAmount: 1000,
@@ -339,25 +339,25 @@ describe("EN 16931 / UBL 2.1 Adapter", () => {
     const result = generateUBLInvoice(zeroVATInvoice);
 
     if (result.success) {
-      expect(result.xml).toContain("0"); // VAT amount or rate
+      expect(result.xml).toContain('0'); // VAT amount or rate
     }
   });
 
-  it("should handle different currencies", () => {
+  it('should handle different currencies', () => {
     const gbpInvoice: UBLInvoiceAdapter = {
       ...mockUBLInvoice,
-      documentCurrencyCode: "GBP",
+      documentCurrencyCode: 'GBP',
     };
 
     const result = generateUBLInvoice(gbpInvoice);
 
     if (result.success) {
-      expect(result.xml).toContain("GBP");
-      expect(result.xml).not.toContain("EUR");
+      expect(result.xml).toContain('GBP');
+      expect(result.xml).not.toContain('EUR');
     }
   });
 
-  it("should be well-formed XML", () => {
+  it('should be well-formed XML', () => {
     const result = generateUBLInvoice(mockUBLInvoice);
 
     if (result.success) {
@@ -374,29 +374,29 @@ describe("EN 16931 / UBL 2.1 Adapter", () => {
   });
 });
 
-describe("convertToUBL", () => {
+describe('convertToUBL', () => {
   const mockInvoice = {
-    invoiceNumber: "INV-2024-001",
-    invoiceDate: new Date("2024-01-15"),
+    invoiceNumber: 'INV-2024-001',
+    invoiceDate: new Date('2024-01-15'),
     seller: {
-      name: "TechCorp Bulgaria",
-      address: "ul. Aleksandar Batenberg 57",
-      city: "Sofia",
-      postalCode: "1000",
-      country: "Bulgaria",
-      vatNumber: "BG202024680",
+      name: 'TechCorp Bulgaria',
+      address: 'ul. Aleksandar Batenberg 57',
+      city: 'Sofia',
+      postalCode: '1000',
+      country: 'Bulgaria',
+      vatNumber: 'BG202024680',
     },
     buyer: {
-      name: "GmbH Company",
-      address: "Hauptstraße 100",
-      city: "Berlin",
-      postalCode: "10115",
-      country: "Germany",
-      vatNumber: "DE123456789",
+      name: 'GmbH Company',
+      address: 'Hauptstraße 100',
+      city: 'Berlin',
+      postalCode: '10115',
+      country: 'Germany',
+      vatNumber: 'DE123456789',
     },
     lineItems: [
       {
-        description: "Service",
+        description: 'Service',
         quantity: 1,
         unitPrice: 1000,
         netAmount: 1000,
@@ -408,27 +408,27 @@ describe("convertToUBL", () => {
     totalNetAmount: 1000,
     totalVATAmount: 190,
     totalGrossAmount: 1190,
-    currency: "EUR",
+    currency: 'EUR',
   };
 
-  it("should convert Invoice to UBLInvoiceAdapter", () => {
+  it('should convert Invoice to UBLInvoiceAdapter', () => {
     const ubl = convertToUBL(mockInvoice);
 
     expect(ubl.id).toBe(mockInvoice.invoiceNumber);
     expect(ubl.issueDate).toEqual(mockInvoice.invoiceDate);
-    expect(ubl.documentCurrencyCode).toBe("EUR");
-    expect(ubl.customizationID).toBe("urn:cen.eu:en16931:2017#compliance#T0");
-    expect(ubl.profileID).toBe("urn:fdc:peppol.eu:2017:poacc:billing:01:1.0");
+    expect(ubl.documentCurrencyCode).toBe('EUR');
+    expect(ubl.customizationID).toBe('urn:cen.eu:en16931:2017#compliance#T0');
+    expect(ubl.profileID).toBe('urn:fdc:peppol.eu:2017:poacc:billing:01:1.0');
   });
 
-  it("should preserve all line items in conversion", () => {
+  it('should preserve all line items in conversion', () => {
     const ubl = convertToUBL(mockInvoice);
 
     expect(ubl.lineItems.length).toBe(mockInvoice.lineItems.length);
     expect(ubl.lineItems[0].description).toBe(mockInvoice.lineItems[0].description);
   });
 
-  it("should preserve monetary totals in conversion", () => {
+  it('should preserve monetary totals in conversion', () => {
     const ubl = convertToUBL(mockInvoice);
 
     expect(ubl.totalNetAmount).toBe(mockInvoice.totalNetAmount);
@@ -436,7 +436,7 @@ describe("convertToUBL", () => {
     expect(ubl.totalGrossAmount).toBe(mockInvoice.totalGrossAmount);
   });
 
-  it("should preserve party information in conversion", () => {
+  it('should preserve party information in conversion', () => {
     const ubl = convertToUBL(mockInvoice);
 
     expect(ubl.seller.name).toBe(mockInvoice.seller.name);

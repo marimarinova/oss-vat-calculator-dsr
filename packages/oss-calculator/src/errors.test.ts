@@ -11,11 +11,7 @@ import {
 describe('Error Classes', () => {
   describe('VATCalculationError', () => {
     it('should create error with message, code, and context', () => {
-      const error = new VATCalculationError(
-        'Test error',
-        'TEST_CODE',
-        { detail: 'test' }
-      );
+      const error = new VATCalculationError('Test error', 'TEST_CODE', { detail: 'test' });
 
       expect(error.message).toBe('Test error');
       expect(error.code).toBe('TEST_CODE');
@@ -132,7 +128,7 @@ describe('Error Classes', () => {
         'standard',
         19,
         18, // Outdated rate
-        new Date('2026-01-15')
+        new Date('2026-01-15'),
       );
 
       expect(error.code).toBe('RATE_MISMATCH');
@@ -146,7 +142,7 @@ describe('Error Classes', () => {
         3, // Source has 3 decimal places
         2, // Target has 2 decimal places
         2, // ECB convention is 2
-        'EUR'
+        'EUR',
       );
 
       expect(error.code).toBe('CURRENCY_ROUNDING_DIVERGENCE');

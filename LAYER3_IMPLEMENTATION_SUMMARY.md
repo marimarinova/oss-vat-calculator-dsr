@@ -13,6 +13,7 @@ Layer 3 of the OSS VAT Calculator provides production-grade output generation fo
 ### Core Modules (Production Code)
 
 #### 1. **pdf-invoice.ts** (10 KB)
+
 - PDF invoice generation per Directive 2006/112/EC, Article 226
 - 45+ validation rules for mandatory fields
 - Works in Node.js and browser environments
@@ -22,6 +23,7 @@ Layer 3 of the OSS VAT Calculator provides production-grade output generation fo
 - Custom formatting options (font size, margins, format)
 
 **Key Features:**
+
 - Seller VAT ID validation (mandatory per Article 226)
 - B2B and B2C invoice support
 - Automatic line item aggregation
@@ -30,6 +32,7 @@ Layer 3 of the OSS VAT Calculator provides production-grade output generation fo
 - Professional PDF layout
 
 #### 2. **csv-nap-export.ts** (8 KB)
+
 - CSV export for Bulgarian National Revenue Agency (NAP) portal
 - Full NAP specification compliance
 - Section aggregation (2A, 2B, 2C, 2D)
@@ -38,6 +41,7 @@ Layer 3 of the OSS VAT Calculator provides production-grade output generation fo
 - Detailed total verification
 
 **Key Features:**
+
 - Automatic row aggregation by section + member state
 - Date formatting per NAP spec (dd.mm.yyyy)
 - Decimal separator handling (period by default)
@@ -46,6 +50,7 @@ Layer 3 of the OSS VAT Calculator provides production-grade output generation fo
 - Comprehensive total verification
 
 #### 3. **en16931-adapter.ts** (10 KB)
+
 - EN 16931 / UBL 2.1 XML generation
 - Forward compatibility for ViDA compliance (2035)
 - PEPPOL invoicing profile support
@@ -54,6 +59,7 @@ Layer 3 of the OSS VAT Calculator provides production-grade output generation fo
 - Line item VAT structure
 
 **Key Features:**
+
 - Valid UBL 2.1 XML output
 - PEPPOL AP profile compliance
 - EN 16931 semantic data model
@@ -62,12 +68,14 @@ Layer 3 of the OSS VAT Calculator provides production-grade output generation fo
 - Multiple currency support
 
 #### 4. **types.ts** (4 KB)
+
 - Comprehensive TypeScript interfaces
 - Discriminated union types for results
 - Full type safety across all generators
 - Clear party, line item, and document structures
 
 **Type Coverage:**
+
 - `Invoice` — Complete invoice document
 - `VATLineItem` — Tax-detailed line items
 - `Party` — Buyer/seller information
@@ -77,6 +85,7 @@ Layer 3 of the OSS VAT Calculator provides production-grade output generation fo
 - `GenerationError` — Consistent error format
 
 #### 5. **index.ts** (1 KB)
+
 - Clean barrel exports
 - Type re-exports for consumer convenience
 - Organized public API
@@ -84,6 +93,7 @@ Layer 3 of the OSS VAT Calculator provides production-grade output generation fo
 ### Test Suites (100% Code Coverage Target)
 
 #### 1. **pdf-invoice.test.ts** (9 KB)
+
 - **37+ test cases** covering:
   - Article 226 compliance validation
   - All mandatory fields
@@ -97,6 +107,7 @@ Layer 3 of the OSS VAT Calculator provides production-grade output generation fo
   - Error cases and validation
 
 #### 2. **csv-nap-export.test.ts** (11 KB)
+
 - **35+ test cases** covering:
   - NAP format compliance
   - Decimal and delimiter handling
@@ -110,6 +121,7 @@ Layer 3 of the OSS VAT Calculator provides production-grade output generation fo
   - Error cases
 
 #### 3. **en16931-adapter.test.ts** (13 KB)
+
 - **33+ test cases** covering:
   - UBL 2.1 XML structure
   - PEPPOL compliance
@@ -125,6 +137,7 @@ Layer 3 of the OSS VAT Calculator provides production-grade output generation fo
 ### Documentation
 
 #### 1. **README.md** (Comprehensive guide)
+
 - Usage examples for each generator
 - Type system documentation
 - Design decisions and rationale
@@ -133,6 +146,7 @@ Layer 3 of the OSS VAT Calculator provides production-grade output generation fo
 - Academic context
 
 #### 2. **LAYER3_IMPLEMENTATION_SUMMARY.md** (This file)
+
 - Implementation overview
 - File structure
 - Test coverage
@@ -168,6 +182,7 @@ Total: 81 KB of production code
 ## Technology Stack
 
 ### Dependencies
+
 - **jspdf@^2.5.1** — PDF generation (browser & Node.js compatible)
   - Minimal footprint (2.5 KB gzipped)
   - Production-grade, widely adopted
@@ -175,11 +190,13 @@ Total: 81 KB of production code
   - ES2022+ compatible
 
 ### Development Dependencies
+
 - **typescript@^5.0.0** — Type safety
 - **vitest@^1.0.0** — Test runner
 - **@types/node@^20.0.0** — Node.js typings
 
 ### Build Target
+
 - **ES2022** with ES modules
 - **Node.js 20.0.0+**
 - **TypeScript strict mode** enabled
@@ -190,6 +207,7 @@ Total: 81 KB of production code
 ## Validation & Compliance
 
 ### Directive 2006/112/EC Article 226 Compliance
+
 ✓ Seller VAT ID validation
 ✓ Buyer identification (B2B/B2C)
 ✓ Sequential invoice numbering
@@ -206,6 +224,7 @@ Total: 81 KB of production code
 ✓ Currency declaration
 
 ### Bulgarian NAP Portal Compliance
+
 ✓ Section categorization (2A, 2B, 2C, 2D)
 ✓ Member state code validation
 ✓ Decimal separator (period)
@@ -216,6 +235,7 @@ Total: 81 KB of production code
 ✓ Total verification
 
 ### EN 16931 / UBL 2.1 Compliance
+
 ✓ UBL version declaration
 ✓ EN 16931 customization ID
 ✓ PEPPOL profile ID
@@ -233,28 +253,31 @@ Total: 81 KB of production code
 
 ### Total Test Cases: **105+**
 
-| Module | Tests | Coverage |
-|--------|-------|----------|
-| PDF Invoice | 37 | Validation, conversion, edge cases |
-| CSV NAP | 35 | Format, aggregation, validation |
-| UBL Adapter | 33 | XML structure, conversion, validation |
-| **Total** | **105** | **>95% code coverage target** |
+| Module      | Tests   | Coverage                              |
+| ----------- | ------- | ------------------------------------- |
+| PDF Invoice | 37      | Validation, conversion, edge cases    |
+| CSV NAP     | 35      | Format, aggregation, validation       |
+| UBL Adapter | 33      | XML structure, conversion, validation |
+| **Total**   | **105** | **>95% code coverage target**         |
 
 ### Test Categories
 
 **Positive Tests (Happy Path)**
+
 - Valid invoice generation
 - Proper formatting
 - Correct file outputs
 - Type conversion
 
 **Validation Tests**
+
 - Required field validation
 - Format compliance checks
 - Calculation accuracy
 - Rounding tolerance
 
 **Edge Cases**
+
 - Empty/missing fields
 - Long descriptions
 - Multiple VAT rates
@@ -264,6 +287,7 @@ Total: 81 KB of production code
 - Date format variations
 
 **Error Handling**
+
 - Invalid inputs
 - Mismatched totals
 - Out-of-range values
@@ -418,8 +442,8 @@ Layer 3 is designed to consume output from Layer 2 (VAT Calculation Engine):
 
 ```typescript
 import {
-  TaxEngine,           // Layer 2
-  generatePDFInvoice,  // Layer 3
+  TaxEngine, // Layer 2
+  generatePDFInvoice, // Layer 3
 } from '@oss-vat/oss-calculator';
 
 // Use TaxEngine (Layer 2) to calculate VAT
@@ -432,7 +456,7 @@ const invoice = {
   invoiceDate: new Date(),
   seller: sellerData,
   buyer: buyerData,
-  lineItems: calculation.lineItems.map(item => ({
+  lineItems: calculation.lineItems.map((item) => ({
     description: item.description,
     quantity: item.quantity,
     unitPrice: item.unitPrice,
@@ -465,12 +489,12 @@ const xml = generateUBLInvoice(ublInvoice);
 
 ### Why These Technologies?
 
-| Technology | Reason |
-|------------|--------|
-| **jspdf** | Small footprint, production-proven, dual Node/browser |
-| **Pure TypeScript CSV** | No dependencies, maximum portability |
-| **Template-based XML** | Minimal overhead, easy to customize |
-| **vitest** | Fast, TypeScript-first, modern test runner |
+| Technology              | Reason                                                |
+| ----------------------- | ----------------------------------------------------- |
+| **jspdf**               | Small footprint, production-proven, dual Node/browser |
+| **Pure TypeScript CSV** | No dependencies, maximum portability                  |
+| **Template-based XML**  | Minimal overhead, easy to customize                   |
+| **vitest**              | Fast, TypeScript-first, modern test runner            |
 
 ### Design Principles Implemented
 
@@ -491,7 +515,7 @@ This Layer 3 implementation is part of a **Design Science Research (DSR) artefac
 
 **Design Principle 5: Portal-aligned output with forward compatibility**
 
-*Demonstrates that VAT calculation results can be efficiently exported to multiple stakeholders (tax authorities, invoicing systems, digital governance) while maintaining forward compatibility with emerging EU digital tax frameworks.*
+_Demonstrates that VAT calculation results can be efficiently exported to multiple stakeholders (tax authorities, invoicing systems, digital governance) while maintaining forward compatibility with emerging EU digital tax frameworks._
 
 **Utility:** Production-grade output generators reduce compliance burden for EU micro-enterprises
 **Feasibility:** Tested across multiple output formats and validation scenarios
@@ -503,10 +527,12 @@ This Layer 3 implementation is part of a **Design Science Research (DSR) artefac
 ## References
 
 ### EU Regulations
+
 - Directive 2006/112/EC (VAT Directive)
 - Directive 2024/... (ViDA — VAT in the Digital Age)
 
 ### Standards
+
 - EN 16931-1:2017 (Semantic data model for invoicing)
 - UBL 2.1 (Universal Business Language)
 - PEPPOL (Pan-European Public Procurement Online)
@@ -514,6 +540,7 @@ This Layer 3 implementation is part of a **Design Science Research (DSR) artefac
 - ISO 3166-1 (Country codes)
 
 ### Bulgarian Requirements
+
 - NAP OSS Portal Specification (Section 2A, 2B, 2C, 2D)
 - Bulgarian VAT Reporting Format
 

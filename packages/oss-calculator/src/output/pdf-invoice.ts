@@ -8,13 +8,8 @@
  * @license MIT
  */
 
-import jsPDF from "jspdf";
-import {
-  Invoice,
-  PDFOptions,
-  PDFGenerationResult,
-  GenerationError,
-} from "./types";
+import jsPDF from 'jspdf';
+import { Invoice, PDFOptions, PDFGenerationResult, GenerationError } from './types';
 
 /**
  * Formats a number as currency with proper decimals
@@ -27,8 +22,8 @@ function formatCurrency(amount: number, decimalPlaces = 2): string {
  * Formats a date as DD.MM.YYYY
  */
 function formatDate(date: Date): string {
-  const day = String(date.getDate()).padStart(2, "0");
-  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
   const year = date.getFullYear();
   return `${day}.${month}.${year}`;
 }
@@ -52,7 +47,7 @@ function formatDate(date: Date): string {
  */
 export async function generatePDFInvoice(
   invoice: Invoice,
-  options?: PDFOptions
+  options?: PDFOptions,
 ): Promise<PDFGenerationResult | GenerationError> {
   try {
     // Validate invoice data
@@ -63,9 +58,9 @@ export async function generatePDFInvoice(
 
     // Initialize PDF document
     const doc = new jsPDF({
-      orientation: "portrait",
-      unit: "mm",
-      format: options?.format || "a4",
+      orientation: 'portrait',
+      unit: 'mm',
+      format: options?.format || 'a4',
     });
 
     const pageWidth = doc.internal.pageSize.getWidth();
@@ -76,7 +71,7 @@ export async function generatePDFInvoice(
     let yPosition = margin;
 
     // Set default font
-    doc.setFont("helvetica");
+    doc.setFont('helvetica');
     doc.setFontSize(fontSize);
 
     // ====== HEADER SECTION ======
@@ -85,11 +80,11 @@ export async function generatePDFInvoice(
       try {
         doc.addImage(
           options.companyLogo.dataUrl,
-          "PNG",
+          'PNG',
           margin,
           yPosition,
           options.companyLogo.widthMm,
-          options.companyLogo.heightMm
+          options.companyLogo.heightMm,
         );
         yPosition += options.companyLogo.heightMm + 5;
       } catch (_) {
@@ -99,7 +94,7 @@ export async function generatePDFInvoice(
 
     // Invoice title
     doc.setFontSize(fontSize + 6);
-    doc.text("INVOICE", margin, yPosition);
+    doc.text('INVOICE', margin, yPosition);
     yPosition += 12;
 
     // Invoice number and date
@@ -119,9 +114,9 @@ export async function generatePDFInvoice(
 
     // ====== SELLER/BUYER SECTION ======
     doc.setFontSize(fontSize - 1);
-    doc.setFont("helvetica", "bold");
-    doc.text("FROM (Seller):", margin, yPosition);
-    doc.setFont("helvetica", "normal");
+    doc.setFont('helvetica', 'bold');
+    doc.text('FROM (Seller):', margin, yPosition);
+    doc.setFont('helvetica', 'normal');
     yPosition += 5;
 
     const sellerLines = formatPartyBlock(invoice.seller);
@@ -132,9 +127,9 @@ export async function generatePDFInvoice(
 
     yPosition += 2;
 
-    doc.setFont("helvetica", "bold");
-    doc.text("TO (Buyer):", margin, yPosition);
-    doc.setFont("helvetica", "normal");
+    doc.setFont('helvetica', 'bold');
+    doc.text('TO (Buyer):', margin, yPosition);
+    doc.setFont('helvetica', 'normal');
     yPosition += 5;
 
     const buyerLines = formatPartyBlock(invoice.buyer);
@@ -161,13 +156,11 @@ export async function generatePDFInvoice(
 
     // ====== LINE ITEMS TABLE ======
     doc.setFontSize(fontSize - 1);
-    doc.setFont("helvetica", "bold");
+    doc.setFont('helvetica', 'bold');
 
     const tableConfig = {
       startY: yPosition,
-      head: [
-        ["Description", "Qty", "Unit Price", "Net Amount", "VAT Rate", "VAT", "Gross"],
-      ],
+      head: [['Description', 'Qty', 'Unit Price', 'Net Amount', 'VAT Rate', 'VAT', 'Gross']],
       body: invoice.lineItems.map((item) => [
         item.description.substring(0, 40), // truncate long descriptions
         item.quantity.toString(),
@@ -179,17 +172,17 @@ export async function generatePDFInvoice(
       ]),
       columnStyles: {
         0: { cellWidth: 35 },
-        1: { halign: "right", cellWidth: 10 },
-        2: { halign: "right", cellWidth: 18 },
-        3: { halign: "right", cellWidth: 18 },
-        4: { halign: "right", cellWidth: 12 },
-        5: { halign: "right", cellWidth: 18 },
-        6: { halign: "right", cellWidth: 18 },
+        1: { halign: 'right', cellWidth: 10 },
+        2: { halign: 'right', cellWidth: 18 },
+        3: { halign: 'right', cellWidth: 18 },
+        4: { halign: 'right', cellWidth: 12 },
+        5: { halign: 'right', cellWidth: 18 },
+        6: { halign: 'right', cellWidth: 18 },
       },
-      theme: "grid" as const,
+      theme: 'grid' as const,
       didDrawPage: (data: any) => {
         // Adjust styles
-        doc.setFont("helvetica", "bold");
+        doc.setFont('helvetica', 'bold');
         doc.setFontSize(fontSize - 1);
       },
     };
@@ -205,40 +198,40 @@ export async function generatePDFInvoice(
     }
 
     // ====== TOTALS SECTION ======
-    doc.setFont("helvetica", "normal");
+    doc.setFont('helvetica', 'normal');
     doc.setFontSize(fontSize);
 
     const totalLabelX = margin + contentWidth - 80;
     const totalValueX = margin + contentWidth - 20;
 
-    doc.text("Subtotal (Net):", totalLabelX, yPosition);
+    doc.text('Subtotal (Net):', totalLabelX, yPosition);
     doc.text(formatCurrency(invoice.totalNetAmount), totalValueX, yPosition, {
-      align: "right",
+      align: 'right',
     });
     yPosition += 6;
 
     doc.text(`Total VAT:`, totalLabelX, yPosition);
     doc.text(formatCurrency(invoice.totalVATAmount), totalValueX, yPosition, {
-      align: "right",
+      align: 'right',
     });
     yPosition += 6;
 
     // Total due in bold
-    doc.setFont("helvetica", "bold");
+    doc.setFont('helvetica', 'bold');
     doc.setFontSize(fontSize + 1);
-    doc.text("TOTAL DUE:", totalLabelX, yPosition);
+    doc.text('TOTAL DUE:', totalLabelX, yPosition);
     doc.text(formatCurrency(invoice.totalGrossAmount), totalValueX, yPosition, {
-      align: "right",
+      align: 'right',
     });
     yPosition += 10;
 
     // ====== FOOTER ======
-    doc.setFont("helvetica", "normal");
+    doc.setFont('helvetica', 'normal');
     doc.setFontSize(fontSize - 2);
 
     if (invoice.notes) {
       yPosition += 4;
-      doc.text("Notes:", margin, yPosition);
+      doc.text('Notes:', margin, yPosition);
       yPosition += 4;
       const noteLines = doc.splitTextToSize(invoice.notes, contentWidth - 10);
       noteLines.forEach((line: string) => {
@@ -249,30 +242,26 @@ export async function generatePDFInvoice(
 
     // Add page number at bottom
     const pageCount = (doc as any).internal.pages.length - 1;
-    doc.setFont("helvetica", "normal");
+    doc.setFont('helvetica', 'normal');
     doc.setFontSize(fontSize - 2);
-    doc.text(
-      `Page 1 of ${pageCount}`,
-      margin,
-      doc.internal.pageSize.getHeight() - 10
-    );
+    doc.text(`Page 1 of ${pageCount}`, margin, doc.internal.pageSize.getHeight() - 10);
 
     // Generate PDF as Uint8Array
-    const pdfBytes = doc.output("arraybuffer") as ArrayBuffer;
+    const pdfBytes = doc.output('arraybuffer') as ArrayBuffer;
     const pdf = new Uint8Array(pdfBytes);
 
     return {
       success: true,
       pdf,
       filename: `invoice-${invoice.invoiceNumber}.pdf`,
-      mimeType: "application/pdf",
+      mimeType: 'application/pdf',
       generatedAt: new Date(),
     };
   } catch (err) {
     const errorMessage = err instanceof Error ? err.message : String(err);
     return {
       success: false,
-      error: "PDF generation failed",
+      error: 'PDF generation failed',
       details: errorMessage,
     };
   }
@@ -303,40 +292,38 @@ function formatPartyBlock(party: {
 /**
  * Validate invoice data for mandatory Article 226 fields
  */
-function validateInvoice(
-  invoice: Invoice
-): GenerationError | null {
+function validateInvoice(invoice: Invoice): GenerationError | null {
   const errors: string[] = [];
 
   // Check mandatory fields
-  if (!invoice.invoiceNumber || invoice.invoiceNumber.trim() === "") {
-    errors.push("Invoice number is required");
+  if (!invoice.invoiceNumber || invoice.invoiceNumber.trim() === '') {
+    errors.push('Invoice number is required');
   }
 
   if (!invoice.invoiceDate) {
-    errors.push("Invoice date is required");
+    errors.push('Invoice date is required');
   }
 
   if (!invoice.seller.vatNumber) {
-    errors.push("Seller VAT number is mandatory per Article 226");
+    errors.push('Seller VAT number is mandatory per Article 226');
   }
 
   if (!invoice.buyer.name) {
-    errors.push("Buyer name is required");
+    errors.push('Buyer name is required');
   }
 
   if (!invoice.buyer.address) {
-    errors.push("Buyer address is required");
+    errors.push('Buyer address is required');
   }
 
   if (invoice.lineItems.length === 0) {
-    errors.push("At least one line item is required");
+    errors.push('At least one line item is required');
   }
 
   // Check line item requirements
   for (let i = 0; i < invoice.lineItems.length; i++) {
     const item = invoice.lineItems[i];
-    if (!item.description || item.description.trim() === "") {
+    if (!item.description || item.description.trim() === '') {
       errors.push(`Line item ${i + 1}: Description is required`);
     }
     if (item.quantity < 0) {
@@ -349,18 +336,18 @@ function validateInvoice(
 
   // Check totals are positive
   if (invoice.totalNetAmount < 0) {
-    errors.push("Total net amount cannot be negative");
+    errors.push('Total net amount cannot be negative');
   }
 
   if (invoice.totalGrossAmount < invoice.totalNetAmount) {
-    errors.push("Total gross amount must be >= total net amount");
+    errors.push('Total gross amount must be >= total net amount');
   }
 
   if (errors.length > 0) {
     return {
       success: false,
-      error: "Invoice validation failed",
-      details: errors.join("; "),
+      error: 'Invoice validation failed',
+      details: errors.join('; '),
     };
   }
 

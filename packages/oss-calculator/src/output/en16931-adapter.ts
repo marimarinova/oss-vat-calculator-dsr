@@ -16,11 +16,7 @@
  * @license MIT
  */
 
-import {
-  UBLInvoiceAdapter,
-  UBLGenerationResult,
-  GenerationError,
-} from "./types";
+import { UBLInvoiceAdapter, UBLGenerationResult, GenerationError } from './types';
 
 /**
  * Generates a basic EN 16931 / UBL 2.1 XML invoice
@@ -39,7 +35,7 @@ import {
  * - Time-stamping service integration
  */
 export function generateUBLInvoice(
-  invoice: UBLInvoiceAdapter
+  invoice: UBLInvoiceAdapter,
 ): UBLGenerationResult | GenerationError {
   try {
     // Validate invoice structure
@@ -55,14 +51,14 @@ export function generateUBLInvoice(
       success: true,
       xml,
       filename: `invoice-${invoice.id}.xml`,
-      mimeType: "application/xml",
+      mimeType: 'application/xml',
       generatedAt: new Date(),
     };
   } catch (err) {
     const errorMessage = err instanceof Error ? err.message : String(err);
     return {
       success: false,
-      error: "UBL generation failed",
+      error: 'UBL generation failed',
       details: errorMessage,
     };
   }
@@ -74,15 +70,15 @@ export function generateUBLInvoice(
 function buildUBLXML(invoice: UBLInvoiceAdapter): string {
   const escapeXML = (text: string): string => {
     return text
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&apos;");
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&apos;');
   };
 
   const formatDate = (date: Date): string => {
-    return date.toISOString().split("T")[0];
+    return date.toISOString().split('T')[0];
   };
 
   const formatAmount = (amount: number): string => {
@@ -118,15 +114,15 @@ function buildUBLXML(invoice: UBLInvoiceAdapter): string {
         </cac:TaxSubtotal>
       </cac:TaxTotal>
     </cac:InvoiceLine>
-  `
+  `,
     )
-    .join("");
+    .join('');
 
   // Build seller party XML
-  const sellerXML = buildPartyXML(invoice.seller, "Seller");
+  const sellerXML = buildPartyXML(invoice.seller, 'Seller');
 
   // Build buyer party XML
-  const buyerXML = buildPartyXML(invoice.buyer, "Buyer");
+  const buyerXML = buildPartyXML(invoice.buyer, 'Buyer');
 
   // Assemble complete invoice XML
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -144,7 +140,7 @@ function buildUBLXML(invoice: UBLInvoiceAdapter): string {
   <cbc:ProfileID>${escapeXML(invoice.profileID)}</cbc:ProfileID>
   <cbc:ID>${escapeXML(invoice.id)}</cbc:ID>
   <cbc:IssueDate>${formatDate(invoice.issueDate)}</cbc:IssueDate>
-  ${invoice.dueDate ? `<cbc:DueDate>${formatDate(invoice.dueDate)}</cbc:DueDate>` : ""}
+  ${invoice.dueDate ? `<cbc:DueDate>${formatDate(invoice.dueDate)}</cbc:DueDate>` : ''}
   <cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
   <cbc:DocumentCurrencyCode>${escapeXML(invoice.documentCurrencyCode)}</cbc:DocumentCurrencyCode>
 
@@ -193,24 +189,24 @@ function buildPartyXML(
     country: string;
     vatNumber?: string;
   },
-  role: "Seller" | "Buyer"
+  role: 'Seller' | 'Buyer',
 ): string {
   const escapeXML = (text: string): string => {
     return text
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&apos;");
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&apos;');
   };
 
-  const elementName = role === "Seller" ? "AccountingSupplierParty" : "AccountingCustomerParty";
+  const elementName = role === 'Seller' ? 'AccountingSupplierParty' : 'AccountingCustomerParty';
 
   let partyXML = `  <cac:${elementName}>
     <cac:Party>
       <cbc:WebsiteURI/>
       <cac:PartyIdentification>
-        <cbc:ID>${party.vatNumber ? escapeXML(party.vatNumber) : "N/A"}</cbc:ID>
+        <cbc:ID>${party.vatNumber ? escapeXML(party.vatNumber) : 'N/A'}</cbc:ID>
       </cac:PartyIdentification>
       <cac:PartyName>
         <cbc:Name>${escapeXML(party.name)}</cbc:Name>
@@ -225,7 +221,7 @@ function buildPartyXML(
       </cac:PostalAddress>
     </cac:Party>`;
 
-  if (role === "Seller") {
+  if (role === 'Seller') {
     partyXML += `
     <cac:DespatchContact>
       <cbc:Telephone/>
@@ -246,35 +242,35 @@ function buildPartyXML(
 function validateUBLInvoice(invoice: UBLInvoiceAdapter): GenerationError | null {
   const errors: string[] = [];
 
-  if (!invoice.id || invoice.id.trim() === "") {
-    errors.push("Invoice ID is required");
+  if (!invoice.id || invoice.id.trim() === '') {
+    errors.push('Invoice ID is required');
   }
 
   if (!invoice.issueDate) {
-    errors.push("Issue date is required");
+    errors.push('Issue date is required');
   }
 
-  if (!invoice.documentCurrencyCode || invoice.documentCurrencyCode.trim() === "") {
-    errors.push("Document currency code is required");
+  if (!invoice.documentCurrencyCode || invoice.documentCurrencyCode.trim() === '') {
+    errors.push('Document currency code is required');
   }
 
-  if (!invoice.customizationID || invoice.customizationID.trim() === "") {
-    errors.push("Customization ID is required");
+  if (!invoice.customizationID || invoice.customizationID.trim() === '') {
+    errors.push('Customization ID is required');
   }
 
-  if (!invoice.profileID || invoice.profileID.trim() === "") {
-    errors.push("Profile ID is required");
+  if (!invoice.profileID || invoice.profileID.trim() === '') {
+    errors.push('Profile ID is required');
   }
 
   if (invoice.lineItems.length === 0) {
-    errors.push("At least one line item is required");
+    errors.push('At least one line item is required');
   }
 
   if (errors.length > 0) {
     return {
       success: false,
-      error: "UBL validation failed",
-      details: errors.join("; "),
+      error: 'UBL validation failed',
+      details: errors.join('; '),
     };
   }
 
@@ -319,8 +315,8 @@ export function convertToUBL(invoice: {
   currency: string;
 }): UBLInvoiceAdapter {
   return {
-    customizationID: "urn:cen.eu:en16931:2017#compliance#T0",
-    profileID: "urn:fdc:peppol.eu:2017:poacc:billing:01:1.0",
+    customizationID: 'urn:cen.eu:en16931:2017#compliance#T0',
+    profileID: 'urn:fdc:peppol.eu:2017:poacc:billing:01:1.0',
     id: invoice.invoiceNumber,
     issueDate: invoice.invoiceDate,
     documentCurrencyCode: invoice.currency,

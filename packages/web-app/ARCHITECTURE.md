@@ -6,16 +6,16 @@ The OSS VAT Calculator web application is a professional-grade React frontend fo
 
 ## Stack
 
-| Component | Technology | Version |
-|-----------|-----------|---------|
-| Framework | React | 18.2 |
-| Language | TypeScript | 5.0+ |
-| Build Tool | Vite | 5.0 |
-| Styling | Tailwind CSS | CDN |
-| Routing | React Router | 6.20 |
-| State | React Context | (built-in) |
-| Backend | Firebase | 10.7 (optional) |
-| Local Storage | Browser API | (fallback) |
+| Component     | Technology    | Version         |
+| ------------- | ------------- | --------------- |
+| Framework     | React         | 18.2            |
+| Language      | TypeScript    | 5.0+            |
+| Build Tool    | Vite          | 5.0             |
+| Styling       | Tailwind CSS  | CDN             |
+| Routing       | React Router  | 6.20            |
+| State         | React Context | (built-in)      |
+| Backend       | Firebase      | 10.7 (optional) |
+| Local Storage | Browser API   | (fallback)      |
 
 ## Project Structure
 
@@ -73,6 +73,7 @@ App.tsx (BrowserRouter)
 ## State Management (React Context)
 
 **AppContext** provides:
+
 - User authentication (sign up, sign in, logout)
 - Seller information (name, VAT ID, country, email)
 - Transactions (CRUD operations)
@@ -80,41 +81,39 @@ App.tsx (BrowserRouter)
 - Firebase status (cloud vs. demo mode)
 
 **Storage Backends**:
+
 1. **Firebase (Primary)**: Auth + Firestore persistence
 2. **localStorage (Fallback)**: Browser-based storage for demo mode
 
 ```typescript
 // Usage in components:
-const { 
-  user, 
-  transactions, 
-  addTransaction, 
-  filings 
-} = useAppContext();
+const { user, transactions, addTransaction, filings } = useAppContext();
 ```
 
 ## Data Models
 
 ### Transaction
+
 ```typescript
 interface StorageTransaction {
   id: string;
-  date: string;                      // ISO date
-  buyerCountry: string;              // 2-letter code
-  amount: number;                    // cents to avoid floats
-  currency: string;                  // ISO 4217
+  date: string; // ISO date
+  buyerCountry: string; // 2-letter code
+  amount: number; // cents to avoid floats
+  currency: string; // ISO 4217
   description: string;
   productType: 'goods' | 'services';
-  vatRate?: number;                  // percentage
-  timestamp: number;                 // Unix timestamp
+  vatRate?: number; // percentage
+  timestamp: number; // Unix timestamp
 }
 ```
 
 ### Filing
+
 ```typescript
 interface StorageFiling {
   id: string;
-  period: string;                    // YYYY-Q format
+  period: string; // YYYY-Q format
   status: 'draft' | 'submitted' | 'accepted' | 'rejected';
   createdAt: number;
   submittedAt?: number;
@@ -126,6 +125,7 @@ interface StorageFiling {
 ## Integration with Core Packages
 
 ### @oss-vat/oss-calculator
+
 - **TaxEngine**: Real-time VAT calculation (Calculator page)
 - **getMemberStateRates()**: Rate lookup for all 27 EU MS
 - **generatePDFInvoice()**: PDF export (Filing page)
@@ -142,11 +142,12 @@ const result = taxEngine.calculateVAT({
   amount: 100,
   currency: 'EUR',
   rateType: 'standard',
-  isGoods: true
+  isGoods: true,
 });
 ```
 
 ### @oss-vat/shared-core
+
 - **getAllMemberStates()**: Populate country dropdowns
 - **getMemberStateName()**: Display friendly names
 - **HMAC audit chain**: Status indicator (Settings page)
@@ -155,30 +156,35 @@ const result = taxEngine.calculateVAT({
 ## Design Principles Implementation
 
 ### DP1: Near-Zero Cost
+
 - **Metric**: Firebase free tier (2 MB Firestore, 10 GB downloads/month)
 - **UI**: Cloud vs. Local badge in Layout sidebar
 - **Fallback**: localStorage for demo mode (0 backend cost)
 - **Code**: `firebaseService.isDemoMode()` check in AppContext
 
 ### DP2: Audit Trail
+
 - **Metric**: HMAC-SHA256 chain via shared-core
 - **UI**: Status indicator in Settings page ("✓ Active")
 - **Transparency**: Shows that integrity is verified cryptographically
 - **Code**: `generateHMACChain()` called by backend on transaction save
 
 ### DP3: Data Lifecycle
+
 - **Metric**: Taxonomy stages (Draft → Processing → Filed)
 - **UI**: Status badges in Filing history, Dashboard indicators
 - **Persistence**: Timestamps for each stage transition
 - **Code**: `status` field in StorageFiling, AppContext state
 
 ### DP4: Deterministic Calculation
+
 - **Metric**: EU VAT rate tables (TAXUD Q1 2026)
 - **UI**: Calculator page shows rate source and version
 - **Transparency**: Rate lookup is deterministic and reproducible
 - **Code**: `TaxEngine.calculateVAT()` uses getMemberStateRates() with date-based lookup
 
 ### DP5: Portal-Aligned Output
+
 - **Metric**: CSV matches NAP Bulgaria sections 2A–2D exactly
 - **UI**: "Export CSV for NAP" button, preview table
 - **Forward Compatibility**: UBL 2.1/EN 16931 support for ViDA (2025)
@@ -240,16 +246,19 @@ Load seller info + transactions from storage
 ## Testing Strategy
 
 ### Unit Testing (Future)
+
 - Component logic with React Testing Library
 - Context hooks with @testing-library/react-hooks
 - Storage service with localStorage mocks
 
 ### Integration Testing (Future)
+
 - Transaction CRUD workflow
 - Filing generation and export
 - Form validation and error handling
 
 ### Manual Testing (Current)
+
 1. Login/signup with demo mode
 2. Add transactions with various currencies/countries
 3. Calculate VAT and verify rates
@@ -260,17 +269,20 @@ Load seller info + transactions from storage
 ## Deployment
 
 ### Development
+
 ```bash
 pnpm dev --filter web-app
 ```
 
 ### Production Build
+
 ```bash
 pnpm build --filter web-app
 # Output: packages/web-app/dist/
 ```
 
 ### Hosting Options
+
 1. **Vercel**: Native Vite support, zero config
 2. **Firebase Hosting**: Integrated with Firestore backend
 3. **Netlify**: Git-based continuous deployment
@@ -294,6 +306,7 @@ pnpm build --filter web-app
 ## Known Limitations & Future Work
 
 ### Current
+
 - CSV export is simulated (calls would be to oss-calculator)
 - No multi-language (EN only; BG planned)
 - Currency conversion uses mock rates (real ECB API pending)
@@ -301,6 +314,7 @@ pnpm build --filter web-app
 - No email notifications
 
 ### Planned
+
 1. **Real CSV Export**: Integrate generateNAPExportCSV()
 2. **PDF Generation**: Call generatePDFInvoice() with actual data
 3. **UBL Export**: Implement convertToUBL() button
@@ -315,11 +329,13 @@ pnpm build --filter web-app
 ## Monitoring & Logging
 
 ### Development
+
 - React DevTools extension
 - Vite dev server with HMR
 - Browser DevTools (Network, Console, Application tabs)
 
 ### Production
+
 - Firebase Analytics
 - Sentry for error tracking (future)
 - Custom error boundaries (future)

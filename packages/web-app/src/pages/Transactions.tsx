@@ -9,8 +9,7 @@ import { TransactionForm } from '../components/TransactionForm';
 import { getMemberStateName } from '@oss-vat/shared-core';
 
 export const Transactions: React.FC = () => {
-  const { transactions, addTransaction, updateTransaction, deleteTransaction } =
-    useAppContext();
+  const { transactions, addTransaction, updateTransaction, deleteTransaction } = useAppContext();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [filterCountry, setFilterCountry] = useState<string>('');
   const [searchTerm, setSearchTerm] = useState('');
@@ -52,7 +51,7 @@ export const Transactions: React.FC = () => {
   const totalNet = filteredTransactions.reduce((sum, tx) => sum + tx.amount, 0);
   const totalVat = filteredTransactions.reduce(
     (sum, tx) => sum + (tx.amount * (tx.vatRate || 19)) / 100,
-    0
+    0,
   );
 
   return (
@@ -60,9 +59,7 @@ export const Transactions: React.FC = () => {
       {/* Page Title */}
       <div>
         <h1 className="text-3xl font-bold text-gray-900">Transactions</h1>
-        <p className="text-gray-500 mt-1">
-          Manage your cross-border B2C transactions
-        </p>
+        <p className="text-gray-500 mt-1">Manage your cross-border B2C transactions</p>
       </div>
 
       {/* Add Transaction Form */}
@@ -89,9 +86,7 @@ export const Transactions: React.FC = () => {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Search
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
             <input
               type="text"
               value={searchTerm}
@@ -119,9 +114,7 @@ export const Transactions: React.FC = () => {
         <div className="grid grid-cols-3 gap-4 bg-white rounded-lg border border-gray-200 p-4">
           <div>
             <p className="text-xs font-medium text-gray-500">TRANSACTIONS</p>
-            <p className="text-2xl font-bold text-gray-900">
-              {filteredTransactions.length}
-            </p>
+            <p className="text-2xl font-bold text-gray-900">{filteredTransactions.length}</p>
           </div>
           <div>
             <p className="text-xs font-medium text-gray-500">NET TOTAL (EUR)</p>
@@ -151,9 +144,7 @@ export const Transactions: React.FC = () => {
             <table className="w-full">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                    Date
-                  </th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Date</th>
                   <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
                     Country
                   </th>
@@ -163,9 +154,7 @@ export const Transactions: React.FC = () => {
                   <th className="px-6 py-3 text-right text-sm font-semibold text-gray-700">
                     Amount
                   </th>
-                  <th className="px-6 py-3 text-right text-sm font-semibold text-gray-700">
-                    VAT
-                  </th>
+                  <th className="px-6 py-3 text-right text-sm font-semibold text-gray-700">VAT</th>
                   <th className="px-6 py-3 text-center text-sm font-semibold text-gray-700">
                     Type
                   </th>
@@ -176,10 +165,7 @@ export const Transactions: React.FC = () => {
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {filteredTransactions
-                  .sort(
-                    (a, b) =>
-                      new Date(b.date).getTime() - new Date(a.date).getTime()
-                  )
+                  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
                   .map((tx) => {
                     const vatAmount = (tx.amount * (tx.vatRate || 19)) / 100;
                     return (
@@ -215,8 +201,7 @@ export const Transactions: React.FC = () => {
                                 : 'bg-green-100 text-green-700'
                             }`}
                           >
-                            {tx.productType === 'goods' ? '📦' : '🔧'}{' '}
-                            {tx.productType}
+                            {tx.productType === 'goods' ? '📦' : '🔧'} {tx.productType}
                           </span>
                         </td>
                         <td className="px-6 py-4 text-center text-sm">

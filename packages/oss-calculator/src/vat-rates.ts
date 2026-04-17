@@ -294,7 +294,7 @@ export function getMemberStateRates(countryCode: string): MemberStateRates | nul
 export function getVATRate(
   countryCode: string,
   rateType: 'standard' | 'reduced' | 'super-reduced',
-  asOfDate: Date
+  asOfDate: Date,
 ): number | null {
   const msRates = getMemberStateRates(countryCode);
   if (!msRates) return null;
@@ -316,9 +316,7 @@ export function getVATRate(
 
   // Find the effective rate as of the given date
   const effectiveRate = rateArray.find(
-    (r) =>
-      r.effectiveFrom <= asOfDate &&
-      (!r.effectiveTo || r.effectiveTo >= asOfDate)
+    (r) => r.effectiveFrom <= asOfDate && (!r.effectiveTo || r.effectiveTo >= asOfDate),
   );
 
   return effectiveRate?.rate ?? null;
@@ -332,7 +330,7 @@ export function verifyVATRate(
   countryCode: string,
   rateType: 'standard' | 'reduced' | 'super-reduced',
   expectedRate: number,
-  asOfDate: Date
+  asOfDate: Date,
 ): boolean {
   const actualRate = getVATRate(countryCode, rateType, asOfDate);
   return actualRate === expectedRate;

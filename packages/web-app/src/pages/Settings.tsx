@@ -22,9 +22,7 @@ export const Settings: React.FC = () => {
     }
   }, [sellerInfo]);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -44,7 +42,9 @@ export const Settings: React.FC = () => {
       {/* Page Title */}
       <div>
         <h1 className="text-3xl font-bold text-gray-900">Settings</h1>
-        <p className="text-gray-500 mt-1">Manage your seller information and system configuration</p>
+        <p className="text-gray-500 mt-1">
+          Manage your seller information and system configuration
+        </p>
       </div>
 
       {/* Seller Information Form */}
@@ -53,9 +53,7 @@ export const Settings: React.FC = () => {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Business Name
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Business Name</label>
             <input
               type="text"
               name="name"
@@ -81,9 +79,7 @@ export const Settings: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Home Country
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Home Country</label>
             <select
               name="country"
               value={formData.country}
@@ -104,9 +100,7 @@ export const Settings: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Contact Email
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Contact Email</label>
             <input
               type="email"
               name="email"
@@ -173,9 +167,7 @@ export const Settings: React.FC = () => {
           <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200">
             <div>
               <p className="font-medium text-gray-900">Data Lifecycle Taxonomy</p>
-              <p className="text-sm text-gray-600">
-                Draft → Processing → Filed (DP3)
-              </p>
+              <p className="text-sm text-gray-600">Draft → Processing → Filed (DP3)</p>
             </div>
             <span className="px-4 py-2 rounded-lg font-semibold text-white bg-blue-600">
               Processing
@@ -186,9 +178,7 @@ export const Settings: React.FC = () => {
           <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200">
             <div>
               <p className="font-medium text-gray-900">VAT Engine Version</p>
-              <p className="text-sm text-gray-600">
-                EU VAT tables Q1 2026 (TAXUD source)
-              </p>
+              <p className="text-sm text-gray-600">EU VAT tables Q1 2026 (TAXUD source)</p>
             </div>
             <span className="px-4 py-2 rounded-lg font-semibold text-white bg-blue-600">
               v0.1.0
@@ -199,9 +189,7 @@ export const Settings: React.FC = () => {
           <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200">
             <div>
               <p className="font-medium text-gray-900">Output Formats</p>
-              <p className="text-sm text-gray-600">
-                PDF, CSV (NAP), UBL 2.1/EN 16931 (DP5)
-              </p>
+              <p className="text-sm text-gray-600">PDF, CSV (NAP), UBL 2.1/EN 16931 (DP5)</p>
             </div>
             <span className="px-4 py-2 rounded-lg font-semibold text-white bg-green-600">
               ✓ Ready
@@ -218,40 +206,40 @@ export const Settings: React.FC = () => {
           <div>
             <p className="font-semibold">DP1: Near-Zero Cost</p>
             <p>
-              Firebase free tier (2 MB Firestore, 10 GB downloads/month) with localStorage
-              fallback for demo mode.
+              Firebase free tier (2 MB Firestore, 10 GB downloads/month) with localStorage fallback
+              for demo mode.
             </p>
           </div>
 
           <div>
             <p className="font-semibold">DP2: Audit Trail</p>
             <p>
-              HMAC-SHA256 chain ensures transaction integrity and provides cryptographic
-              proof for regulatory compliance.
+              HMAC-SHA256 chain ensures transaction integrity and provides cryptographic proof for
+              regulatory compliance.
             </p>
           </div>
 
           <div>
             <p className="font-semibold">DP3: Data Lifecycle</p>
             <p>
-              Structured taxonomy tracks records from draft through processing to filed
-              status with timestamps.
+              Structured taxonomy tracks records from draft through processing to filed status with
+              timestamps.
             </p>
           </div>
 
           <div>
             <p className="font-semibold">DP4: Deterministic Calculation</p>
             <p>
-              All VAT rates sourced from European Commission TAXUD tables with effective
-              date tracking for reproducibility.
+              All VAT rates sourced from European Commission TAXUD tables with effective date
+              tracking for reproducibility.
             </p>
           </div>
 
           <div>
             <p className="font-semibold">DP5: Portal-Aligned Output</p>
             <p>
-              CSV exports match NAP Bulgaria sections 2A–2D exactly. UBL 2.1/EN 16931
-              support ensures ViDA (2025) forward compatibility.
+              CSV exports match NAP Bulgaria sections 2A–2D exactly. UBL 2.1/EN 16931 support
+              ensures ViDA (2025) forward compatibility.
             </p>
           </div>
         </div>
@@ -268,8 +256,7 @@ export const Settings: React.FC = () => {
             <strong>Backend:</strong> Firebase Auth + Firestore (or localStorage fallback)
           </p>
           <p>
-            <strong>Monorepo:</strong> pnpm workspaces with shared-core and oss-calculator
-            packages
+            <strong>Monorepo:</strong> pnpm workspaces with shared-core and oss-calculator packages
           </p>
           <p>
             <strong>Repository:</strong> github.com/marimarinova/oss-vat-calculator

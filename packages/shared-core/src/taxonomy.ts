@@ -143,7 +143,7 @@ export function pseudonymiseBuyerName(fullName: string, salt: string): string {
     let hash = 0;
     const combined = salt + fullName;
     for (let i = 0; i < combined.length; i++) {
-      hash = ((hash << 5) - hash) + combined.charCodeAt(i);
+      hash = (hash << 5) - hash + combined.charCodeAt(i);
       hash = hash & hash;
     }
     return `BUYER-${Math.abs(hash).toString(16).padStart(16, '0')}`;
@@ -192,7 +192,7 @@ export function hashVatId(vatId: string, salt: string): string {
     let hash = 0;
     const combined = salt + vatId;
     for (let i = 0; i < combined.length; i++) {
-      hash = ((hash << 5) - hash) + combined.charCodeAt(i);
+      hash = (hash << 5) - hash + combined.charCodeAt(i);
       hash = hash & hash;
     }
     return `VAT-${Math.abs(hash).toString(16).padStart(16, '0')}`;
@@ -209,7 +209,7 @@ export function hashVatId(vatId: string, salt: string): string {
 export function transformToArchival(
   originalData: Record<string, unknown>,
   buyerVatId: string,
-  sellerSalt: string
+  sellerSalt: string,
 ): LifecycleTransformedData {
   const transformed = { ...originalData };
   const transformations: TransformationLog[] = [];
@@ -229,7 +229,7 @@ export function transformToArchival(
   if (transformed.address && transformed.country && typeof transformed.country === 'string') {
     transformed.address = truncateAddressToCountry(
       String(transformed.address),
-      String(transformed.country)
+      String(transformed.country),
     );
     transformations.push({
       name: 'truncate_address_to_country',
@@ -274,7 +274,7 @@ export function transformToArchival(
  * @returns Anonymised data with all identifiers removed
  */
 export function transformToAnonymised(
-  originalData: Record<string, unknown>
+  originalData: Record<string, unknown>,
 ): LifecycleTransformedData {
   const timestamp = Date.now();
   // Keep only aggregated, non-identifying fields
@@ -329,7 +329,7 @@ export function getLifecyclePolicy(stage: DataLifecycleStage): LifecyclePolicy {
  */
 export function calculateNextTransitionTime(
   transitionedAt: number,
-  currentStage: DataLifecycleStage
+  currentStage: DataLifecycleStage,
 ): number | null {
   const policy = getLifecyclePolicy(currentStage);
 

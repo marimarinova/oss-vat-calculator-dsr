@@ -39,9 +39,7 @@ export const VatSummaryCard: React.FC<VatSummaryCardProps> = ({
       : value.toLocaleString('en-US');
 
   return (
-    <div
-      className={`p-6 rounded-lg border ${colorClasses[color]} ${colorClasses[color]}`}
-    >
+    <div className={`p-6 rounded-lg border ${colorClasses[color]} ${colorClasses[color]}`}>
       <div className="flex items-start justify-between">
         <div>
           <p className="text-sm font-medium text-gray-600 mb-2">{title}</p>

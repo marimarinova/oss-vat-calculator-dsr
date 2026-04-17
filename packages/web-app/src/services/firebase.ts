@@ -4,11 +4,7 @@
  * Design Principle 1: Near-zero cost via Firebase free tier
  */
 
-import {
-  initializeApp,
-  FirebaseApp,
-  FirebaseOptions,
-} from 'firebase/app';
+import { initializeApp, FirebaseApp, FirebaseOptions } from 'firebase/app';
 import {
   getAuth,
   Auth,
@@ -65,9 +61,7 @@ export class FirebaseService {
           : null);
 
       if (!firebaseConfig) {
-        console.warn(
-          'Firebase not configured. Running in demo mode with localStorage only.'
-        );
+        console.warn('Firebase not configured. Running in demo mode with localStorage only.');
         this.demoMode = true;
         return;
       }
@@ -89,11 +83,7 @@ export class FirebaseService {
   // Auth Methods
   async signUp(email: string, password: string): Promise<User> {
     if (!this.auth) throw new Error('Firebase not initialized');
-    const result = await createUserWithEmailAndPassword(
-      this.auth,
-      email,
-      password
-    );
+    const result = await createUserWithEmailAndPassword(this.auth, email, password);
     return result.user;
   }
 
@@ -132,7 +122,7 @@ export class FirebaseService {
   async saveData<T extends DocumentData>(
     collectionName: string,
     docId: string,
-    data: T
+    data: T,
   ): Promise<void> {
     if (this.demoMode) {
       const key = `${collectionName}:${docId}`;
@@ -146,7 +136,7 @@ export class FirebaseService {
 
   async queryData<T extends DocumentData>(
     collectionName: string,
-    constraints: QueryConstraint[]
+    constraints: QueryConstraint[],
   ): Promise<QueryDocumentSnapshot<T, DocumentData>[]> {
     if (this.demoMode) {
       // Simple localStorage-based query (supports basic field equality)
@@ -180,10 +170,7 @@ export class FirebaseService {
     return snapshot.docs;
   }
 
-  private evaluateConstraint(
-    data: DocumentData,
-    constraint: QueryConstraint
-  ): boolean {
+  private evaluateConstraint(data: DocumentData, constraint: QueryConstraint): boolean {
     // Simplified constraint evaluation for demo mode
     // In production, use proper Firestore query evaluation
     return true;

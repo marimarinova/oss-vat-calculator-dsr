@@ -10,13 +10,14 @@ User-facing frontend for micro-enterprise cross-border VAT compliance. Part of t
 - **Routing**: React Router v6
 - **State Management**: React Context (useContext + useState)
 - **Backend**: Firebase Auth + Firestore (with localStorage fallback)
-- **Dependencies**: 
+- **Dependencies**:
   - `@oss-vat/oss-calculator` — VAT rate tables, tax engine, output generators
   - `@oss-vat/shared-core` — HMAC audit chain, data lifecycle taxonomy
 
 ## Features
 
 ### 1. Dashboard
+
 - Summary cards: transaction count, net amount, VAT liability, threshold status
 - Quick stats by Member State (top 5)
 - Threshold alert (EUR 10,000 OSS registration limit)
@@ -24,6 +25,7 @@ User-facing frontend for micro-enterprise cross-border VAT compliance. Part of t
 - Design Principles reference
 
 ### 2. Transactions
+
 - Add single transactions with buyer country, amount, currency, description
 - Edit/delete functionality
 - Filter by country and search by description
@@ -31,6 +33,7 @@ User-facing frontend for micro-enterprise cross-border VAT compliance. Part of t
 - Aggregate statistics (net total, VAT liability)
 
 ### 3. VAT Calculator
+
 - Real-time calculation with EU VAT rate tables
 - Currency conversion support (EUR, USD, GBP, BGN)
 - Standard/reduced/super-reduced rate selection
@@ -38,6 +41,7 @@ User-facing frontend for micro-enterprise cross-border VAT compliance. Part of t
 - Multi-currency member state rate lookup
 
 ### 4. Filing / OSS Return
+
 - Quarterly return view (Q1–Q4, 2 years)
 - Transaction aggregation by Member State
 - NAP Bulgaria format preview (sections 2A–2D)
@@ -48,6 +52,7 @@ User-facing frontend for micro-enterprise cross-border VAT compliance. Part of t
 - Filing history with status tracking (draft, submitted, accepted, rejected)
 
 ### 5. Settings
+
 - Seller information (name, VAT ID, country, email)
 - System status monitoring:
   - Data storage (Cloud vs. Local)
@@ -61,27 +66,32 @@ User-facing frontend for micro-enterprise cross-border VAT compliance. Part of t
 ## Design Principles (DSR)
 
 ### DP1: Near-Zero Cost
+
 - Firebase free tier: 2 MB Firestore, 10 GB downloads/month
 - localStorage fallback for demo mode (no server cost)
 - Responsive UI for desktop-first accounting users
 
 ### DP2: Audit Trail
+
 - HMAC-SHA256 chain via `@oss-vat/shared-core`
 - Cryptographic proof for transaction integrity
 - Displayed in Settings for transparency
 
 ### DP3: Data Lifecycle
+
 - Taxonomy: Draft → Processing → Filed
 - Timestamp tracking for each stage
 - Status indicator in Dashboard and Filing views
 
 ### DP4: Deterministic Calculation
+
 - EU VAT rate tables (Q1 2026, TAXUD source)
 - Rate version tracking in UI
 - Reproducible results across sessions
 - Transparent rate source attribution
 
 ### DP5: Portal-Aligned Output
+
 - CSV exports match NAP Bulgaria sections 2A–2D exactly
 - PDF uses Article 226 TFEU format
 - UBL 2.1/EN 16931 support for ViDA (2025) compatibility
@@ -90,6 +100,7 @@ User-facing frontend for micro-enterprise cross-border VAT compliance. Part of t
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js ≥20.0.0
 - pnpm ≥9.0.0
 
@@ -126,6 +137,7 @@ pnpm build --filter web-app
 ## Demo Mode
 
 If Firebase is not configured, the app runs in **demo mode** using localStorage:
+
 - User authentication is simulated
 - All data persists in browser storage
 - Perfect for reviewers and testing without backend setup
@@ -176,6 +188,7 @@ packages/web-app/
 ## Integration Points
 
 ### With @oss-vat/oss-calculator
+
 - `TaxEngine.calculateVAT()` → Calculator page
 - `getMemberStateRates()` → TransactionForm, Calculator
 - `generatePDFInvoice()` → Filing page (button)
@@ -183,6 +196,7 @@ packages/web-app/
 - `convertToUBL()` → Filing page (export)
 
 ### With @oss-vat/shared-core
+
 - `getAllMemberStates()` → Country dropdowns
 - `getMemberStateName()` → Display labels
 - HMAC audit chain → Settings status badge

@@ -50,7 +50,7 @@ const invoice = {
   invoiceNumber: 'INV-2024-001',
   invoiceDate: new Date('2024-01-15'),
   supplyDate: new Date('2024-01-10'), // optional
-  
+
   seller: {
     name: 'TechCorp Bulgaria',
     address: 'ul. Aleksandar Batenberg 57',
@@ -59,7 +59,7 @@ const invoice = {
     country: 'Bulgaria',
     vatNumber: 'BG202024680', // REQUIRED per Article 226
   },
-  
+
   buyer: {
     name: 'GmbH Company',
     address: 'Hauptstraße 100',
@@ -68,7 +68,7 @@ const invoice = {
     country: 'Germany',
     vatNumber: 'DE123456789', // required for B2B
   },
-  
+
   lineItems: [
     {
       description: 'Web Development Services',
@@ -80,7 +80,7 @@ const invoice = {
       grossAmount: 2380,
     },
   ],
-  
+
   totalNetAmount: 2000,
   totalVATAmount: 380,
   totalGrossAmount: 2380,
@@ -100,11 +100,11 @@ if (result.success) {
   // result.pdf is a Uint8Array containing PDF binary
   // result.filename is 'invoice-INV-2024-001.pdf'
   // result.mimeType is 'application/pdf'
-  
+
   // Save to file (Node.js)
   const fs = require('fs');
   fs.writeFileSync(result.filename, Buffer.from(result.pdf));
-  
+
   // Or: Download in browser
   const blob = new Blob([result.pdf], { type: 'application/pdf' });
   const url = URL.createObjectURL(blob);
@@ -118,6 +118,7 @@ if (result.success) {
 ### Validation
 
 The PDF generator performs comprehensive validation:
+
 - Seller VAT number is mandatory (Article 226)
 - All required fields are non-empty
 - VAT rates are in valid range (0-100%)
@@ -129,7 +130,7 @@ The PDF generator performs comprehensive validation:
 ```typescript
 const result = await generatePDFInvoice(invoice);
 if (!result.success) {
-  console.error(result.error);   // "PDF generation failed"
+  console.error(result.error); // "PDF generation failed"
   console.error(result.details); // Specific validation errors
 }
 ```
@@ -145,12 +146,14 @@ Generates CSV files formatted for the Bulgarian National Revenue Agency (NAP) OS
 ### NAP Specifications
 
 #### Sections
+
 - **2A:** Services supplied from Bulgaria
 - **2B:** Goods supplied from Bulgaria
 - **2C:** Services supplied from other Member States
 - **2D:** Goods supplied from other Member States
 
 #### Format Requirements
+
 - **Decimal separator:** Period (`.`) per NAP spec
 - **Date format:** `dd.mm.yyyy`
 - **Encoding:** UTF-8
@@ -230,6 +233,7 @@ if (result.success) {
 ### Aggregation Helper
 
 `aggregateToNAPRows()` automatically:
+
 - Groups items by section and member state
 - Sums taxable amounts and VAT amounts
 - Validates VAT rate consistency per group
@@ -237,6 +241,7 @@ if (result.success) {
 ### Validation
 
 The CSV exporter validates:
+
 - Report period: quarter is 1-4, year is ≥2015
 - Member state codes: 2-letter ISO 3166-1 alpha-2
 - Section codes: Must be 2A, 2B, 2C, or 2D
@@ -264,6 +269,7 @@ Provides a forward-compatibility skeleton for EU ViDA (VAT in the Digital Age) c
 ### Current Implementation
 
 The adapter generates basic UBL 2.1 XML with:
+
 - ✓ Proper XML structure and namespaces
 - ✓ EN 16931 semantic data model
 - ✓ Mandatory invoice elements
@@ -275,6 +281,7 @@ The adapter generates basic UBL 2.1 XML with:
 ### Future Capabilities (Deferred to 2035)
 
 Not yet implemented but placeholders for:
+
 - Electronic signature support (XAdES)
 - Time-stamping service integration
 - Audit trail for ViDA compliance
@@ -327,7 +334,9 @@ const ubl = {
 const result = generateUBLInvoice(ubl);
 
 // Option 2: Convert from standard Invoice type
-const invoice = { /* Invoice type */ };
+const invoice = {
+  /* Invoice type */
+};
 const ublAdapted = convertToUBL(invoice);
 const resultConverted = generateUBLInvoice(ublAdapted);
 
@@ -335,7 +344,7 @@ if (result.success) {
   // result.xml contains UBL 2.1 XML text
   // result.filename is 'invoice-INV-2024-001.xml'
   console.log(result.xml);
-  
+
   // Save XML
   const fs = require('fs');
   fs.writeFileSync(result.filename, result.xml, 'utf-8');
@@ -345,6 +354,7 @@ if (result.success) {
 ### XML Structure
 
 Generated XML includes:
+
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" ...>
@@ -363,6 +373,7 @@ Generated XML includes:
 ### Validation
 
 The UBL adapter validates:
+
 - Invoice ID is present
 - Issue date is provided
 - Currency code is valid ISO 4217
@@ -447,6 +458,7 @@ interface GenerationError {
 All three generators are covered by comprehensive vitest test suites:
 
 ### PDF Invoice Tests (`pdf-invoice.test.ts`)
+
 - Validates Article 226 compliance
 - Tests all mandatory fields
 - Checks VAT calculations
@@ -454,6 +466,7 @@ All three generators are covered by comprehensive vitest test suites:
 - Tests error cases
 
 ### CSV NAP Tests (`csv-nap-export.test.ts`)
+
 - Validates NAP format requirements
 - Tests aggregation logic
 - Checks decimal separator handling
@@ -461,6 +474,7 @@ All three generators are covered by comprehensive vitest test suites:
 - Tests rounding tolerance
 
 ### UBL Adapter Tests (`en16931-adapter.test.ts`)
+
 - Validates XML structure
 - Checks PEPPOL compliance
 - Tests XML special character escaping
@@ -482,24 +496,28 @@ npm run test
 ## Design Decisions
 
 ### 1. PDF Generation
+
 - Uses `jspdf` library (2.5 KB, widely adopted)
 - Works in Node.js and browser
 - No external dependencies for content generation
 - Template-based to allow customization
 
 ### 2. CSV Export
+
 - Pure TypeScript, no external dependencies
 - NAP portal alignment (Bulgarian specification)
 - Supports multiple delimiters and decimal formats
 - Aggregation helper for multi-line consolidation
 
 ### 3. EN 16931 Adapter
+
 - Template string-based XML generation
 - No heavy XML library required
 - Forward-compatible skeleton design
 - Ready for ViDA requirements (2035)
 
 ### 4. Type Safety
+
 - Full TypeScript with strict mode enabled
 - Discriminated union types for results
 - Comprehensive validation before generation
@@ -512,6 +530,7 @@ npm run test
 This Layer 3 implementation is part of the **Design Science Research (DSR) artefact** for Springer academic publication, authored by Marieta Marinova (PhD Accounting, Sofia University).
 
 **Design Principle 5:** Portal-aligned output with forward compatibility ensures that VAT calculation results can be efficiently exported to:
+
 - Tax authorities (Bulgarian NAP portal)
 - Invoicing systems (PDF, ISO-compliant)
 - Digital governance frameworks (UBL/ViDA ready)

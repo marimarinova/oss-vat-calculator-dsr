@@ -11,7 +11,7 @@ export class VATCalculationError extends Error {
   constructor(
     message: string,
     public readonly code: string,
-    public readonly context?: Record<string, unknown>
+    public readonly context?: Record<string, unknown>,
   ) {
     super(message);
     this.name = 'VATCalculationError';
@@ -27,9 +27,9 @@ export class MissingCountryCodeError extends VATCalculationError {
     const code = countryCode || 'UNDEFINED';
     super(
       `Missing or invalid country code: "${code}" for transaction "${transactionId}". ` +
-      `Country code must be a valid 2-letter ISO 3166-1 alpha-2 code for an EU Member State.`,
+        `Country code must be a valid 2-letter ISO 3166-1 alpha-2 code for an EU Member State.`,
       'MISSING_COUNTRY_CODE',
-      { countryCode, transactionId }
+      { countryCode, transactionId },
     );
   }
 }
@@ -45,14 +45,14 @@ export class RateMismatchError extends VATCalculationError {
     rateType: 'standard' | 'reduced' | 'super-reduced',
     expectedRate: number,
     actualRate: number,
-    effectiveDate: Date
+    effectiveDate: Date,
   ) {
     super(
       `VAT rate mismatch for ${countryCode} (${rateType}): ` +
-      `expected ${expectedRate}% but found ${actualRate}% as of ${effectiveDate.toISOString()}. ` +
-      `Rate table may be stale or effective date is outside valid range.`,
+        `expected ${expectedRate}% but found ${actualRate}% as of ${effectiveDate.toISOString()}. ` +
+        `Rate table may be stale or effective date is outside valid range.`,
       'RATE_MISMATCH',
-      { countryCode, rateType, expectedRate, actualRate, effectiveDate }
+      { countryCode, rateType, expectedRate, actualRate, effectiveDate },
     );
   }
 }
@@ -68,13 +68,13 @@ export class CurrencyRoundingError extends VATCalculationError {
     sourceDecimalPlaces: number,
     targetDecimalPlaces: number,
     ecbConventionPlaces: number,
-    currency: string
+    currency: string,
   ) {
     super(
       `Currency rounding divergence for ${currency}: ` +
-      `source had ${sourceDecimalPlaces} decimal places, target has ${targetDecimalPlaces}, ` +
-      `but ECB convention specifies ${ecbConventionPlaces} for this currency. ` +
-      `Original amount: ${originalAmount}. Conversion may have lost precision.`,
+        `source had ${sourceDecimalPlaces} decimal places, target has ${targetDecimalPlaces}, ` +
+        `but ECB convention specifies ${ecbConventionPlaces} for this currency. ` +
+        `Original amount: ${originalAmount}. Conversion may have lost precision.`,
       'CURRENCY_ROUNDING_DIVERGENCE',
       {
         originalAmount,
@@ -82,7 +82,7 @@ export class CurrencyRoundingError extends VATCalculationError {
         targetDecimalPlaces,
         ecbConventionPlaces,
         currency,
-      }
+      },
     );
   }
 }
@@ -95,7 +95,7 @@ export class InvalidVATRateError extends VATCalculationError {
     super(
       `Invalid VAT rate: ${rate}%. Rate must be a non-negative number and typically between 0% and 30%.`,
       'INVALID_VAT_RATE',
-      { rate }
+      { rate },
     );
   }
 }
@@ -107,9 +107,9 @@ export class ECBRateNotFoundError extends VATCalculationError {
   constructor(sourceCurrency: string, targetCurrency: string, date: Date) {
     super(
       `ECB exchange rate not found: ${sourceCurrency}/${targetCurrency} as of ${date.toISOString()}. ` +
-      `Ensure ECB rate tables are loaded for the requested date.`,
+        `Ensure ECB rate tables are loaded for the requested date.`,
       'ECB_RATE_NOT_FOUND',
-      { sourceCurrency, targetCurrency, date }
+      { sourceCurrency, targetCurrency, date },
     );
   }
 }

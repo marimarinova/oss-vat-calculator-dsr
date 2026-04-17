@@ -44,9 +44,7 @@ export const Login: React.FC = () => {
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-blue-600 mb-2">VAT OS</h1>
           <p className="text-gray-600 text-lg">Cross-Border VAT Compliance</p>
-          <p className="text-sm text-gray-500 mt-2">
-            For EU micro-enterprises
-          </p>
+          <p className="text-sm text-gray-500 mt-2">For EU micro-enterprises</p>
         </div>
 
         {/* Card */}
@@ -64,9 +62,7 @@ export const Login: React.FC = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Email */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Email Address
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
               <input
                 type="email"
                 value={email}
@@ -79,9 +75,7 @@ export const Login: React.FC = () => {
 
             {/* Password */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Password
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
               <input
                 type="password"
                 value={password}
@@ -99,11 +93,7 @@ export const Login: React.FC = () => {
               disabled={isLoading}
               className="w-full px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isLoading
-                ? 'Loading...'
-                : isSignUp
-                  ? 'Create Account'
-                  : 'Sign In'}
+              {isLoading ? 'Loading...' : isSignUp ? 'Create Account' : 'Sign In'}
             </button>
           </form>
 
@@ -123,18 +113,15 @@ export const Login: React.FC = () => {
           {/* Demo Notice */}
           <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
             <p className="text-xs text-amber-800">
-              <strong>Demo Mode:</strong> If Firebase is not configured, data is stored
-              locally. Use any email/password to continue.
+              <strong>Demo Mode:</strong> If Firebase is not configured, data is stored locally. Use
+              any email/password to continue.
             </p>
           </div>
         </div>
 
         {/* Footer */}
         <div className="mt-8 text-center text-sm text-gray-600">
-          <p>
-            OSS VAT Calculator — Design Science Research artefact for Springer
-            publication
-          </p>
+          <p>OSS VAT Calculator — Design Science Research artefact for Springer publication</p>
         </div>
       </div>
     </div>

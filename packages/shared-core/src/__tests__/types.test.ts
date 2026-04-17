@@ -417,7 +417,7 @@ describe('Core Type Definitions', () => {
       expect(return_.countries.length).toBe(4);
       const totalTransactions = return_.countries.reduce(
         (sum, country) => sum + country.transactions.length,
-        0
+        0,
       );
       expect(totalTransactions).toBe(9);
     });

@@ -27,13 +27,11 @@ export const Dashboard: React.FC = () => {
     const netTotal = quarterlyTransactions.reduce((sum, tx) => sum + tx.amount, 0);
     const vatTotal = quarterlyTransactions.reduce(
       (sum, tx) => sum + (tx.amount * (tx.vatRate || 19)) / 100,
-      0
+      0,
     );
-    const goodsCount = quarterlyTransactions.filter(
-      (tx) => tx.productType === 'goods'
-    ).length;
+    const goodsCount = quarterlyTransactions.filter((tx) => tx.productType === 'goods').length;
     const servicesCount = quarterlyTransactions.filter(
-      (tx) => tx.productType === 'services'
+      (tx) => tx.productType === 'services',
     ).length;
 
     // Calculate by country
@@ -112,9 +110,7 @@ export const Dashboard: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Top Member States */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">
-            Top Member States
-          </h2>
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">Top Member States</h2>
           {topCountries.length > 0 ? (
             <div className="space-y-3">
               {topCountries.map(({ country, amount }, index) => (
@@ -148,9 +144,7 @@ export const Dashboard: React.FC = () => {
               <span className="text-sm font-medium text-gray-700">Data Storage</span>
               <span
                 className={`px-3 py-1 rounded-full text-xs font-medium ${
-                  isFirebaseEnabled
-                    ? 'bg-green-100 text-green-700'
-                    : 'bg-amber-100 text-amber-700'
+                  isFirebaseEnabled ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'
                 }`}
               >
                 {isFirebaseEnabled ? '☁️ Cloud' : '💾 Local'}
@@ -183,8 +177,8 @@ export const Dashboard: React.FC = () => {
         <h3 className="font-semibold text-blue-900 mb-3">Design Principles (DSR)</h3>
         <ul className="space-y-2 text-sm text-blue-800">
           <li>
-            <strong>DP1:</strong> Near-zero cost via Firebase free tier (2 MB Firestore,
-            local fallback available)
+            <strong>DP1:</strong> Near-zero cost via Firebase free tier (2 MB Firestore, local
+            fallback available)
           </li>
           <li>
             <strong>DP2:</strong> HMAC-SHA256 audit chain for transaction integrity
@@ -193,12 +187,12 @@ export const Dashboard: React.FC = () => {
             <strong>DP3:</strong> Data lifecycle taxonomy (draft → processing → filed)
           </li>
           <li>
-            <strong>DP4:</strong> Deterministic VAT calculation with transparent rate
-            sources (EU VAT tables Q1 2026)
+            <strong>DP4:</strong> Deterministic VAT calculation with transparent rate sources (EU
+            VAT tables Q1 2026)
           </li>
           <li>
-            <strong>DP5:</strong> Portal-aligned output (NAP Bulgaria sections 2A–2D,
-            EN 16931/UBL forward compatibility)
+            <strong>DP5:</strong> Portal-aligned output (NAP Bulgaria sections 2A–2D, EN 16931/UBL
+            forward compatibility)
           </li>
         </ul>
       </div>

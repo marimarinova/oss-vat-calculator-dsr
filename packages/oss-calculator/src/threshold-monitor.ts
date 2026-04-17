@@ -60,11 +60,7 @@ export class ThresholdMonitor {
    * Record a transaction amount in EUR
    * Returns updated threshold status
    */
-  public recordTransaction(
-    amountEUR: number,
-    month: number,
-    year: number
-  ): ThresholdStatus {
+  public recordTransaction(amountEUR: number, month: number, year: number): ThresholdStatus {
     if (amountEUR < 0) {
       throw new Error('Transaction amount must be non-negative');
     }
@@ -164,14 +160,8 @@ export class ThresholdMonitor {
     return OSS_REGISTRATION_THRESHOLD_EUR;
   }
 
-  private updateMonthlyBreakdown(
-    amountEUR: number,
-    month: number,
-    year: number
-  ): void {
-    const existing = this.state.monthlyBreakdown.find(
-      (m) => m.month === month && m.year === year
-    );
+  private updateMonthlyBreakdown(amountEUR: number, month: number, year: number): void {
+    const existing = this.state.monthlyBreakdown.find((m) => m.month === month && m.year === year);
 
     if (existing) {
       existing.totalEUR += amountEUR;
@@ -214,9 +204,7 @@ export class ThresholdMonitor {
     if (year === this.state.year) {
       const validMonths = quarterMonths[this.state.quarter as keyof typeof quarterMonths];
       if (!validMonths.includes(month)) {
-        throw new Error(
-          `Month ${month} is not in Q${this.state.quarter} of ${year}`
-        );
+        throw new Error(`Month ${month} is not in Q${this.state.quarter} of ${year}`);
       }
     }
   }
@@ -245,11 +233,7 @@ export class YearlyThresholdMonitor {
   /**
    * Record transaction for a specific quarter
    */
-  public recordTransaction(
-    amountEUR: number,
-    month: number,
-    year: number
-  ): ThresholdStatus {
+  public recordTransaction(amountEUR: number, month: number, year: number): ThresholdStatus {
     const quarter = this.getQuarterForMonth(month);
     const monitor = this.getOrCreateQuarter(quarter, year);
     return monitor.recordTransaction(amountEUR, month, year);

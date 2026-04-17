@@ -209,7 +209,7 @@ describe('HMAC-SHA256 Audit Chain', () => {
         const entry = createAuditEntry(
           { transactionId: `tx-${i}`, amount: i * 100 },
           currentHash,
-          testKey
+          testKey,
         );
         entries.push(entry);
         currentHash = entry.hash;
@@ -228,7 +228,7 @@ describe('HMAC-SHA256 Audit Chain', () => {
         const entry = createAuditEntry(
           { transactionId: `tx-${i}`, amount: i * 100 },
           currentHash,
-          testKey
+          testKey,
         );
         entries.push(entry);
         currentHash = entry.hash;

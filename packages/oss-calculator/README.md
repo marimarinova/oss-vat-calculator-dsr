@@ -14,6 +14,7 @@ Primary DSR artefact — automated cross-border VAT OSS compliance for EU micro-
 ## Architecture
 
 Three-layer pan-EU design:
+
 1. **Core engine** — tax calculation, schema, audit
 2. **National adapters** — NAP Bulgaria (primary), extensible to other MS
 3. **Localization** — i18n, currency, country name mappings

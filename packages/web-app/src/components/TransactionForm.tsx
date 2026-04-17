@@ -34,9 +34,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onSubmit }) =>
   const memberStates = getAllMemberStates();
 
   const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -49,7 +47,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onSubmit }) =>
     if (name === 'amount' || name === 'buyerCountry') {
       updateVatPreview(
         name === 'amount' ? parseFloat(value) : formData.amount,
-        name === 'buyerCountry' ? value : formData.buyerCountry
+        name === 'buyerCountry' ? value : formData.buyerCountry,
       );
     }
   };
@@ -109,9 +107,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onSubmit }) =>
       <div className="grid grid-cols-2 gap-4 mb-4">
         {/* Date */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Date
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Date</label>
           <input
             type="date"
             name="date"
@@ -121,16 +117,12 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onSubmit }) =>
               errors.date ? 'border-red-500' : 'border-gray-300'
             }`}
           />
-          {errors.date && (
-            <p className="text-red-500 text-xs mt-1">{errors.date}</p>
-          )}
+          {errors.date && <p className="text-red-500 text-xs mt-1">{errors.date}</p>}
         </div>
 
         {/* Buyer Country */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Buyer Country
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Buyer Country</label>
           <select
             name="buyerCountry"
             value={formData.buyerCountry}
@@ -154,9 +146,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onSubmit }) =>
       <div className="grid grid-cols-3 gap-4 mb-4">
         {/* Amount */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Amount
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Amount</label>
           <input
             type="number"
             name="amount"
@@ -168,16 +158,12 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onSubmit }) =>
               errors.amount ? 'border-red-500' : 'border-gray-300'
             }`}
           />
-          {errors.amount && (
-            <p className="text-red-500 text-xs mt-1">{errors.amount}</p>
-          )}
+          {errors.amount && <p className="text-red-500 text-xs mt-1">{errors.amount}</p>}
         </div>
 
         {/* Currency */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Currency
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Currency</label>
           <select
             name="currency"
             value={formData.currency}
@@ -193,9 +179,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onSubmit }) =>
 
         {/* Product Type */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Type
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Type</label>
           <select
             name="productType"
             value={formData.productType}
@@ -223,9 +207,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onSubmit }) =>
 
       {/* Description */}
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Description
-        </label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
         <textarea
           name="description"
           value={formData.description}
@@ -236,9 +218,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onSubmit }) =>
           }`}
           rows={3}
         ></textarea>
-        {errors.description && (
-          <p className="text-red-500 text-xs mt-1">{errors.description}</p>
-        )}
+        {errors.description && <p className="text-red-500 text-xs mt-1">{errors.description}</p>}
       </div>
 
       {/* Submit Button */}

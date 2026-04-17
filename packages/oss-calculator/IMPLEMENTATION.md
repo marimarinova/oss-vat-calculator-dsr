@@ -9,6 +9,7 @@ This is the **Layer 2: VAT Calculation Engine** for the OSS VAT Calculator, a De
 The engine is organized into six core modules:
 
 ### 1. **VAT Rate Tables** (`src/vat-rates.ts`)
+
 - **Purpose**: Store standard, reduced, and super-reduced rates for all 27 EU Member States
 - **Source**: European Commission TAXUD rate tables (Q1 2026)
 - **Key Features**:
@@ -19,6 +20,7 @@ The engine is organized into six core modules:
   - Support for historical rate tracking via effective dates
 
 **Implementation Details**:
+
 - All 27 MS included: AT, BE, BG, HR, CY, CZ, DK, EE, FI, FR, DE, EL, HU, IE, IT, LV, LT, LU, MT, NL, PL, PT, RO, SK, SI, ES, SE
 - Bulgaria (BG) as primary context: 20% standard rate
 - France, Ireland, Italy, Luxembourg, Spain support super-reduced rates
@@ -26,6 +28,7 @@ The engine is organized into six core modules:
 - All rates effective from 2020-01-01 (can be extended for historical tracking)
 
 ### 2. **Tax Calculation Engine** (`src/tax-engine.ts`)
+
 - **Purpose**: Apply destination-country rates to transactions and handle currency conversion
 - **Key Classes**:
   - `TaxEngine`: Main calculation orchestrator
@@ -33,6 +36,7 @@ The engine is organized into six core modules:
   - `VATCalculationResult`: Output structure (VAT amount, total, rate source)
 
 **Features**:
+
 - Deterministic calculation: Same input → Same output
 - Destination-country rate application
 - Currency conversion with ECB rates (configurable)
@@ -41,12 +45,14 @@ The engine is organized into six core modules:
 - Country rate information retrieval
 
 ### 3. **ECB Currency Conversion** (`src/ecb-rates.ts`)
+
 - **Purpose**: Manage exchange rates with ECB quarterly reference rates and rounding compliance
 - **Key Classes**:
   - `ECBRateProvider`: Rate registry with effective date ranges
   - `CurrencyConverter`: Conversion with ECB decimal place rounding
 
 **Features**:
+
 - Quarterly rate registration (`registerQuarterlyRates()`)
 - Identity rate for same currency
 - Historical rate lookup by date
@@ -55,12 +61,14 @@ The engine is organized into six core modules:
 - Default provider with Q1 2026 sample rates
 
 ### 4. **EUR 10,000 Threshold Monitor** (`src/threshold-monitor.ts`)
+
 - **Purpose**: Real-time monitoring of OSS registration threshold
 - **Key Classes**:
   - `ThresholdMonitor`: Per-quarter monitoring
   - `YearlyThresholdMonitor`: Multi-quarter tracking
 
 **Features**:
+
 - EUR 10,000 threshold constant
 - Transaction recording with date tracking
 - Status transitions (BELOW_THRESHOLD → AT_OR_ABOVE_THRESHOLD)
@@ -70,11 +78,13 @@ The engine is organized into six core modules:
 - Year-over-year threshold detection
 
 ### 5. **Quarterly Aggregation** (`src/quarterly-aggregator.ts`)
+
 - **Purpose**: Generate OSS VAT return matching NAP Bulgaria form structure
 - **Key Classes**:
   - `QuarterlyAggregator`: Main aggregation engine
 
 **Features**:
+
 - Four-section aggregation (2A, 2B, 2C, 2D):
   - **Section 2A**: Services supplied from supplier country
   - **Section 2B**: Goods supplied from supplier country
@@ -87,9 +97,11 @@ The engine is organized into six core modules:
 - Sorted output by member state code
 
 ### 6. **Error Handling** (`src/errors.ts`)
+
 - **Purpose**: Address three critical error scenarios per design specification
 
 **Error Classes**:
+
 1. **Scenario 1: Missing Country Codes** (`MissingCountryCodeError`)
    - Raised when buyer address lacks valid EU country code
    - Includes transaction ID and code for debugging
@@ -105,6 +117,7 @@ The engine is organized into six core modules:
    - Prevents silent precision loss
 
 **Additional Errors**:
+
 - `InvalidVATRateError`: Out-of-range rates
 - `ECBRateNotFoundError`: Missing exchange rates
 

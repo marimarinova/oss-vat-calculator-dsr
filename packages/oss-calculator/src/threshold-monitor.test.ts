@@ -1,9 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import {
-  ThresholdMonitor,
-  ThresholdStatus,
-  YearlyThresholdMonitor,
-} from './threshold-monitor';
+import { ThresholdMonitor, ThresholdStatus, YearlyThresholdMonitor } from './threshold-monitor';
 
 describe('Threshold Monitor', () => {
   let monitor: ThresholdMonitor;

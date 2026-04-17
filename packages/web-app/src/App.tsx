@@ -4,12 +4,7 @@
  */
 
 import React from 'react';
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useAppContext } from './context/AppContext';
 import { Layout } from './components/Layout';
 
@@ -25,9 +20,7 @@ import { Settings } from './pages/Settings';
  * Protected Route Wrapper
  * Redirects to login if user is not authenticated
  */
-const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, isLoading } = useAppContext();
 
   if (isLoading) {

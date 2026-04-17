@@ -9,16 +9,8 @@
  * - Comprehensive error handling for missing codes, rate mismatches, and rounding divergence
  */
 
-import {
-  MissingCountryCodeError,
-  RateMismatchError,
-  InvalidVATRateError,
-} from './errors';
-import {
-  getMemberStateRates,
-  getVATRate,
-  isValidEUCountry,
-} from './vat-rates';
+import { MissingCountryCodeError, RateMismatchError, InvalidVATRateError } from './errors';
+import { getMemberStateRates, getVATRate, isValidEUCountry } from './vat-rates';
 import { CurrencyConverter } from './ecb-rates';
 
 /**
@@ -79,21 +71,15 @@ export class TaxEngine {
    */
   public calculateVAT(transaction: Transaction): VATCalculationResult {
     // Validate country code
-    if (
-      !transaction.customerCountryCode ||
-      !isValidEUCountry(transaction.customerCountryCode)
-    ) {
-      throw new MissingCountryCodeError(
-        transaction.customerCountryCode,
-        transaction.id
-      );
+    if (!transaction.customerCountryCode || !isValidEUCountry(transaction.customerCountryCode)) {
+      throw new MissingCountryCodeError(transaction.customerCountryCode, transaction.id);
     }
 
     // Get VAT rate for destination country
     const vatRate = getVATRate(
       transaction.customerCountryCode,
       transaction.rateType,
-      transaction.date
+      transaction.date,
     );
 
     if (vatRate === null) {
@@ -102,7 +88,7 @@ export class TaxEngine {
         transaction.rateType,
         0, // We don't have expected value, use 0 as indicator
         0,
-        transaction.date
+        transaction.date,
       );
     }
 
@@ -112,11 +98,7 @@ export class TaxEngine {
     }
 
     // Convert to EUR if needed
-    const amountEUR = this.convertToEUR(
-      transaction.amount,
-      transaction.currency,
-      transaction.date
-    );
+    const amountEUR = this.convertToEUR(transaction.amount, transaction.currency, transaction.date);
 
     // Calculate VAT amount
     const vatAmount = (amountEUR * vatRate) / 100;
@@ -147,11 +129,7 @@ export class TaxEngine {
   /**
    * Convert amount to EUR using configured currency converter
    */
-  private convertToEUR(
-    amount: number,
-    currency: string,
-    asOfDate: Date
-  ): number {
+  private convertToEUR(amount: number, currency: string, asOfDate: Date): number {
     if (currency === 'EUR' || !currency) {
       return amount;
     }
@@ -159,16 +137,11 @@ export class TaxEngine {
     if (!this.config.currencyConverter) {
       throw new Error(
         `Currency converter not configured. Cannot convert from ${currency} to EUR. ` +
-        `Provide a CurrencyConverter instance in TaxEngineConfig.`
+          `Provide a CurrencyConverter instance in TaxEngineConfig.`,
       );
     }
 
-    return this.config.currencyConverter.convert(
-      amount,
-      currency,
-      'EUR',
-      asOfDate
-    );
+    return this.config.currencyConverter.convert(amount, currency, 'EUR', asOfDate);
   }
 
   /**
@@ -182,7 +155,7 @@ export class TaxEngine {
    * Get information about available VAT rates for a country
    */
   public getCountryRateInfo(
-    countryCode: string
+    countryCode: string,
   ): { standard: number | null; reduced: number[]; superReduced: number[] } | null {
     const rates = getMemberStateRates(countryCode);
     if (!rates) return null;
@@ -190,9 +163,7 @@ export class TaxEngine {
     const today = new Date();
 
     const standardRate = getVATRate(countryCode, 'standard', today);
-    const reducedRates = rates.reduced
-      .map((r) => r.rate)
-      .filter((v, i, a) => a.indexOf(v) === i); // deduplicate
+    const reducedRates = rates.reduced.map((r) => r.rate).filter((v, i, a) => a.indexOf(v) === i); // deduplicate
     const superReducedRates = rates.superReduced
       .map((r) => r.rate)
       .filter((v, i, a) => a.indexOf(v) === i); // deduplicate

@@ -66,7 +66,7 @@ export class ECBRateProvider {
     targetCurrency: string,
     rate: number,
     effectiveFrom: Date,
-    effectiveTo?: Date
+    effectiveTo?: Date,
   ): void {
     if (sourceCurrency === targetCurrency) {
       // Identity rate
@@ -82,11 +82,7 @@ export class ECBRateProvider {
    * Get exchange rate for a currency pair as of a specific date
    * Returns null if rate not found
    */
-  public getRate(
-    sourceCurrency: string,
-    targetCurrency: string,
-    asOfDate: Date
-  ): number | null {
+  public getRate(sourceCurrency: string, targetCurrency: string, asOfDate: Date): number | null {
     if (sourceCurrency === targetCurrency) {
       return 1;
     }
@@ -99,9 +95,7 @@ export class ECBRateProvider {
     }
 
     const effectiveRate = rates.find(
-      (r) =>
-        r.effectiveFrom <= asOfDate &&
-        (!r.effectiveTo || r.effectiveTo >= asOfDate)
+      (r) => r.effectiveFrom <= asOfDate && (!r.effectiveTo || r.effectiveTo >= asOfDate),
     );
 
     return effectiveRate?.rate ?? null;
@@ -118,7 +112,7 @@ export class ECBRateProvider {
       rate: number;
       quarter: number; // 1-4
       year: number;
-    }>
+    }>,
   ): void {
     const quarterDates: Record<number, number> = {
       1: 0, // January 1
@@ -131,19 +125,9 @@ export class ECBRateProvider {
       const effectiveFrom = new Date(rate.year, quarterDates[rate.quarter], 1);
       const nextQuarter = (rate.quarter % 4) + 1;
       const nextYear = nextQuarter === 1 ? rate.year + 1 : rate.year;
-      const effectiveTo = new Date(
-        nextYear,
-        quarterDates[nextQuarter],
-        1
-      );
+      const effectiveTo = new Date(nextYear, quarterDates[nextQuarter], 1);
 
-      this.registerRate(
-        rate.source,
-        rate.target,
-        rate.rate,
-        effectiveFrom,
-        effectiveTo
-      );
+      this.registerRate(rate.source, rate.target, rate.rate, effectiveFrom, effectiveTo);
     }
   }
 
@@ -152,7 +136,7 @@ export class ECBRateProvider {
     target: string,
     rate: number,
     effectiveFrom: Date,
-    effectiveTo?: Date
+    effectiveTo?: Date,
   ): void {
     const key = this.getPairKey(source, target);
     if (!this.rates.has(key)) {
@@ -184,7 +168,7 @@ export class CurrencyConverter {
     amount: number,
     sourceCurrency: string,
     targetCurrency: string,
-    asOfDate: Date
+    asOfDate: Date,
   ): number {
     if (sourceCurrency === targetCurrency) {
       return amount;
@@ -200,18 +184,10 @@ export class CurrencyConverter {
     const targetDecimalPlaces = this.getDecimalPlaces(targetCurrency);
 
     // Round to target currency decimal places
-    const rounded = this.roundToDecimalPlaces(
-      converted,
-      targetDecimalPlaces
-    );
+    const rounded = this.roundToDecimalPlaces(converted, targetDecimalPlaces);
 
     // Verify no significant divergence from ECB convention
-    this.verifyRoundingCompliance(
-      amount,
-      sourceDecimalPlaces,
-      targetDecimalPlaces,
-      targetCurrency
-    );
+    this.verifyRoundingCompliance(amount, sourceDecimalPlaces, targetDecimalPlaces, targetCurrency);
 
     return rounded;
   }
@@ -240,7 +216,7 @@ export class CurrencyConverter {
     amount: number,
     sourceDecimalPlaces: number,
     targetDecimalPlaces: number,
-    targetCurrency: string
+    targetCurrency: string,
   ): void {
     const ecbConventionPlaces = this.getDecimalPlaces(targetCurrency);
 
@@ -251,7 +227,7 @@ export class CurrencyConverter {
         sourceDecimalPlaces,
         targetDecimalPlaces,
         ecbConventionPlaces,
-        targetCurrency
+        targetCurrency,
       );
     }
   }

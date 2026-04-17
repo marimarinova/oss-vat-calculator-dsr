@@ -38,10 +38,7 @@ export const Calculator: React.FC = () => {
         customerCountryCode: formData.country,
         amount: parseFloat(formData.amount),
         currency: formData.currency,
-        rateType: formData.rateType as
-          | 'standard'
-          | 'reduced'
-          | 'super-reduced',
+        rateType: formData.rateType as 'standard' | 'reduced' | 'super-reduced',
         isGoods: true,
       };
 
@@ -62,9 +59,7 @@ export const Calculator: React.FC = () => {
   const currentRates = getMemberStateRates(formData.country);
   const standardRate = currentRates?.standard[0];
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -79,25 +74,19 @@ export const Calculator: React.FC = () => {
       {/* Page Title */}
       <div>
         <h1 className="text-3xl font-bold text-gray-900">VAT Calculator</h1>
-        <p className="text-gray-500 mt-1">
-          Real-time calculation with destination-country rates
-        </p>
+        <p className="text-gray-500 mt-1">Real-time calculation with destination-country rates</p>
       </div>
 
       {/* Calculator Form */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Input Panel */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">
-            Input Details
-          </h2>
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">Input Details</h2>
 
           <div className="space-y-4">
             {/* Amount */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Net Amount
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Net Amount</label>
               <div className="flex gap-2">
                 <input
                   type="number"
@@ -132,9 +121,7 @@ export const Calculator: React.FC = () => {
 
             {/* Rate Type */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                VAT Rate Type
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">VAT Rate Type</label>
               <select
                 name="rateType"
                 value={formData.rateType}
@@ -149,9 +136,7 @@ export const Calculator: React.FC = () => {
 
             {/* Currency */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Currency
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Currency</label>
               <select
                 name="currency"
                 value={formData.currency}
@@ -199,9 +184,7 @@ export const Calculator: React.FC = () => {
                     <p className="text-sm text-gray-600 mb-1">
                       VAT Rate Applied (Design Principle 4)
                     </p>
-                    <p className="text-3xl font-bold text-blue-600">
-                      {result.vatRate.toFixed(2)}%
-                    </p>
+                    <p className="text-3xl font-bold text-blue-600">{result.vatRate.toFixed(2)}%</p>
                     <p className="text-xs text-gray-500 mt-2">
                       Source: EU VAT Tables Q1 2026 (TAXUD)
                     </p>
@@ -282,10 +265,10 @@ export const Calculator: React.FC = () => {
           Design Principle 4: Deterministic Calculation
         </h3>
         <p className="text-sm text-amber-800">
-          All calculations use the official EU VAT rate tables from the European
-          Commission TAXUD database (Q1 2026). Rates are deterministic and
-          reproducible across all transactions. Currency conversion uses ECB
-          quarterly reference rates for consistent multi-currency support.
+          All calculations use the official EU VAT rate tables from the European Commission TAXUD
+          database (Q1 2026). Rates are deterministic and reproducible across all transactions.
+          Currency conversion uses ECB quarterly reference rates for consistent multi-currency
+          support.
         </p>
       </div>
     </div>

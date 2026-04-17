@@ -11,6 +11,7 @@ Developed as part of a doctoral dissertation at the Department of Finance and Ac
 ## Quick Start
 
 ### Prerequisites
+
 - Node.js >= 20.0.0
 - pnpm >= 9.0.0
 - Firebase CLI (for deployment)
@@ -85,40 +86,45 @@ firebase deploy --only hosting,firestore:rules,firestore:indexes --project oss-v
 
 ### Monorepo Structure
 
-| Package | Description | Status |
-|---------|-------------|--------|
-| `@oss-vat/shared-core` | Authentication, multi-tenancy, data lifecycle taxonomy, HMAC audit chain | Active development |
-| `@oss-vat/oss-calculator` | Primary OSS compliance artefact with Layer 2 & 3 implementation (v1.0) | Active development |
-| `@oss-vat/sme-exemption` | SME exemption calculator (Directive 2020/285) | Reserved (post-defence) |
-| `@oss-vat/web-app` | Firebase-hosted frontend (React + Vite) | Planned |
+| Package                   | Description                                                              | Status                  |
+| ------------------------- | ------------------------------------------------------------------------ | ----------------------- |
+| `@oss-vat/shared-core`    | Authentication, multi-tenancy, data lifecycle taxonomy, HMAC audit chain | Active development      |
+| `@oss-vat/oss-calculator` | Primary OSS compliance artefact with Layer 2 & 3 implementation (v1.0)   | Active development      |
+| `@oss-vat/sme-exemption`  | SME exemption calculator (Directive 2020/285)                            | Reserved (post-defence) |
+| `@oss-vat/web-app`        | Firebase-hosted frontend (React + Vite)                                  | Planned                 |
 
 ---
 
 ## Key Features
 
 ### Design Principle 1: Multi-Tenancy Architecture
+
 - Isolated user data per authentication context
 - Row-level security enforcement via Firestore rules
 - Support for 27 EU member states simultaneously
 
 ### Design Principle 2: Data Access Control
+
 - User-scoped transaction collection (users/{userId}/transactions/{transactionId})
 - Append-only audit log enforcement (no updates/deletes)
 - Read-only access to archived data
 - Comprehensive Firestore security rules implementation
 
 ### Design Principle 3: Validated Data Lifecycle
+
 - Transaction-level field validation (amount > 0, valid country code, valid date)
 - VAT rate validation (0-100%)
 - EU country code enforcement (27 MS only)
 - Date format validation (ISO 8601: YYYY-MM-DD)
 
 ### Design Principle 4: Regulatory Output Alignment
+
 - NAP Bulgarian portal CSV format export
 - PDF invoice generation per Directive 2006/112/EC Article 226
 - EN 16931 / UBL 2.1 XML for future ViDA compliance (2035)
 
 ### Design Principle 5: Forward Compatibility
+
 - ViDA SVR support skeleton (ready for 2028 expansion)
 - PEPPOL invoicing profile compatibility
 - Extensible adapter pattern for future MS implementations
@@ -128,12 +134,14 @@ firebase deploy --only hosting,firestore:rules,firestore:indexes --project oss-v
 ## Documentation
 
 ### Architecture & Design
+
 - [Three-Layer Architecture Deep Dive](docs/architecture/three-layer.md) — Layer 1/2/3 design patterns
 - [Data Lifecycle Taxonomy](docs/architecture/taxonomy.md) — T0-T4 lifecycle enforcement
 - [ViDA Scope & Future Roadmap](docs/vida-scope.md) — Post-2028 evolution planning
 - [Regulatory Evolution Log](docs/regulatory-log.md) — VAT directive changes tracked
 
 ### Implementation Details
+
 - [Layer 3 Output Generation](packages/oss-calculator/LAYER3_IMPLEMENTATION_SUMMARY.md) — PDF/CSV/UBL generators
 - [Layer 2 NAP Adapter](packages/oss-calculator/IMPLEMENTATION.md) — Bulgarian portal integration
 - [Shared Core Types](packages/shared-core/README.md) — Authentication & audit chain
@@ -143,6 +151,7 @@ firebase deploy --only hosting,firestore:rules,firestore:indexes --project oss-v
 ## Testing
 
 ### Run All Tests
+
 ```bash
 # Unit tests across all packages
 pnpm test
@@ -155,6 +164,7 @@ pnpm test -- --coverage
 ```
 
 ### Test Coverage Targets
+
 - **@oss-vat/shared-core**: 95%+ (HMAC audit chain, lifecycle enforcement)
 - **@oss-vat/oss-calculator**: 95%+ (105+ test cases for Layer 2 & 3)
 - **@oss-vat/sme-exemption**: 95%+ (post-defence)
@@ -164,12 +174,14 @@ pnpm test -- --coverage
 ## Firebase Deployment
 
 ### Configuration Files
+
 - **firebase.json** — Hosting, Firestore rules, and index configuration
 - **firestore.rules** — Security rules enforcing Design Principles 2 & 3
 - **firestore.indexes.json** — Composite indexes for optimized queries
 - **.firebaserc** — Project aliases (dev/production)
 
 ### Security Rules Highlights
+
 - User-scoped data access (match on userId)
 - Append-only audit logs (no updates/deletes allowed)
 - Read-only archived data
@@ -180,6 +192,7 @@ pnpm test -- --coverage
   - valid VAT rates (0-100%)
 
 ### Environment Variables
+
 Copy `.env.example` to `.env.local` and populate Firebase credentials:
 
 ```bash
@@ -187,6 +200,7 @@ cp .env.example .env.local
 ```
 
 Required variables:
+
 - `VITE_FIREBASE_API_KEY`
 - `VITE_FIREBASE_AUTH_DOMAIN`
 - `VITE_FIREBASE_PROJECT_ID`
@@ -210,24 +224,29 @@ This artefact implements **five core design principles** for automating cross-bo
 5. **Forward Compatibility** — Ready for ViDA SVR expansion (2028) and pan-EU standardization
 
 ### Methodology
+
 - **DSR Approach** (Peffers et al., 2007; Johannesson & Perjons, 2021)
 - **Problem Investigation** — EU regulatory complexity burdens micro-enterprises
 - **Design Artifacts** — Three-layer architecture, 105+ test cases, production code
 - **Evaluation** — Functional completeness, regulatory compliance, type safety
 
 ### Academic Publication
+
 **Springer ASFT Series Chapter** (2026)
-- *Title*: "Automating Cross-Border VAT Compliance: A Design Science Approach to OSS Reporting for EU Micro-Enterprises"
-- *Authors*: Marieta Marinova, Department of Finance and Accounting, Sofia University
-- *Focus*: Addressing information asymmetries in VAT compliance through automation
+
+- _Title_: "Automating Cross-Border VAT Compliance: A Design Science Approach to OSS Reporting for EU Micro-Enterprises"
+- _Authors_: Marieta Marinova, Department of Finance and Accounting, Sofia University
+- _Focus_: Addressing information asymmetries in VAT compliance through automation
 
 ### Regulatory References
+
 - Directive 2006/112/EC (VAT Directive)
 - Directive 2024/... (ViDA — VAT in the Digital Age)
 - Council Regulation (EU) No 1042/2013 (OSS special scheme)
 - Bulgarian Ordinance on VAT (OSS portal specification)
 
 ### Standards & Frameworks
+
 - EN 16931-1:2017 (Semantic data model for invoicing)
 - UBL 2.1 (Universal Business Language)
 - PEPPOL (Pan-European Public Procurement Online)
@@ -240,17 +259,20 @@ This artefact implements **five core design principles** for automating cross-bo
 ## Compliance & Quality
 
 ### Type Safety
+
 - 100% TypeScript with strict mode enabled
 - Full source maps and declaration files
 - Discriminated union types for results (success/error)
 
 ### Validation
+
 - 45+ validation rules for invoice generation (Article 226 compliance)
 - 35+ test cases for NAP CSV export format
 - 33+ test cases for EN 16931 / UBL adapter
 - Firestore security rule validation at DB layer
 
 ### Security
+
 - User authentication via Firebase Auth
 - Row-level security via Firestore rules
 - HMAC-based audit chain (Layer 1)

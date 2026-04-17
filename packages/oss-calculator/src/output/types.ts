@@ -71,7 +71,7 @@ export interface Invoice {
  * Maps to one line in sections 2A, 2B, 2C, or 2D
  */
 export interface NAPExportRow {
-  section: "2A" | "2B" | "2C" | "2D"; // 2A=services BG, 2B=goods BG, 2C=services other MS, 2D=goods other MS
+  section: '2A' | '2B' | '2C' | '2D'; // 2A=services BG, 2B=goods BG, 2C=services other MS, 2D=goods other MS
   memberState: string; // ISO 3166-1 alpha-2 code
   vatRate: number; // as percentage
   taxableAmount: number; // net amount
@@ -120,7 +120,7 @@ export interface UBLInvoiceAdapter {
  * PDF output configuration
  */
 export interface PDFOptions {
-  format?: "a4" | "letter"; // default: a4
+  format?: 'a4' | 'letter'; // default: a4
   fontSize?: number; // default: 10
   marginMm?: number; // default: 15
   companyLogo?: {
@@ -134,10 +134,10 @@ export interface PDFOptions {
  * CSV output configuration
  */
 export interface CSVOptions {
-  delimiter?: "," | ";" | "\t"; // default: ","
-  dateFormat?: "dd.mm.yyyy" | "yyyy-mm-dd"; // default: "dd.mm.yyyy" for NAP compatibility
-  decimalSeparator?: "." | ","; // default: "." per NAP spec
-  encoding?: "utf-8" | "iso-8859-1"; // default: utf-8
+  delimiter?: ',' | ';' | '\t'; // default: ","
+  dateFormat?: 'dd.mm.yyyy' | 'yyyy-mm-dd'; // default: "dd.mm.yyyy" for NAP compatibility
+  decimalSeparator?: '.' | ','; // default: "." per NAP spec
+  encoding?: 'utf-8' | 'iso-8859-1'; // default: utf-8
   includeHeader?: boolean; // default: true
 }
 
@@ -148,7 +148,7 @@ export interface PDFGenerationResult {
   success: boolean;
   pdf: Uint8Array; // PDF binary data
   filename: string;
-  mimeType: "application/pdf";
+  mimeType: 'application/pdf';
   generatedAt: Date;
 }
 
@@ -159,7 +159,7 @@ export interface CSVGenerationResult {
   success: boolean;
   csv: string; // CSV text content
   filename: string;
-  mimeType: "text/csv";
+  mimeType: 'text/csv';
   generatedAt: Date;
   rowCount: number;
 }
@@ -171,7 +171,7 @@ export interface UBLGenerationResult {
   success: boolean;
   xml: string; // XML text content
   filename: string;
-  mimeType: "application/xml";
+  mimeType: 'application/xml';
   generatedAt: Date;
 }
 

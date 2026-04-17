@@ -106,7 +106,7 @@ function generateSyntheticTransactions() {
 
       // Expected VAT calculation
       const expectedVATRate = getVATRate(countryCode, 'standard', date) ?? 0;
-      const expectedVATAmount = Math.round((netAmount * expectedVATRate) / 100 * 100) / 100;
+      const expectedVATAmount = Math.round(((netAmount * expectedVATRate) / 100) * 100) / 100;
 
       transactions.push({
         id: transactionId,
@@ -137,7 +137,7 @@ function generateSyntheticTransactions() {
       // Use reduced rate if available, otherwise use standard
       const rateType = hasReducedRate ? 'reduced' : 'standard';
       const expectedVATRate = getVATRate(countryCode, rateType, date) ?? 0;
-      const expectedVATAmount = Math.round((netAmount * expectedVATRate) / 100 * 100) / 100;
+      const expectedVATAmount = Math.round(((netAmount * expectedVATRate) / 100) * 100) / 100;
 
       transactions.push({
         id: transactionId,
@@ -165,8 +165,8 @@ function generateSyntheticTransactions() {
       const standardRate = getVATRate(countryCode, 'standard', date) ?? 0;
       const redRate = getVATRate(countryCode, 'reduced', date);
       const reducedRateVal = redRate !== null ? redRate : standardRate;
-      const weightedRate = (standardRate * 0.7 + reducedRateVal * 0.3);
-      const expectedVATAmount = Math.round((netAmount * weightedRate) / 100 * 100) / 100;
+      const weightedRate = standardRate * 0.7 + reducedRateVal * 0.3;
+      const expectedVATAmount = Math.round(((netAmount * weightedRate) / 100) * 100) / 100;
 
       transactions.push({
         id: transactionId,
@@ -193,15 +193,17 @@ function calculateManualVAT(transaction) {
   const vatRate = getVATRate(
     transaction.customerCountryCode,
     transaction.rateType,
-    transaction.date
+    transaction.date,
   );
 
   if (vatRate === null) {
-    throw new Error(`Cannot find VAT rate for ${transaction.customerCountryCode} (${transaction.rateType})`);
+    throw new Error(
+      `Cannot find VAT rate for ${transaction.customerCountryCode} (${transaction.rateType})`,
+    );
   }
 
   // Round to EUR cents
-  const vatAmount = Math.round((transaction.amount * vatRate) / 100 * 100) / 100;
+  const vatAmount = Math.round(((transaction.amount * vatRate) / 100) * 100) / 100;
 
   return { vatAmount, vatRate };
 }
@@ -332,19 +334,29 @@ This report documents the validation of the OSS VAT Calculator against a synthet
 3. Comparison with TaxEngine results field by field
 4. Tolerance: 0.01 EUR (1 cent) for floating-point differences
 
-${discrepancies.length > 0 ? `
+${
+  discrepancies.length > 0
+    ? `
 ### Discrepancies Found
 
 ${discrepancies.length} transaction(s) had discrepancies:
 
-${discrepancies.slice(0, 10).map(d => `- **${d.transactionId}** (${d.countryCode}): Expected EUR ${d.expectedVATAmount.toFixed(2)} @ ${d.expectedVATRate.toFixed(2)}%, got EUR ${d.actualVATAmount.toFixed(2)} @ ${d.actualVATRate.toFixed(2)}% (error: EUR ${d.absoluteError.toFixed(4)})`).join('\n')}
+${discrepancies
+  .slice(0, 10)
+  .map(
+    (d) =>
+      `- **${d.transactionId}** (${d.countryCode}): Expected EUR ${d.expectedVATAmount.toFixed(2)} @ ${d.expectedVATRate.toFixed(2)}%, got EUR ${d.actualVATAmount.toFixed(2)} @ ${d.actualVATRate.toFixed(2)}% (error: EUR ${d.absoluteError.toFixed(4)})`,
+  )
+  .join('\n')}
 
 ${discrepancies.length > 10 ? `\n... and ${discrepancies.length - 10} more` : ''}
-` : `
+`
+    : `
 ### Discrepancies Found
 
 No discrepancies. All transactions validated successfully with 100% accuracy.
-`}
+`
+}
 
 ## Conclusion
 
@@ -370,7 +382,9 @@ async function runValidation() {
   // Step 1: Generate synthetic transactions
   console.log('Step 1: Generating 2,700 synthetic transactions...');
   const transactions = generateSyntheticTransactions();
-  console.log(`Generated ${transactions.length} transactions (${EU_COUNTRIES.length} countries x 100 each)`);
+  console.log(
+    `Generated ${transactions.length} transactions (${EU_COUNTRIES.length} countries x 100 each)`,
+  );
   console.log('');
 
   // Step 2: Initialize TaxEngine
@@ -434,7 +448,7 @@ async function runValidation() {
   // Step 5: Calculate statistics
   console.log('Step 5: Computing statistics...');
 
-  const absoluteErrors = validationResults.map(v => v.absoluteError);
+  const absoluteErrors = validationResults.map((v) => v.absoluteError);
   const meanAbsoluteError = absoluteErrors.reduce((a, b) => a + b, 0) / absoluteErrors.length;
   const maxAbsoluteError = Math.max(...absoluteErrors);
 
@@ -476,7 +490,8 @@ async function runValidation() {
   }
 
   for (const validation of validationResults) {
-    const productType = transactions.find(t => t.id === validation.transactionId)?.productType || 'unknown';
+    const productType =
+      transactions.find((t) => t.id === validation.transactionId)?.productType || 'unknown';
     breakdown[validation.countryCode][productType].total++;
     if (validation.match) {
       breakdown[validation.countryCode][productType].accurate++;
@@ -506,10 +521,12 @@ async function runValidation() {
   console.log('Top 10 Countries by Transaction Count:');
   const countryCounts = EU_COUNTRIES.slice(0, 10);
   for (const country of countryCounts) {
-    const countryValidations = validationResults.filter(v => v.countryCode === country);
-    const countryAccurate = countryValidations.filter(v => v.match).length;
+    const countryValidations = validationResults.filter((v) => v.countryCode === country);
+    const countryAccurate = countryValidations.filter((v) => v.match).length;
     const countryAccuracy = (countryAccurate / countryValidations.length) * 100;
-    console.log(`  ${country}: ${countryAccurate}/${countryValidations.length} (${countryAccuracy.toFixed(2)}%)`);
+    console.log(
+      `  ${country}: ${countryAccurate}/${countryValidations.length} (${countryAccuracy.toFixed(2)}%)`,
+    );
   }
 
   console.log('');
@@ -520,8 +537,12 @@ async function runValidation() {
     console.log('');
     for (const disc of discrepancies.slice(0, 10)) {
       console.log(`  TX ${disc.transactionId} (${disc.countryCode} - ${disc.productType})`);
-      console.log(`    Expected VAT: EUR ${disc.expectedVATAmount.toFixed(2)} @ ${disc.expectedVATRate.toFixed(2)}%`);
-      console.log(`    Actual VAT:   EUR ${disc.actualVATAmount.toFixed(2)} @ ${disc.actualVATRate.toFixed(2)}%`);
+      console.log(
+        `    Expected VAT: EUR ${disc.expectedVATAmount.toFixed(2)} @ ${disc.expectedVATRate.toFixed(2)}%`,
+      );
+      console.log(
+        `    Actual VAT:   EUR ${disc.actualVATAmount.toFixed(2)} @ ${disc.actualVATRate.toFixed(2)}%`,
+      );
       console.log(`    Error: EUR ${disc.absoluteError.toFixed(4)}`);
       console.log('');
     }
@@ -578,7 +599,7 @@ async function runValidation() {
 }
 
 // Run the validation
-runValidation().catch(error => {
+runValidation().catch((error) => {
   console.error('Validation failed:', error);
   process.exit(1);
 });

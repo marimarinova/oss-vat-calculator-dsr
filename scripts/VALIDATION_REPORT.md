@@ -15,63 +15,63 @@ This report documents the validation of the OSS VAT Calculator against a synthet
 
 ### Overall Accuracy
 
-| Metric | Value |
-|--------|-------|
-| Total Transactions | 2700 |
-| Accurate Transactions | 2700 |
-| Accuracy Rate | 100.00% |
+| Metric                    | Value      |
+| ------------------------- | ---------- |
+| Total Transactions        | 2700       |
+| Accurate Transactions     | 2700       |
+| Accuracy Rate             | 100.00%    |
 | Mean Absolute Error (EUR) | EUR 0.0000 |
-| Max Absolute Error (EUR) | EUR 0.0000 |
+| Max Absolute Error (EUR)  | EUR 0.0000 |
 
 ### Performance Metrics
 
-| Metric | Value |
-|--------|-------|
-| Total Processing Time | 32.57 ms |
+| Metric                       | Value     |
+| ---------------------------- | --------- |
+| Total Processing Time        | 32.57 ms  |
 | Average Time per Transaction | 0.0024 ms |
 | Minimum Time per Transaction | 0.0009 ms |
 | Maximum Time per Transaction | 0.3553 ms |
-| Median Time per Transaction | 0.0012 ms |
+| Median Time per Transaction  | 0.0012 ms |
 
 ### Accuracy by Product Type
 
-| Product Type | Accurate | Total | Accuracy |
-|--------------|----------|-------|----------|
-| standard-goods | 918 | 918 | 100.00% |
-| reduced-digital | 891 | 891 | 100.00% |
-| mixed-basket | 891 | 891 | 100.00% |
+| Product Type    | Accurate | Total | Accuracy |
+| --------------- | -------- | ----- | -------- |
+| standard-goods  | 918      | 918   | 100.00%  |
+| reduced-digital | 891      | 891   | 100.00%  |
+| mixed-basket    | 891      | 891   | 100.00%  |
 
 ### Accuracy by EU Member State
 
-| Country Code | Country Name | Accurate | Total | Accuracy |
-|--------------|--------------|----------|-------|----------|
-| AT | Austria | 100 | 100 | 100.00% |
-| BE | Belgium | 100 | 100 | 100.00% |
-| BG | Bulgaria | 100 | 100 | 100.00% |
-| CY | Cyprus | 100 | 100 | 100.00% |
-| CZ | Czech Republic | 100 | 100 | 100.00% |
-| DE | Germany | 100 | 100 | 100.00% |
-| DK | Denmark | 100 | 100 | 100.00% |
-| EE | Estonia | 100 | 100 | 100.00% |
-| EL | Greece | 100 | 100 | 100.00% |
-| ES | Spain | 100 | 100 | 100.00% |
-| FI | Finland | 100 | 100 | 100.00% |
-| FR | France | 100 | 100 | 100.00% |
-| HR | Croatia | 100 | 100 | 100.00% |
-| HU | Hungary | 100 | 100 | 100.00% |
-| IE | Ireland | 100 | 100 | 100.00% |
-| IT | Italy | 100 | 100 | 100.00% |
-| LT | Lithuania | 100 | 100 | 100.00% |
-| LU | Luxembourg | 100 | 100 | 100.00% |
-| LV | Latvia | 100 | 100 | 100.00% |
-| MT | Malta | 100 | 100 | 100.00% |
-| NL | Netherlands | 100 | 100 | 100.00% |
-| PL | Poland | 100 | 100 | 100.00% |
-| PT | Portugal | 100 | 100 | 100.00% |
-| RO | Romania | 100 | 100 | 100.00% |
-| SE | Sweden | 100 | 100 | 100.00% |
-| SI | Slovenia | 100 | 100 | 100.00% |
-| SK | Slovakia | 100 | 100 | 100.00% |
+| Country Code | Country Name   | Accurate | Total | Accuracy |
+| ------------ | -------------- | -------- | ----- | -------- |
+| AT           | Austria        | 100      | 100   | 100.00%  |
+| BE           | Belgium        | 100      | 100   | 100.00%  |
+| BG           | Bulgaria       | 100      | 100   | 100.00%  |
+| CY           | Cyprus         | 100      | 100   | 100.00%  |
+| CZ           | Czech Republic | 100      | 100   | 100.00%  |
+| DE           | Germany        | 100      | 100   | 100.00%  |
+| DK           | Denmark        | 100      | 100   | 100.00%  |
+| EE           | Estonia        | 100      | 100   | 100.00%  |
+| EL           | Greece         | 100      | 100   | 100.00%  |
+| ES           | Spain          | 100      | 100   | 100.00%  |
+| FI           | Finland        | 100      | 100   | 100.00%  |
+| FR           | France         | 100      | 100   | 100.00%  |
+| HR           | Croatia        | 100      | 100   | 100.00%  |
+| HU           | Hungary        | 100      | 100   | 100.00%  |
+| IE           | Ireland        | 100      | 100   | 100.00%  |
+| IT           | Italy          | 100      | 100   | 100.00%  |
+| LT           | Lithuania      | 100      | 100   | 100.00%  |
+| LU           | Luxembourg     | 100      | 100   | 100.00%  |
+| LV           | Latvia         | 100      | 100   | 100.00%  |
+| MT           | Malta          | 100      | 100   | 100.00%  |
+| NL           | Netherlands    | 100      | 100   | 100.00%  |
+| PL           | Poland         | 100      | 100   | 100.00%  |
+| PT           | Portugal       | 100      | 100   | 100.00%  |
+| RO           | Romania        | 100      | 100   | 100.00%  |
+| SE           | Sweden         | 100      | 100   | 100.00%  |
+| SI           | Slovenia       | 100      | 100   | 100.00%  |
+| SK           | Slovakia       | 100      | 100   | 100.00%  |
 
 ## Quality Assurance
 
@@ -98,11 +98,9 @@ This report documents the validation of the OSS VAT Calculator against a synthet
 3. Comparison with TaxEngine results field by field
 4. Tolerance: 0.01 EUR (1 cent) for floating-point differences
 
-
 ### Discrepancies Found
 
 No discrepancies. All transactions validated successfully with 100% accuracy.
-
 
 ## Conclusion
 

@@ -26,8 +26,7 @@ export const FIREBASE_CONFIGS: Record<string, FirebaseConfig> = {
     apiKey: process.env.VITE_FIREBASE_API_KEY || 'dev-api-key',
     authDomain: process.env.VITE_FIREBASE_AUTH_DOMAIN || 'oss-vat-calculator-dev.firebaseapp.com',
     projectId: process.env.VITE_FIREBASE_PROJECT_ID || 'oss-vat-calculator-dev',
-    storageBucket:
-      process.env.VITE_FIREBASE_STORAGE_BUCKET || 'oss-vat-calculator-dev.appspot.com',
+    storageBucket: process.env.VITE_FIREBASE_STORAGE_BUCKET || 'oss-vat-calculator-dev.appspot.com',
     messagingSenderId: process.env.VITE_FIREBASE_MESSAGING_SENDER_ID || 'dev-sender-id',
     appId: process.env.VITE_FIREBASE_APP_ID || 'dev-app-id',
     measurementId: process.env.VITE_FIREBASE_MEASUREMENT_ID,
@@ -62,7 +61,7 @@ export function getFirebaseConfig(environment: string = 'development'): Firebase
 
   if (!(env in FIREBASE_CONFIGS)) {
     throw new Error(
-      `Unsupported environment: ${env}. Supported: ${Object.keys(FIREBASE_CONFIGS).join(', ')}`
+      `Unsupported environment: ${env}. Supported: ${Object.keys(FIREBASE_CONFIGS).join(', ')}`,
     );
   }
 

@@ -17,7 +17,7 @@ import {
   CSVOptions,
   CSVGenerationResult,
   GenerationError,
-} from "./types";
+} from './types';
 
 /**
  * Generates a CSV export compatible with Bulgarian NAP OSS portal
@@ -31,7 +31,7 @@ import {
  */
 export function generateNAPExportCSV(
   document: NAPExportDocument,
-  options?: CSVOptions
+  options?: CSVOptions,
 ): CSVGenerationResult | GenerationError {
   try {
     // Validate document
@@ -40,9 +40,9 @@ export function generateNAPExportCSV(
       return validationError;
     }
 
-    const delimiter = options?.delimiter || ",";
-    const decimalSeparator = options?.decimalSeparator || ".";
-    const dateFormat = options?.dateFormat || "dd.mm.yyyy";
+    const delimiter = options?.delimiter || ',';
+    const decimalSeparator = options?.decimalSeparator || '.';
+    const dateFormat = options?.dateFormat || 'dd.mm.yyyy';
     const includeHeader = options?.includeHeader !== false;
 
     // Build CSV content
@@ -51,16 +51,12 @@ export function generateNAPExportCSV(
     // Add header row
     if (includeHeader) {
       csvLines.push(
-        ["section", "member_state", "vat_rate", "taxable_amount", "vat_amount"].join(
-          delimiter
-        )
+        ['section', 'member_state', 'vat_rate', 'taxable_amount', 'vat_amount'].join(delimiter),
       );
     }
 
     // Sort rows by section for better readability
-    const sortedRows = [...document.rows].sort(
-      (a, b) => a.section.localeCompare(b.section)
-    );
+    const sortedRows = [...document.rows].sort((a, b) => a.section.localeCompare(b.section));
 
     // Add data rows
     for (const row of sortedRows) {
@@ -68,13 +64,13 @@ export function generateNAPExportCSV(
       csvLines.push(formattedRow);
     }
 
-    const csv = csvLines.join("\n");
+    const csv = csvLines.join('\n');
 
     return {
       success: true,
       csv,
       filename: `NAP-OSS-Q${document.reportPeriod.quarter}-${document.reportPeriod.year}.csv`,
-      mimeType: "text/csv",
+      mimeType: 'text/csv',
       generatedAt: new Date(),
       rowCount: sortedRows.length,
     };
@@ -82,7 +78,7 @@ export function generateNAPExportCSV(
     const errorMessage = err instanceof Error ? err.message : String(err);
     return {
       success: false,
-      error: "CSV generation failed",
+      error: 'CSV generation failed',
       details: errorMessage,
     };
   }
@@ -92,21 +88,17 @@ export function generateNAPExportCSV(
  * Format a single NAP export row as CSV
  * Applies proper decimal formatting and escaping
  */
-function formatNAPRow(
-  row: NAPExportRow,
-  delimiter: string,
-  decimalSeparator: string
-): string {
+function formatNAPRow(row: NAPExportRow, delimiter: string, decimalSeparator: string): string {
   const formatNumber = (num: number, decimals = 2): string => {
     const formatted = num.toFixed(decimals);
-    if (decimalSeparator === ",") {
-      return formatted.replace(".", ",");
+    if (decimalSeparator === ',') {
+      return formatted.replace('.', ',');
     }
     return formatted;
   };
 
   const csvEscape = (value: string): string => {
-    if (value.includes(delimiter) || value.includes('"') || value.includes("\n")) {
+    if (value.includes(delimiter) || value.includes('"') || value.includes('\n')) {
       return `"${value.replace(/"/g, '""')}"`;
     }
     return value;
@@ -135,9 +127,9 @@ export function aggregateToNAPRows(
     netAmount: number;
     vatRate: number;
     vatAmount: number;
-    section: "2A" | "2B" | "2C" | "2D";
+    section: '2A' | '2B' | '2C' | '2D';
     memberState: string;
-  }>
+  }>,
 ): NAPExportRow[] {
   // Group by section and member state
   const grouped = new Map<string, NAPExportRow>();
@@ -162,7 +154,7 @@ export function aggregateToNAPRows(
       if (existing.vatRate !== item.vatRate) {
         console.warn(
           `Warning: Different VAT rates for section ${item.section}, ${item.memberState}: ` +
-            `${existing.vatRate}% vs ${item.vatRate}%`
+            `${existing.vatRate}% vs ${item.vatRate}%`,
         );
       }
     }
@@ -174,12 +166,12 @@ export function aggregateToNAPRows(
 /**
  * Format date according to NAP specification
  */
-export function formatNAPDate(date: Date, format: string = "dd.mm.yyyy"): string {
-  const day = String(date.getDate()).padStart(2, "0");
-  const month = String(date.getMonth() + 1).padStart(2, "0");
+export function formatNAPDate(date: Date, format: string = 'dd.mm.yyyy'): string {
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
   const year = date.getFullYear();
 
-  if (format === "yyyy-mm-dd") {
+  if (format === 'yyyy-mm-dd') {
     return `${year}-${month}-${day}`;
   }
 
@@ -190,44 +182,46 @@ export function formatNAPDate(date: Date, format: string = "dd.mm.yyyy"): string
 /**
  * Validate NAP export document
  */
-function validateNAPDocument(
-  document: NAPExportDocument
-): GenerationError | null {
+function validateNAPDocument(document: NAPExportDocument): GenerationError | null {
   const errors: string[] = [];
 
   // Check basic structure
-  if (!document.reportPeriod || document.reportPeriod.quarter < 1 || document.reportPeriod.quarter > 4) {
-    errors.push("Invalid report period: quarter must be 1-4");
+  if (
+    !document.reportPeriod ||
+    document.reportPeriod.quarter < 1 ||
+    document.reportPeriod.quarter > 4
+  ) {
+    errors.push('Invalid report period: quarter must be 1-4');
   }
 
   if (!document.reportPeriod.year || document.reportPeriod.year < 2015) {
-    errors.push("Invalid report period: year must be 2015 or later");
+    errors.push('Invalid report period: year must be 2015 or later');
   }
 
   // Check submitting entity
   if (!document.submittingEntity.bulgarianVATNumber) {
-    errors.push("Bulgarian VAT number is required");
+    errors.push('Bulgarian VAT number is required');
   }
 
   if (!document.submittingEntity.companyName) {
-    errors.push("Company name is required");
+    errors.push('Company name is required');
   }
 
   // Check row validity
   if (document.rows.length === 0) {
-    errors.push("At least one export row is required");
+    errors.push('At least one export row is required');
   }
 
   for (let i = 0; i < document.rows.length; i++) {
     const row = document.rows[i];
 
-    if (!["2A", "2B", "2C", "2D"].includes(row.section)) {
+    if (!['2A', '2B', '2C', '2D'].includes(row.section)) {
       errors.push(`Row ${i + 1}: Invalid section "${row.section}"`);
     }
 
     if (!row.memberState || !/^[A-Z]{2}$/.test(row.memberState)) {
       errors.push(
-        `Row ${i + 1}: Invalid member state "${row.memberState}" (must be 2-letter code)`
+        `Row ${i + 1}: Invalid member state "${row.memberState}" (must be 2-letter code)`,
       );
     }
 
@@ -249,7 +243,7 @@ function validateNAPDocument(
     if (difference > 0.01) {
       errors.push(
         `Row ${i + 1}: VAT calculation mismatch. Expected ${expectedVAT.toFixed(2)}, ` +
-          `got ${row.vatAmount.toFixed(2)}`
+          `got ${row.vatAmount.toFixed(2)}`,
       );
     }
   }
@@ -264,22 +258,22 @@ function validateNAPDocument(
   if (netDiff > 0.01) {
     errors.push(
       `Total net amount mismatch: sum of rows is ${sumNetAmount.toFixed(2)}, ` +
-        `document declares ${document.totalNetAmount.toFixed(2)}`
+        `document declares ${document.totalNetAmount.toFixed(2)}`,
     );
   }
 
   if (vatDiff > 0.01) {
     errors.push(
       `Total VAT amount mismatch: sum of rows is ${sumVATAmount.toFixed(2)}, ` +
-        `document declares ${document.totalVATAmount.toFixed(2)}`
+        `document declares ${document.totalVATAmount.toFixed(2)}`,
     );
   }
 
   if (errors.length > 0) {
     return {
       success: false,
-      error: "NAP document validation failed",
-      details: errors.join("; "),
+      error: 'NAP document validation failed',
+      details: errors.join('; '),
     };
   }
 
