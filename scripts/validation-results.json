@@ -1,0 +1,947 @@
+{
+  "stats": {
+    "totalTransactions": 2700,
+    "accurateTransactions": 2700,
+    "accuracy": 100,
+    "meanAbsoluteError": 0,
+    "maxAbsoluteError": 0,
+    "processingTimeMs": 32.574674,
+    "averageTransactionTimeMs": 0.0023616829629629983,
+    "minTransactionTimeMs": 0.0009029999999938809,
+    "maxTransactionTimeMs": 0.35529400000000066,
+    "medianTransactionTimeMs": 0.0011879999999990787
+  },
+  "validationResults": [
+    {
+      "transactionId": "AT-GOODS-000",
+      "countryCode": "AT",
+      "productType": "standard-goods",
+      "expectedVATAmount": 88.7,
+      "actualVATAmount": 88.7,
+      "expectedVATRate": 20,
+      "actualVATRate": 20,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-GOODS-001",
+      "countryCode": "AT",
+      "productType": "standard-goods",
+      "expectedVATAmount": 77.21,
+      "actualVATAmount": 77.21,
+      "expectedVATRate": 20,
+      "actualVATRate": 20,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-GOODS-002",
+      "countryCode": "AT",
+      "productType": "standard-goods",
+      "expectedVATAmount": 60,
+      "actualVATAmount": 60,
+      "expectedVATRate": 20,
+      "actualVATRate": 20,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-GOODS-003",
+      "countryCode": "AT",
+      "productType": "standard-goods",
+      "expectedVATAmount": 78.3,
+      "actualVATAmount": 78.3,
+      "expectedVATRate": 20,
+      "actualVATRate": 20,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-GOODS-004",
+      "countryCode": "AT",
+      "productType": "standard-goods",
+      "expectedVATAmount": 74.38,
+      "actualVATAmount": 74.38,
+      "expectedVATRate": 20,
+      "actualVATRate": 20,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-GOODS-005",
+      "countryCode": "AT",
+      "productType": "standard-goods",
+      "expectedVATAmount": 89.47,
+      "actualVATAmount": 89.47,
+      "expectedVATRate": 20,
+      "actualVATRate": 20,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-GOODS-006",
+      "countryCode": "AT",
+      "productType": "standard-goods",
+      "expectedVATAmount": 65.84,
+      "actualVATAmount": 65.84,
+      "expectedVATRate": 20,
+      "actualVATRate": 20,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-GOODS-007",
+      "countryCode": "AT",
+      "productType": "standard-goods",
+      "expectedVATAmount": 44.73,
+      "actualVATAmount": 44.73,
+      "expectedVATRate": 20,
+      "actualVATRate": 20,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-GOODS-008",
+      "countryCode": "AT",
+      "productType": "standard-goods",
+      "expectedVATAmount": 67.38,
+      "actualVATAmount": 67.38,
+      "expectedVATRate": 20,
+      "actualVATRate": 20,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-GOODS-009",
+      "countryCode": "AT",
+      "productType": "standard-goods",
+      "expectedVATAmount": 76.06,
+      "actualVATAmount": 76.06,
+      "expectedVATRate": 20,
+      "actualVATRate": 20,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-GOODS-010",
+      "countryCode": "AT",
+      "productType": "standard-goods",
+      "expectedVATAmount": 13.01,
+      "actualVATAmount": 13.01,
+      "expectedVATRate": 20,
+      "actualVATRate": 20,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-GOODS-011",
+      "countryCode": "AT",
+      "productType": "standard-goods",
+      "expectedVATAmount": 18.48,
+      "actualVATAmount": 18.48,
+      "expectedVATRate": 20,
+      "actualVATRate": 20,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-GOODS-012",
+      "countryCode": "AT",
+      "productType": "standard-goods",
+      "expectedVATAmount": 34.73,
+      "actualVATAmount": 34.73,
+      "expectedVATRate": 20,
+      "actualVATRate": 20,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-GOODS-013",
+      "countryCode": "AT",
+      "productType": "standard-goods",
+      "expectedVATAmount": 3.99,
+      "actualVATAmount": 3.99,
+      "expectedVATRate": 20,
+      "actualVATRate": 20,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-GOODS-014",
+      "countryCode": "AT",
+      "productType": "standard-goods",
+      "expectedVATAmount": 66.52,
+      "actualVATAmount": 66.52,
+      "expectedVATRate": 20,
+      "actualVATRate": 20,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-GOODS-015",
+      "countryCode": "AT",
+      "productType": "standard-goods",
+      "expectedVATAmount": 65.58,
+      "actualVATAmount": 65.58,
+      "expectedVATRate": 20,
+      "actualVATRate": 20,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-GOODS-016",
+      "countryCode": "AT",
+      "productType": "standard-goods",
+      "expectedVATAmount": 42.4,
+      "actualVATAmount": 42.4,
+      "expectedVATRate": 20,
+      "actualVATRate": 20,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-GOODS-017",
+      "countryCode": "AT",
+      "productType": "standard-goods",
+      "expectedVATAmount": 38.25,
+      "actualVATAmount": 38.25,
+      "expectedVATRate": 20,
+      "actualVATRate": 20,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-GOODS-018",
+      "countryCode": "AT",
+      "productType": "standard-goods",
+      "expectedVATAmount": 94.36,
+      "actualVATAmount": 94.36,
+      "expectedVATRate": 20,
+      "actualVATRate": 20,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-GOODS-019",
+      "countryCode": "AT",
+      "productType": "standard-goods",
+      "expectedVATAmount": 54,
+      "actualVATAmount": 54,
+      "expectedVATRate": 20,
+      "actualVATRate": 20,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-GOODS-020",
+      "countryCode": "AT",
+      "productType": "standard-goods",
+      "expectedVATAmount": 57.41,
+      "actualVATAmount": 57.41,
+      "expectedVATRate": 20,
+      "actualVATRate": 20,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-GOODS-021",
+      "countryCode": "AT",
+      "productType": "standard-goods",
+      "expectedVATAmount": 46.84,
+      "actualVATAmount": 46.84,
+      "expectedVATRate": 20,
+      "actualVATRate": 20,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-GOODS-022",
+      "countryCode": "AT",
+      "productType": "standard-goods",
+      "expectedVATAmount": 63.54,
+      "actualVATAmount": 63.54,
+      "expectedVATRate": 20,
+      "actualVATRate": 20,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-GOODS-023",
+      "countryCode": "AT",
+      "productType": "standard-goods",
+      "expectedVATAmount": 49.76,
+      "actualVATAmount": 49.76,
+      "expectedVATRate": 20,
+      "actualVATRate": 20,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-GOODS-024",
+      "countryCode": "AT",
+      "productType": "standard-goods",
+      "expectedVATAmount": 46.75,
+      "actualVATAmount": 46.75,
+      "expectedVATRate": 20,
+      "actualVATRate": 20,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-GOODS-025",
+      "countryCode": "AT",
+      "productType": "standard-goods",
+      "expectedVATAmount": 95.76,
+      "actualVATAmount": 95.76,
+      "expectedVATRate": 20,
+      "actualVATRate": 20,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-GOODS-026",
+      "countryCode": "AT",
+      "productType": "standard-goods",
+      "expectedVATAmount": 40.05,
+      "actualVATAmount": 40.05,
+      "expectedVATRate": 20,
+      "actualVATRate": 20,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-GOODS-027",
+      "countryCode": "AT",
+      "productType": "standard-goods",
+      "expectedVATAmount": 19.85,
+      "actualVATAmount": 19.85,
+      "expectedVATRate": 20,
+      "actualVATRate": 20,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-GOODS-028",
+      "countryCode": "AT",
+      "productType": "standard-goods",
+      "expectedVATAmount": 76.42,
+      "actualVATAmount": 76.42,
+      "expectedVATRate": 20,
+      "actualVATRate": 20,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-GOODS-029",
+      "countryCode": "AT",
+      "productType": "standard-goods",
+      "expectedVATAmount": 53.02,
+      "actualVATAmount": 53.02,
+      "expectedVATRate": 20,
+      "actualVATRate": 20,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-GOODS-030",
+      "countryCode": "AT",
+      "productType": "standard-goods",
+      "expectedVATAmount": 89.89,
+      "actualVATAmount": 89.89,
+      "expectedVATRate": 20,
+      "actualVATRate": 20,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-GOODS-031",
+      "countryCode": "AT",
+      "productType": "standard-goods",
+      "expectedVATAmount": 30.27,
+      "actualVATAmount": 30.27,
+      "expectedVATRate": 20,
+      "actualVATRate": 20,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-GOODS-032",
+      "countryCode": "AT",
+      "productType": "standard-goods",
+      "expectedVATAmount": 14.43,
+      "actualVATAmount": 14.43,
+      "expectedVATRate": 20,
+      "actualVATRate": 20,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-GOODS-033",
+      "countryCode": "AT",
+      "productType": "standard-goods",
+      "expectedVATAmount": 83.61,
+      "actualVATAmount": 83.61,
+      "expectedVATRate": 20,
+      "actualVATRate": 20,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-DIGITAL-000",
+      "countryCode": "AT",
+      "productType": "reduced-digital",
+      "expectedVATAmount": 45.48,
+      "actualVATAmount": 45.48,
+      "expectedVATRate": 10,
+      "actualVATRate": 10,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-DIGITAL-001",
+      "countryCode": "AT",
+      "productType": "reduced-digital",
+      "expectedVATAmount": 41.3,
+      "actualVATAmount": 41.3,
+      "expectedVATRate": 10,
+      "actualVATRate": 10,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-DIGITAL-002",
+      "countryCode": "AT",
+      "productType": "reduced-digital",
+      "expectedVATAmount": 32.88,
+      "actualVATAmount": 32.88,
+      "expectedVATRate": 10,
+      "actualVATRate": 10,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-DIGITAL-003",
+      "countryCode": "AT",
+      "productType": "reduced-digital",
+      "expectedVATAmount": 40.85,
+      "actualVATAmount": 40.85,
+      "expectedVATRate": 10,
+      "actualVATRate": 10,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-DIGITAL-004",
+      "countryCode": "AT",
+      "productType": "reduced-digital",
+      "expectedVATAmount": 36.33,
+      "actualVATAmount": 36.33,
+      "expectedVATRate": 10,
+      "actualVATRate": 10,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-DIGITAL-005",
+      "countryCode": "AT",
+      "productType": "reduced-digital",
+      "expectedVATAmount": 39.94,
+      "actualVATAmount": 39.94,
+      "expectedVATRate": 10,
+      "actualVATRate": 10,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-DIGITAL-006",
+      "countryCode": "AT",
+      "productType": "reduced-digital",
+      "expectedVATAmount": 22.82,
+      "actualVATAmount": 22.82,
+      "expectedVATRate": 10,
+      "actualVATRate": 10,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-DIGITAL-007",
+      "countryCode": "AT",
+      "productType": "reduced-digital",
+      "expectedVATAmount": 5.58,
+      "actualVATAmount": 5.58,
+      "expectedVATRate": 10,
+      "actualVATRate": 10,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-DIGITAL-008",
+      "countryCode": "AT",
+      "productType": "reduced-digital",
+      "expectedVATAmount": 8.85,
+      "actualVATAmount": 8.85,
+      "expectedVATRate": 10,
+      "actualVATRate": 10,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-DIGITAL-009",
+      "countryCode": "AT",
+      "productType": "reduced-digital",
+      "expectedVATAmount": 3.75,
+      "actualVATAmount": 3.75,
+      "expectedVATRate": 10,
+      "actualVATRate": 10,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-DIGITAL-010",
+      "countryCode": "AT",
+      "productType": "reduced-digital",
+      "expectedVATAmount": 10.92,
+      "actualVATAmount": 10.92,
+      "expectedVATRate": 10,
+      "actualVATRate": 10,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-DIGITAL-011",
+      "countryCode": "AT",
+      "productType": "reduced-digital",
+      "expectedVATAmount": 1.47,
+      "actualVATAmount": 1.47,
+      "expectedVATRate": 10,
+      "actualVATRate": 10,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-DIGITAL-012",
+      "countryCode": "AT",
+      "productType": "reduced-digital",
+      "expectedVATAmount": 45.53,
+      "actualVATAmount": 45.53,
+      "expectedVATRate": 10,
+      "actualVATRate": 10,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-DIGITAL-013",
+      "countryCode": "AT",
+      "productType": "reduced-digital",
+      "expectedVATAmount": 15.23,
+      "actualVATAmount": 15.23,
+      "expectedVATRate": 10,
+      "actualVATRate": 10,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-DIGITAL-014",
+      "countryCode": "AT",
+      "productType": "reduced-digital",
+      "expectedVATAmount": 30.19,
+      "actualVATAmount": 30.19,
+      "expectedVATRate": 10,
+      "actualVATRate": 10,
+      "match": true,
+      "absoluteError": 0
+    },
+    {
+      "transactionId": "AT-DIGITAL-015",
+      "countryCode": "AT",
+      "productType": "reduced-digital",
+      "expectedVATAmount": 12.03,
+      "actualVATAmount": 12.03,
+      "expectedVATRate": 10,
+      "actualVATRate": 10,
+      "match": true,
+      "absoluteError": 0
+    }
+  ],
+  "discrepancies": [],
+  "breakdown": {
+    "AT": {
+      "standard-goods": {
+        "total": 34,
+        "accurate": 34
+      },
+      "reduced-digital": {
+        "total": 33,
+        "accurate": 33
+      },
+      "mixed-basket": {
+        "total": 33,
+        "accurate": 33
+      }
+    },
+    "BE": {
+      "standard-goods": {
+        "total": 34,
+        "accurate": 34
+      },
+      "reduced-digital": {
+        "total": 33,
+        "accurate": 33
+      },
+      "mixed-basket": {
+        "total": 33,
+        "accurate": 33
+      }
+    },
+    "BG": {
+      "standard-goods": {
+        "total": 34,
+        "accurate": 34
+      },
+      "reduced-digital": {
+        "total": 33,
+        "accurate": 33
+      },
+      "mixed-basket": {
+        "total": 33,
+        "accurate": 33
+      }
+    },
+    "HR": {
+      "standard-goods": {
+        "total": 34,
+        "accurate": 34
+      },
+      "reduced-digital": {
+        "total": 33,
+        "accurate": 33
+      },
+      "mixed-basket": {
+        "total": 33,
+        "accurate": 33
+      }
+    },
+    "CY": {
+      "standard-goods": {
+        "total": 34,
+        "accurate": 34
+      },
+      "reduced-digital": {
+        "total": 33,
+        "accurate": 33
+      },
+      "mixed-basket": {
+        "total": 33,
+        "accurate": 33
+      }
+    },
+    "CZ": {
+      "standard-goods": {
+        "total": 34,
+        "accurate": 34
+      },
+      "reduced-digital": {
+        "total": 33,
+        "accurate": 33
+      },
+      "mixed-basket": {
+        "total": 33,
+        "accurate": 33
+      }
+    },
+    "DK": {
+      "standard-goods": {
+        "total": 34,
+        "accurate": 34
+      },
+      "reduced-digital": {
+        "total": 33,
+        "accurate": 33
+      },
+      "mixed-basket": {
+        "total": 33,
+        "accurate": 33
+      }
+    },
+    "EE": {
+      "standard-goods": {
+        "total": 34,
+        "accurate": 34
+      },
+      "reduced-digital": {
+        "total": 33,
+        "accurate": 33
+      },
+      "mixed-basket": {
+        "total": 33,
+        "accurate": 33
+      }
+    },
+    "FI": {
+      "standard-goods": {
+        "total": 34,
+        "accurate": 34
+      },
+      "reduced-digital": {
+        "total": 33,
+        "accurate": 33
+      },
+      "mixed-basket": {
+        "total": 33,
+        "accurate": 33
+      }
+    },
+    "FR": {
+      "standard-goods": {
+        "total": 34,
+        "accurate": 34
+      },
+      "reduced-digital": {
+        "total": 33,
+        "accurate": 33
+      },
+      "mixed-basket": {
+        "total": 33,
+        "accurate": 33
+      }
+    },
+    "DE": {
+      "standard-goods": {
+        "total": 34,
+        "accurate": 34
+      },
+      "reduced-digital": {
+        "total": 33,
+        "accurate": 33
+      },
+      "mixed-basket": {
+        "total": 33,
+        "accurate": 33
+      }
+    },
+    "EL": {
+      "standard-goods": {
+        "total": 34,
+        "accurate": 34
+      },
+      "reduced-digital": {
+        "total": 33,
+        "accurate": 33
+      },
+      "mixed-basket": {
+        "total": 33,
+        "accurate": 33
+      }
+    },
+    "HU": {
+      "standard-goods": {
+        "total": 34,
+        "accurate": 34
+      },
+      "reduced-digital": {
+        "total": 33,
+        "accurate": 33
+      },
+      "mixed-basket": {
+        "total": 33,
+        "accurate": 33
+      }
+    },
+    "IE": {
+      "standard-goods": {
+        "total": 34,
+        "accurate": 34
+      },
+      "reduced-digital": {
+        "total": 33,
+        "accurate": 33
+      },
+      "mixed-basket": {
+        "total": 33,
+        "accurate": 33
+      }
+    },
+    "IT": {
+      "standard-goods": {
+        "total": 34,
+        "accurate": 34
+      },
+      "reduced-digital": {
+        "total": 33,
+        "accurate": 33
+      },
+      "mixed-basket": {
+        "total": 33,
+        "accurate": 33
+      }
+    },
+    "LV": {
+      "standard-goods": {
+        "total": 34,
+        "accurate": 34
+      },
+      "reduced-digital": {
+        "total": 33,
+        "accurate": 33
+      },
+      "mixed-basket": {
+        "total": 33,
+        "accurate": 33
+      }
+    },
+    "LT": {
+      "standard-goods": {
+        "total": 34,
+        "accurate": 34
+      },
+      "reduced-digital": {
+        "total": 33,
+        "accurate": 33
+      },
+      "mixed-basket": {
+        "total": 33,
+        "accurate": 33
+      }
+    },
+    "LU": {
+      "standard-goods": {
+        "total": 34,
+        "accurate": 34
+      },
+      "reduced-digital": {
+        "total": 33,
+        "accurate": 33
+      },
+      "mixed-basket": {
+        "total": 33,
+        "accurate": 33
+      }
+    },
+    "MT": {
+      "standard-goods": {
+        "total": 34,
+        "accurate": 34
+      },
+      "reduced-digital": {
+        "total": 33,
+        "accurate": 33
+      },
+      "mixed-basket": {
+        "total": 33,
+        "accurate": 33
+      }
+    },
+    "NL": {
+      "standard-goods": {
+        "total": 34,
+        "accurate": 34
+      },
+      "reduced-digital": {
+        "total": 33,
+        "accurate": 33
+      },
+      "mixed-basket": {
+        "total": 33,
+        "accurate": 33
+      }
+    },
+    "PL": {
+      "standard-goods": {
+        "total": 34,
+        "accurate": 34
+      },
+      "reduced-digital": {
+        "total": 33,
+        "accurate": 33
+      },
+      "mixed-basket": {
+        "total": 33,
+        "accurate": 33
+      }
+    },
+    "PT": {
+      "standard-goods": {
+        "total": 34,
+        "accurate": 34
+      },
+      "reduced-digital": {
+        "total": 33,
+        "accurate": 33
+      },
+      "mixed-basket": {
+        "total": 33,
+        "accurate": 33
+      }
+    },
+    "RO": {
+      "standard-goods": {
+        "total": 34,
+        "accurate": 34
+      },
+      "reduced-digital": {
+        "total": 33,
+        "accurate": 33
+      },
+      "mixed-basket": {
+        "total": 33,
+        "accurate": 33
+      }
+    },
+    "SK": {
+      "standard-goods": {
+        "total": 34,
+        "accurate": 34
+      },
+      "reduced-digital": {
+        "total": 33,
+        "accurate": 33
+      },
+      "mixed-basket": {
+        "total": 33,
+        "accurate": 33
+      }
+    },
+    "SI": {
+      "standard-goods": {
+        "total": 34,
+        "accurate": 34
+      },
+      "reduced-digital": {
+        "total": 33,
+        "accurate": 33
+      },
+      "mixed-basket": {
+        "total": 33,
+        "accurate": 33
+      }
+    },
+    "ES": {
+      "standard-goods": {
+        "total": 34,
+        "accurate": 34
+      },
+      "reduced-digital": {
+        "total": 33,
+        "accurate": 33
+      },
+      "mixed-basket": {
+        "total": 33,
+        "accurate": 33
+      }
+    },
+    "SE": {
+      "standard-goods": {
+        "total": 34,
+        "accurate": 34
+      },
+      "reduced-digital": {
+        "total": 33,
+        "accurate": 33
+      },
+      "mixed-basket": {
+        "total": 33,
+        "accurate": 33
+      }
+    }
+  }
+}
