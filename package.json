@@ -23,6 +23,7 @@
     "check-format": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\""
   },
   "devDependencies": {
+    "prettier": "3",
     "vitest": "^2.0.0"
   }
 }
