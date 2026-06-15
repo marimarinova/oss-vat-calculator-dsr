@@ -10510,9 +10510,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Laptop Computer",
-    "expectedVATAmount": 1.92,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 2.1,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-GOODS-001",
@@ -10525,9 +10525,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Desk Lamp",
-    "expectedVATAmount": 97.18,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 106.01,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-GOODS-002",
@@ -10540,9 +10540,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "USB Cable",
-    "expectedVATAmount": 40.93,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 44.65,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-GOODS-003",
@@ -10555,9 +10555,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Notebook Set",
-    "expectedVATAmount": 96.36,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 105.12,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-GOODS-004",
@@ -10570,9 +10570,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Printer Paper (500 sheets)",
-    "expectedVATAmount": 91.03,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 99.31,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-GOODS-005",
@@ -10585,9 +10585,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Laptop Computer",
-    "expectedVATAmount": 70.33,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 76.72,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-GOODS-006",
@@ -10600,9 +10600,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Printer Paper (500 sheets)",
-    "expectedVATAmount": 79.62,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 86.86,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-GOODS-007",
@@ -10615,9 +10615,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Keyboard",
-    "expectedVATAmount": 55.39,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 60.42,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-GOODS-008",
@@ -10630,9 +10630,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Printer Paper (500 sheets)",
-    "expectedVATAmount": 43.01,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 46.91,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-GOODS-009",
@@ -10645,9 +10645,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Notebook Set",
-    "expectedVATAmount": 87.84,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 95.83,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-GOODS-010",
@@ -10660,9 +10660,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "File Cabinet",
-    "expectedVATAmount": 17.48,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 19.07,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-GOODS-011",
@@ -10675,9 +10675,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Notebook Set",
-    "expectedVATAmount": 95.09,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 103.73,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-GOODS-012",
@@ -10690,9 +10690,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Keyboard",
-    "expectedVATAmount": 39.35,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 42.92,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-GOODS-013",
@@ -10705,9 +10705,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "File Cabinet",
-    "expectedVATAmount": 4.53,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 4.94,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-GOODS-014",
@@ -10720,9 +10720,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Office Chair",
-    "expectedVATAmount": 36.01,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 39.28,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-GOODS-015",
@@ -10735,9 +10735,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Notebook Set",
-    "expectedVATAmount": 70.26,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 76.64,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-GOODS-016",
@@ -10750,9 +10750,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "File Cabinet",
-    "expectedVATAmount": 43.76,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 47.73,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-GOODS-017",
@@ -10765,9 +10765,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "USB Cable",
-    "expectedVATAmount": 1.88,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 2.05,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-GOODS-018",
@@ -10780,9 +10780,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Desk Lamp",
-    "expectedVATAmount": 98.9,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 107.89,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-GOODS-019",
@@ -10795,9 +10795,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Office Chair",
-    "expectedVATAmount": 53.49,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 58.35,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-GOODS-020",
@@ -10810,9 +10810,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Wireless Mouse",
-    "expectedVATAmount": 19.93,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 21.74,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-GOODS-021",
@@ -10825,9 +10825,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Monitor Stand",
-    "expectedVATAmount": 43.59,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 47.56,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-GOODS-022",
@@ -10840,9 +10840,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Printer Paper (500 sheets)",
-    "expectedVATAmount": 60.96,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 66.5,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-GOODS-023",
@@ -10855,9 +10855,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Printer Paper (500 sheets)",
-    "expectedVATAmount": 8.49,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 9.26,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-GOODS-024",
@@ -10870,9 +10870,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Printer Paper (500 sheets)",
-    "expectedVATAmount": 40.47,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 44.15,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-GOODS-025",
@@ -10885,9 +10885,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "USB Cable",
-    "expectedVATAmount": 93.38,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 101.87,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-GOODS-026",
@@ -10900,9 +10900,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Keyboard",
-    "expectedVATAmount": 103.68,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 113.11,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-GOODS-027",
@@ -10915,9 +10915,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "USB Cable",
-    "expectedVATAmount": 7.86,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 8.57,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-GOODS-028",
@@ -10930,9 +10930,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Notebook Set",
-    "expectedVATAmount": 69.08,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 75.36,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-GOODS-029",
@@ -10945,9 +10945,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Desk Lamp",
-    "expectedVATAmount": 6.03,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 6.58,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-GOODS-030",
@@ -10960,9 +10960,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "USB Cable",
-    "expectedVATAmount": 81.87,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 89.32,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-GOODS-031",
@@ -10975,9 +10975,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "USB Cable",
-    "expectedVATAmount": 15.29,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 16.68,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-GOODS-032",
@@ -10990,9 +10990,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Notebook Set",
-    "expectedVATAmount": 69.46,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 75.77,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-GOODS-033",
@@ -11005,9 +11005,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Laptop Computer",
-    "expectedVATAmount": 71.95,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 78.49,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-DIGITAL-000",
@@ -11515,9 +11515,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Multi-Category Order",
-    "expectedVATAmount": 9.59,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 10.47,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-MIXED-001",
@@ -11530,9 +11530,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Bulk Purchase Order",
-    "expectedVATAmount": 109.13,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 119.06,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-MIXED-002",
@@ -11545,9 +11545,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Hybrid Software Bundle",
-    "expectedVATAmount": 48.1,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 52.47,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-MIXED-003",
@@ -11560,9 +11560,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Workstation Kit",
-    "expectedVATAmount": 89.66,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 97.81,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-MIXED-004",
@@ -11575,9 +11575,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Bulk Purchase Order",
-    "expectedVATAmount": 61.39,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 66.98,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-MIXED-005",
@@ -11590,9 +11590,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Digital + Physical Bundle",
-    "expectedVATAmount": 8.68,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 9.47,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-MIXED-006",
@@ -11605,9 +11605,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Digital + Physical Bundle",
-    "expectedVATAmount": 85.78,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 93.58,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-MIXED-007",
@@ -11620,9 +11620,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Digital + Physical Bundle",
-    "expectedVATAmount": 11.39,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 12.42,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-MIXED-008",
@@ -11635,9 +11635,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Complete Office Solution",
-    "expectedVATAmount": 48.66,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 53.09,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-MIXED-009",
@@ -11650,9 +11650,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Hybrid Software Bundle",
-    "expectedVATAmount": 25.19,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 27.48,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-MIXED-010",
@@ -11665,9 +11665,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Complete Office Solution",
-    "expectedVATAmount": 95.23,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 103.89,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-MIXED-011",
@@ -11680,9 +11680,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Tech Starter Pack",
-    "expectedVATAmount": 86.38,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 94.23,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-MIXED-012",
@@ -11695,9 +11695,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Bulk Purchase Order",
-    "expectedVATAmount": 44,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 47.99,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-MIXED-013",
@@ -11710,9 +11710,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Bulk Purchase Order",
-    "expectedVATAmount": 13.46,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 14.68,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-MIXED-014",
@@ -11725,9 +11725,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Complete Office Solution",
-    "expectedVATAmount": 40.15,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 43.8,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-MIXED-015",
@@ -11740,9 +11740,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Complete Office Solution",
-    "expectedVATAmount": 60.54,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 66.04,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-MIXED-016",
@@ -11755,9 +11755,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Workstation Kit",
-    "expectedVATAmount": 11.1,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 12.1,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-MIXED-017",
@@ -11770,9 +11770,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Multi-Category Order",
-    "expectedVATAmount": 46.1,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 50.29,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-MIXED-018",
@@ -11785,9 +11785,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Office Supplies Bundle",
-    "expectedVATAmount": 102.03,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 111.31,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-MIXED-019",
@@ -11800,9 +11800,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Tech Starter Pack",
-    "expectedVATAmount": 6.46,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 7.05,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-MIXED-020",
@@ -11815,9 +11815,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Hybrid Software Bundle",
-    "expectedVATAmount": 22.56,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 24.61,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-MIXED-021",
@@ -11830,9 +11830,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Complete Office Solution",
-    "expectedVATAmount": 86.81,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 94.7,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-MIXED-022",
@@ -11845,9 +11845,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Bulk Purchase Order",
-    "expectedVATAmount": 26.78,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 29.22,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-MIXED-023",
@@ -11860,9 +11860,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Complete Office Solution",
-    "expectedVATAmount": 105.65,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 115.26,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-MIXED-024",
@@ -11875,9 +11875,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Workstation Kit",
-    "expectedVATAmount": 42.1,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 45.92,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-MIXED-025",
@@ -11890,9 +11890,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Hybrid Software Bundle",
-    "expectedVATAmount": 99.29,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 108.31,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-MIXED-026",
@@ -11905,9 +11905,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Digital + Physical Bundle",
-    "expectedVATAmount": 104.8,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 114.33,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-MIXED-027",
@@ -11920,9 +11920,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Hybrid Software Bundle",
-    "expectedVATAmount": 104.01,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 113.47,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-MIXED-028",
@@ -11935,9 +11935,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Workstation Kit",
-    "expectedVATAmount": 33.4,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 36.43,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-MIXED-029",
@@ -11950,9 +11950,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Tech Starter Pack",
-    "expectedVATAmount": 47.23,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 51.52,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-MIXED-030",
@@ -11965,9 +11965,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Hybrid Software Bundle",
-    "expectedVATAmount": 81.98,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 89.44,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-MIXED-031",
@@ -11980,9 +11980,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Mixed Products Order",
-    "expectedVATAmount": 74.14,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 80.88,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "EE-MIXED-032",
@@ -11995,9 +11995,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Tech Starter Pack",
-    "expectedVATAmount": 69.06,
-    "expectedVATRate": 22,
-    "validationSource": "internal"
+    "expectedVATAmount": 75.34,
+    "expectedVATRate": 24,
+    "validationSource": "oracle"
   },
   {
     "id": "FI-GOODS-000",
@@ -12520,9 +12520,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Cloud Storage Subscription (1 year)",
-    "expectedVATAmount": 26.98,
-    "expectedVATRate": 10,
-    "validationSource": "internal"
+    "expectedVATAmount": 36.43,
+    "expectedVATRate": 13.5,
+    "validationSource": "oracle"
   },
   {
     "id": "FI-DIGITAL-001",
@@ -12535,9 +12535,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Cloud Storage Subscription (1 year)",
-    "expectedVATAmount": 45.3,
-    "expectedVATRate": 10,
-    "validationSource": "internal"
+    "expectedVATAmount": 61.16,
+    "expectedVATRate": 13.5,
+    "validationSource": "oracle"
   },
   {
     "id": "FI-DIGITAL-002",
@@ -12550,9 +12550,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Streaming Service Subscription",
-    "expectedVATAmount": 36.01,
-    "expectedVATRate": 10,
-    "validationSource": "internal"
+    "expectedVATAmount": 48.61,
+    "expectedVATRate": 13.5,
+    "validationSource": "oracle"
   },
   {
     "id": "FI-DIGITAL-003",
@@ -12565,9 +12565,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Software License",
-    "expectedVATAmount": 19.72,
-    "expectedVATRate": 10,
-    "validationSource": "internal"
+    "expectedVATAmount": 26.62,
+    "expectedVATRate": 13.5,
+    "validationSource": "oracle"
   },
   {
     "id": "FI-DIGITAL-004",
@@ -12580,9 +12580,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Web Hosting Service",
-    "expectedVATAmount": 17.07,
-    "expectedVATRate": 10,
-    "validationSource": "internal"
+    "expectedVATAmount": 23.05,
+    "expectedVATRate": 13.5,
+    "validationSource": "oracle"
   },
   {
     "id": "FI-DIGITAL-005",
@@ -12595,9 +12595,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Cloud Storage Subscription (1 year)",
-    "expectedVATAmount": 48.68,
-    "expectedVATRate": 10,
-    "validationSource": "internal"
+    "expectedVATAmount": 65.72,
+    "expectedVATRate": 13.5,
+    "validationSource": "oracle"
   },
   {
     "id": "FI-DIGITAL-006",
@@ -12610,9 +12610,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Web Hosting Service",
-    "expectedVATAmount": 36.18,
-    "expectedVATRate": 10,
-    "validationSource": "internal"
+    "expectedVATAmount": 48.84,
+    "expectedVATRate": 13.5,
+    "validationSource": "oracle"
   },
   {
     "id": "FI-DIGITAL-007",
@@ -12625,9 +12625,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "E-Learning Course License",
-    "expectedVATAmount": 49.68,
-    "expectedVATRate": 10,
-    "validationSource": "internal"
+    "expectedVATAmount": 67.07,
+    "expectedVATRate": 13.5,
+    "validationSource": "oracle"
   },
   {
     "id": "FI-DIGITAL-008",
@@ -12640,9 +12640,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Digital Certification Course",
-    "expectedVATAmount": 10.83,
-    "expectedVATRate": 10,
-    "validationSource": "internal"
+    "expectedVATAmount": 14.61,
+    "expectedVATRate": 13.5,
+    "validationSource": "oracle"
   },
   {
     "id": "FI-DIGITAL-009",
@@ -12655,9 +12655,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "E-Learning Course License",
-    "expectedVATAmount": 39.23,
-    "expectedVATRate": 10,
-    "validationSource": "internal"
+    "expectedVATAmount": 52.96,
+    "expectedVATRate": 13.5,
+    "validationSource": "oracle"
   },
   {
     "id": "FI-DIGITAL-010",
@@ -12670,9 +12670,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Streaming Service Subscription",
-    "expectedVATAmount": 7.01,
-    "expectedVATRate": 10,
-    "validationSource": "internal"
+    "expectedVATAmount": 9.47,
+    "expectedVATRate": 13.5,
+    "validationSource": "oracle"
   },
   {
     "id": "FI-DIGITAL-011",
@@ -12685,9 +12685,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Online Database Access",
-    "expectedVATAmount": 33.81,
-    "expectedVATRate": 10,
-    "validationSource": "internal"
+    "expectedVATAmount": 45.65,
+    "expectedVATRate": 13.5,
+    "validationSource": "oracle"
   },
   {
     "id": "FI-DIGITAL-012",
@@ -12700,9 +12700,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "E-Learning Course License",
-    "expectedVATAmount": 41.25,
-    "expectedVATRate": 10,
-    "validationSource": "internal"
+    "expectedVATAmount": 55.68,
+    "expectedVATRate": 13.5,
+    "validationSource": "oracle"
   },
   {
     "id": "FI-DIGITAL-013",
@@ -12715,9 +12715,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Digital Books (PDF Bundle)",
-    "expectedVATAmount": 49.94,
-    "expectedVATRate": 10,
-    "validationSource": "internal"
+    "expectedVATAmount": 67.42,
+    "expectedVATRate": 13.5,
+    "validationSource": "oracle"
   },
   {
     "id": "FI-DIGITAL-014",
@@ -12730,9 +12730,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Cloud Storage Subscription (1 year)",
-    "expectedVATAmount": 31.02,
-    "expectedVATRate": 10,
-    "validationSource": "internal"
+    "expectedVATAmount": 41.88,
+    "expectedVATRate": 13.5,
+    "validationSource": "oracle"
   },
   {
     "id": "FI-DIGITAL-015",
@@ -12745,9 +12745,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Digital Certification Course",
-    "expectedVATAmount": 5.11,
-    "expectedVATRate": 10,
-    "validationSource": "internal"
+    "expectedVATAmount": 6.9,
+    "expectedVATRate": 13.5,
+    "validationSource": "oracle"
   },
   {
     "id": "FI-DIGITAL-016",
@@ -12760,9 +12760,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Software License",
-    "expectedVATAmount": 42.33,
-    "expectedVATRate": 10,
-    "validationSource": "internal"
+    "expectedVATAmount": 57.15,
+    "expectedVATRate": 13.5,
+    "validationSource": "oracle"
   },
   {
     "id": "FI-DIGITAL-017",
@@ -12775,9 +12775,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "API Access License",
-    "expectedVATAmount": 14.82,
-    "expectedVATRate": 10,
-    "validationSource": "internal"
+    "expectedVATAmount": 20.01,
+    "expectedVATRate": 13.5,
+    "validationSource": "oracle"
   },
   {
     "id": "FI-DIGITAL-018",
@@ -12790,9 +12790,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Web Hosting Service",
-    "expectedVATAmount": 42.19,
-    "expectedVATRate": 10,
-    "validationSource": "internal"
+    "expectedVATAmount": 56.96,
+    "expectedVATRate": 13.5,
+    "validationSource": "oracle"
   },
   {
     "id": "FI-DIGITAL-019",
@@ -12805,9 +12805,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Digital Books (PDF Bundle)",
-    "expectedVATAmount": 46.07,
-    "expectedVATRate": 10,
-    "validationSource": "internal"
+    "expectedVATAmount": 62.2,
+    "expectedVATRate": 13.5,
+    "validationSource": "oracle"
   },
   {
     "id": "FI-DIGITAL-020",
@@ -12820,9 +12820,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Email Marketing Platform Access",
-    "expectedVATAmount": 47.09,
-    "expectedVATRate": 10,
-    "validationSource": "internal"
+    "expectedVATAmount": 63.57,
+    "expectedVATRate": 13.5,
+    "validationSource": "oracle"
   },
   {
     "id": "FI-DIGITAL-021",
@@ -12835,9 +12835,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Streaming Service Subscription",
-    "expectedVATAmount": 16.36,
-    "expectedVATRate": 10,
-    "validationSource": "internal"
+    "expectedVATAmount": 22.09,
+    "expectedVATRate": 13.5,
+    "validationSource": "oracle"
   },
   {
     "id": "FI-DIGITAL-022",
@@ -12850,9 +12850,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Email Marketing Platform Access",
-    "expectedVATAmount": 24.03,
-    "expectedVATRate": 10,
-    "validationSource": "internal"
+    "expectedVATAmount": 32.44,
+    "expectedVATRate": 13.5,
+    "validationSource": "oracle"
   },
   {
     "id": "FI-DIGITAL-023",
@@ -12865,9 +12865,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Email Marketing Platform Access",
-    "expectedVATAmount": 41.2,
-    "expectedVATRate": 10,
-    "validationSource": "internal"
+    "expectedVATAmount": 55.62,
+    "expectedVATRate": 13.5,
+    "validationSource": "oracle"
   },
   {
     "id": "FI-DIGITAL-024",
@@ -12880,9 +12880,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Cloud Storage Subscription (1 year)",
-    "expectedVATAmount": 39.01,
-    "expectedVATRate": 10,
-    "validationSource": "internal"
+    "expectedVATAmount": 52.66,
+    "expectedVATRate": 13.5,
+    "validationSource": "oracle"
   },
   {
     "id": "FI-DIGITAL-025",
@@ -12895,9 +12895,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "E-Learning Course License",
-    "expectedVATAmount": 38.08,
-    "expectedVATRate": 10,
-    "validationSource": "internal"
+    "expectedVATAmount": 51.4,
+    "expectedVATRate": 13.5,
+    "validationSource": "oracle"
   },
   {
     "id": "FI-DIGITAL-026",
@@ -12910,9 +12910,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Email Marketing Platform Access",
-    "expectedVATAmount": 9.53,
-    "expectedVATRate": 10,
-    "validationSource": "internal"
+    "expectedVATAmount": 12.87,
+    "expectedVATRate": 13.5,
+    "validationSource": "oracle"
   },
   {
     "id": "FI-DIGITAL-027",
@@ -12925,9 +12925,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "E-Learning Course License",
-    "expectedVATAmount": 23.5,
-    "expectedVATRate": 10,
-    "validationSource": "internal"
+    "expectedVATAmount": 31.72,
+    "expectedVATRate": 13.5,
+    "validationSource": "oracle"
   },
   {
     "id": "FI-DIGITAL-028",
@@ -12940,9 +12940,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "API Access License",
-    "expectedVATAmount": 1.6,
-    "expectedVATRate": 10,
-    "validationSource": "internal"
+    "expectedVATAmount": 2.15,
+    "expectedVATRate": 13.5,
+    "validationSource": "oracle"
   },
   {
     "id": "FI-DIGITAL-029",
@@ -12955,9 +12955,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Software License",
-    "expectedVATAmount": 13.96,
-    "expectedVATRate": 10,
-    "validationSource": "internal"
+    "expectedVATAmount": 18.84,
+    "expectedVATRate": 13.5,
+    "validationSource": "oracle"
   },
   {
     "id": "FI-DIGITAL-030",
@@ -12970,9 +12970,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Digital Books (PDF Bundle)",
-    "expectedVATAmount": 31.7,
-    "expectedVATRate": 10,
-    "validationSource": "internal"
+    "expectedVATAmount": 42.8,
+    "expectedVATRate": 13.5,
+    "validationSource": "oracle"
   },
   {
     "id": "FI-DIGITAL-031",
@@ -12985,9 +12985,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Email Marketing Platform Access",
-    "expectedVATAmount": 25.96,
-    "expectedVATRate": 10,
-    "validationSource": "internal"
+    "expectedVATAmount": 35.04,
+    "expectedVATRate": 13.5,
+    "validationSource": "oracle"
   },
   {
     "id": "FI-DIGITAL-032",
@@ -13000,9 +13000,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Email Marketing Platform Access",
-    "expectedVATAmount": 17.35,
-    "expectedVATRate": 10,
-    "validationSource": "internal"
+    "expectedVATAmount": 23.42,
+    "expectedVATRate": 13.5,
+    "validationSource": "oracle"
   },
   {
     "id": "FI-MIXED-000",
@@ -33010,9 +33010,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Office Chair",
-    "expectedVATAmount": 60.51,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 66.88,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-GOODS-001",
@@ -33025,9 +33025,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Notebook Set",
-    "expectedVATAmount": 19.99,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 22.1,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-GOODS-002",
@@ -33040,9 +33040,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Office Chair",
-    "expectedVATAmount": 36.73,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 40.59,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-GOODS-003",
@@ -33055,9 +33055,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "File Cabinet",
-    "expectedVATAmount": 55.86,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 61.74,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-GOODS-004",
@@ -33070,9 +33070,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "USB Cable",
-    "expectedVATAmount": 22.52,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 24.89,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-GOODS-005",
@@ -33085,9 +33085,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "File Cabinet",
-    "expectedVATAmount": 69.95,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 77.32,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-GOODS-006",
@@ -33100,9 +33100,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Office Chair",
-    "expectedVATAmount": 49.24,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 54.43,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-GOODS-007",
@@ -33115,9 +33115,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Desk Lamp",
-    "expectedVATAmount": 93.63,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 103.48,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-GOODS-008",
@@ -33130,9 +33130,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Notebook Set",
-    "expectedVATAmount": 54.19,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 59.9,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-GOODS-009",
@@ -33145,9 +33145,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Office Chair",
-    "expectedVATAmount": 64.18,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 70.94,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-GOODS-010",
@@ -33160,9 +33160,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Keyboard",
-    "expectedVATAmount": 68.73,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 75.96,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-GOODS-011",
@@ -33175,9 +33175,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Printer Paper (500 sheets)",
-    "expectedVATAmount": 12.96,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 14.33,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-GOODS-012",
@@ -33190,9 +33190,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Laptop Computer",
-    "expectedVATAmount": 30.14,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 33.31,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-GOODS-013",
@@ -33205,9 +33205,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Notebook Set",
-    "expectedVATAmount": 65.38,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 72.26,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-GOODS-014",
@@ -33220,9 +33220,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "USB Cable",
-    "expectedVATAmount": 63.82,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 70.54,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-GOODS-015",
@@ -33235,9 +33235,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Desk Lamp",
-    "expectedVATAmount": 64.67,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 71.47,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-GOODS-016",
@@ -33250,9 +33250,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Printer Paper (500 sheets)",
-    "expectedVATAmount": 13.04,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 14.42,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-GOODS-017",
@@ -33265,9 +33265,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Monitor Stand",
-    "expectedVATAmount": 42.19,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 46.63,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-GOODS-018",
@@ -33280,9 +33280,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Printer Paper (500 sheets)",
-    "expectedVATAmount": 3.19,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 3.53,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-GOODS-019",
@@ -33295,9 +33295,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Office Chair",
-    "expectedVATAmount": 29.29,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 32.37,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-GOODS-020",
@@ -33310,9 +33310,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Notebook Set",
-    "expectedVATAmount": 65.62,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 72.52,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-GOODS-021",
@@ -33325,9 +33325,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Desk Lamp",
-    "expectedVATAmount": 57.32,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 63.35,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-GOODS-022",
@@ -33340,9 +33340,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "File Cabinet",
-    "expectedVATAmount": 43.57,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 48.16,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-GOODS-023",
@@ -33355,9 +33355,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Desk Lamp",
-    "expectedVATAmount": 63.57,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 70.27,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-GOODS-024",
@@ -33370,9 +33370,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Monitor Stand",
-    "expectedVATAmount": 62.46,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 69.03,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-GOODS-025",
@@ -33385,9 +33385,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Wireless Mouse",
-    "expectedVATAmount": 79.41,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 87.77,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-GOODS-026",
@@ -33400,9 +33400,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Office Chair",
-    "expectedVATAmount": 59.57,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 65.84,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-GOODS-027",
@@ -33415,9 +33415,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Office Chair",
-    "expectedVATAmount": 42.13,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 46.56,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-GOODS-028",
@@ -33430,9 +33430,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "File Cabinet",
-    "expectedVATAmount": 66.27,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 73.24,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-GOODS-029",
@@ -33445,9 +33445,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Printer Paper (500 sheets)",
-    "expectedVATAmount": 77.12,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 85.24,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-GOODS-030",
@@ -33460,9 +33460,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Desk Lamp",
-    "expectedVATAmount": 19.84,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 21.93,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-GOODS-031",
@@ -33475,9 +33475,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Keyboard",
-    "expectedVATAmount": 27.65,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 30.56,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-GOODS-032",
@@ -33490,9 +33490,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Wireless Mouse",
-    "expectedVATAmount": 45.69,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 50.5,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-GOODS-033",
@@ -33505,9 +33505,9 @@
     "supplierCountryCode": "DE",
     "productType": "standard-goods",
     "productDescription": "Laptop Computer",
-    "expectedVATAmount": 19.1,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 21.11,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-DIGITAL-000",
@@ -33520,9 +33520,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "API Access License",
-    "expectedVATAmount": 21.35,
-    "expectedVATRate": 5,
-    "validationSource": "internal"
+    "expectedVATAmount": 46.96,
+    "expectedVATRate": 11,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-DIGITAL-001",
@@ -33535,9 +33535,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Digital Books (PDF Bundle)",
-    "expectedVATAmount": 21.8,
-    "expectedVATRate": 5,
-    "validationSource": "internal"
+    "expectedVATAmount": 47.96,
+    "expectedVATRate": 11,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-DIGITAL-002",
@@ -33550,9 +33550,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "API Access License",
-    "expectedVATAmount": 16.69,
-    "expectedVATRate": 5,
-    "validationSource": "internal"
+    "expectedVATAmount": 36.72,
+    "expectedVATRate": 11,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-DIGITAL-003",
@@ -33565,9 +33565,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Web Hosting Service",
-    "expectedVATAmount": 16.34,
-    "expectedVATRate": 5,
-    "validationSource": "internal"
+    "expectedVATAmount": 35.95,
+    "expectedVATRate": 11,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-DIGITAL-004",
@@ -33580,9 +33580,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Streaming Service Subscription",
-    "expectedVATAmount": 6.31,
-    "expectedVATRate": 5,
-    "validationSource": "internal"
+    "expectedVATAmount": 13.88,
+    "expectedVATRate": 11,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-DIGITAL-005",
@@ -33595,9 +33595,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "API Access License",
-    "expectedVATAmount": 21.65,
-    "expectedVATRate": 5,
-    "validationSource": "internal"
+    "expectedVATAmount": 47.64,
+    "expectedVATRate": 11,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-DIGITAL-006",
@@ -33610,9 +33610,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Streaming Service Subscription",
-    "expectedVATAmount": 23.19,
-    "expectedVATRate": 5,
-    "validationSource": "internal"
+    "expectedVATAmount": 51.03,
+    "expectedVATRate": 11,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-DIGITAL-007",
@@ -33625,9 +33625,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Web Hosting Service",
-    "expectedVATAmount": 21.24,
-    "expectedVATRate": 5,
-    "validationSource": "internal"
+    "expectedVATAmount": 46.73,
+    "expectedVATRate": 11,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-DIGITAL-008",
@@ -33640,9 +33640,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "E-Learning Course License",
-    "expectedVATAmount": 1.35,
-    "expectedVATRate": 5,
-    "validationSource": "internal"
+    "expectedVATAmount": 2.97,
+    "expectedVATRate": 11,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-DIGITAL-009",
@@ -33655,9 +33655,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "API Access License",
-    "expectedVATAmount": 23.34,
-    "expectedVATRate": 5,
-    "validationSource": "internal"
+    "expectedVATAmount": 51.36,
+    "expectedVATRate": 11,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-DIGITAL-010",
@@ -33670,9 +33670,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Web Hosting Service",
-    "expectedVATAmount": 23.28,
-    "expectedVATRate": 5,
-    "validationSource": "internal"
+    "expectedVATAmount": 51.21,
+    "expectedVATRate": 11,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-DIGITAL-011",
@@ -33685,9 +33685,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Software License",
-    "expectedVATAmount": 11.47,
-    "expectedVATRate": 5,
-    "validationSource": "internal"
+    "expectedVATAmount": 25.23,
+    "expectedVATRate": 11,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-DIGITAL-012",
@@ -33700,9 +33700,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Software License",
-    "expectedVATAmount": 22.98,
-    "expectedVATRate": 5,
-    "validationSource": "internal"
+    "expectedVATAmount": 50.55,
+    "expectedVATRate": 11,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-DIGITAL-013",
@@ -33715,9 +33715,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Cloud Storage Subscription (1 year)",
-    "expectedVATAmount": 18.62,
-    "expectedVATRate": 5,
-    "validationSource": "internal"
+    "expectedVATAmount": 40.96,
+    "expectedVATRate": 11,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-DIGITAL-014",
@@ -33730,9 +33730,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Streaming Service Subscription",
-    "expectedVATAmount": 8.7,
-    "expectedVATRate": 5,
-    "validationSource": "internal"
+    "expectedVATAmount": 19.14,
+    "expectedVATRate": 11,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-DIGITAL-015",
@@ -33745,9 +33745,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Web Hosting Service",
-    "expectedVATAmount": 3.53,
-    "expectedVATRate": 5,
-    "validationSource": "internal"
+    "expectedVATAmount": 7.78,
+    "expectedVATRate": 11,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-DIGITAL-016",
@@ -33760,9 +33760,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "API Access License",
-    "expectedVATAmount": 13.44,
-    "expectedVATRate": 5,
-    "validationSource": "internal"
+    "expectedVATAmount": 29.57,
+    "expectedVATRate": 11,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-DIGITAL-017",
@@ -33775,9 +33775,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Email Marketing Platform Access",
-    "expectedVATAmount": 23.97,
-    "expectedVATRate": 5,
-    "validationSource": "internal"
+    "expectedVATAmount": 52.74,
+    "expectedVATRate": 11,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-DIGITAL-018",
@@ -33790,9 +33790,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Email Marketing Platform Access",
-    "expectedVATAmount": 20.7,
-    "expectedVATRate": 5,
-    "validationSource": "internal"
+    "expectedVATAmount": 45.54,
+    "expectedVATRate": 11,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-DIGITAL-019",
@@ -33805,9 +33805,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "E-Learning Course License",
-    "expectedVATAmount": 13.93,
-    "expectedVATRate": 5,
-    "validationSource": "internal"
+    "expectedVATAmount": 30.65,
+    "expectedVATRate": 11,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-DIGITAL-020",
@@ -33820,9 +33820,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Cloud Storage Subscription (1 year)",
-    "expectedVATAmount": 13.98,
-    "expectedVATRate": 5,
-    "validationSource": "internal"
+    "expectedVATAmount": 30.76,
+    "expectedVATRate": 11,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-DIGITAL-021",
@@ -33835,9 +33835,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Streaming Service Subscription",
-    "expectedVATAmount": 6.41,
-    "expectedVATRate": 5,
-    "validationSource": "internal"
+    "expectedVATAmount": 14.11,
+    "expectedVATRate": 11,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-DIGITAL-022",
@@ -33850,9 +33850,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Web Hosting Service",
-    "expectedVATAmount": 1.54,
-    "expectedVATRate": 5,
-    "validationSource": "internal"
+    "expectedVATAmount": 3.38,
+    "expectedVATRate": 11,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-DIGITAL-023",
@@ -33865,9 +33865,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Streaming Service Subscription",
-    "expectedVATAmount": 9.66,
-    "expectedVATRate": 5,
-    "validationSource": "internal"
+    "expectedVATAmount": 21.26,
+    "expectedVATRate": 11,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-DIGITAL-024",
@@ -33880,9 +33880,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Web Hosting Service",
-    "expectedVATAmount": 16.36,
-    "expectedVATRate": 5,
-    "validationSource": "internal"
+    "expectedVATAmount": 35.99,
+    "expectedVATRate": 11,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-DIGITAL-025",
@@ -33895,9 +33895,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Software License",
-    "expectedVATAmount": 7.19,
-    "expectedVATRate": 5,
-    "validationSource": "internal"
+    "expectedVATAmount": 15.81,
+    "expectedVATRate": 11,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-DIGITAL-026",
@@ -33910,9 +33910,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "E-Learning Course License",
-    "expectedVATAmount": 17.2,
-    "expectedVATRate": 5,
-    "validationSource": "internal"
+    "expectedVATAmount": 37.85,
+    "expectedVATRate": 11,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-DIGITAL-027",
@@ -33925,9 +33925,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Software License",
-    "expectedVATAmount": 7.23,
-    "expectedVATRate": 5,
-    "validationSource": "internal"
+    "expectedVATAmount": 15.9,
+    "expectedVATRate": 11,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-DIGITAL-028",
@@ -33940,9 +33940,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Streaming Service Subscription",
-    "expectedVATAmount": 12.32,
-    "expectedVATRate": 5,
-    "validationSource": "internal"
+    "expectedVATAmount": 27.1,
+    "expectedVATRate": 11,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-DIGITAL-029",
@@ -33955,9 +33955,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Cloud Storage Subscription (1 year)",
-    "expectedVATAmount": 18.04,
-    "expectedVATRate": 5,
-    "validationSource": "internal"
+    "expectedVATAmount": 39.69,
+    "expectedVATRate": 11,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-DIGITAL-030",
@@ -33970,9 +33970,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "E-Learning Course License",
-    "expectedVATAmount": 9.96,
-    "expectedVATRate": 5,
-    "validationSource": "internal"
+    "expectedVATAmount": 21.9,
+    "expectedVATRate": 11,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-DIGITAL-031",
@@ -33985,9 +33985,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Online Database Access",
-    "expectedVATAmount": 23.13,
-    "expectedVATRate": 5,
-    "validationSource": "internal"
+    "expectedVATAmount": 50.88,
+    "expectedVATRate": 11,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-DIGITAL-032",
@@ -34000,9 +34000,9 @@
     "supplierCountryCode": "IE",
     "productType": "reduced-digital",
     "productDescription": "Digital Books (PDF Bundle)",
-    "expectedVATAmount": 18.36,
-    "expectedVATRate": 5,
-    "validationSource": "internal"
+    "expectedVATAmount": 40.4,
+    "expectedVATRate": 11,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-MIXED-000",
@@ -34015,9 +34015,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Workstation Kit",
-    "expectedVATAmount": 22.73,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 25.12,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-MIXED-001",
@@ -34030,9 +34030,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Hybrid Software Bundle",
-    "expectedVATAmount": 79.96,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 88.37,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-MIXED-002",
@@ -34045,9 +34045,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Hybrid Software Bundle",
-    "expectedVATAmount": 92.56,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 102.3,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-MIXED-003",
@@ -34060,9 +34060,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Mixed Products Order",
-    "expectedVATAmount": 5.66,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 6.26,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-MIXED-004",
@@ -34075,9 +34075,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Complete Office Solution",
-    "expectedVATAmount": 46.56,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 51.47,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-MIXED-005",
@@ -34090,9 +34090,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Hybrid Software Bundle",
-    "expectedVATAmount": 66.35,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 73.33,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-MIXED-006",
@@ -34105,9 +34105,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Assorted Items Package",
-    "expectedVATAmount": 10.15,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 11.22,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-MIXED-007",
@@ -34120,9 +34120,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Tech Starter Pack",
-    "expectedVATAmount": 11.21,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 12.39,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-MIXED-008",
@@ -34135,9 +34135,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Mixed Products Order",
-    "expectedVATAmount": 14.67,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 16.21,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-MIXED-009",
@@ -34150,9 +34150,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Office Supplies Bundle",
-    "expectedVATAmount": 59.71,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 65.99,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-MIXED-010",
@@ -34165,9 +34165,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Hybrid Software Bundle",
-    "expectedVATAmount": 91.46,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 101.09,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-MIXED-011",
@@ -34180,9 +34180,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Hybrid Software Bundle",
-    "expectedVATAmount": 55.08,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 60.88,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-MIXED-012",
@@ -34195,9 +34195,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Digital + Physical Bundle",
-    "expectedVATAmount": 83.79,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 92.61,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-MIXED-013",
@@ -34210,9 +34210,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Bulk Purchase Order",
-    "expectedVATAmount": 28.68,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 31.7,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-MIXED-014",
@@ -34225,9 +34225,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Assorted Items Package",
-    "expectedVATAmount": 22.99,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 25.41,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-MIXED-015",
@@ -34240,9 +34240,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Workstation Kit",
-    "expectedVATAmount": 11.86,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 13.11,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-MIXED-016",
@@ -34255,9 +34255,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Workstation Kit",
-    "expectedVATAmount": 34.47,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 38.1,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-MIXED-017",
@@ -34270,9 +34270,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Digital + Physical Bundle",
-    "expectedVATAmount": 35.97,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 39.76,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-MIXED-018",
@@ -34285,9 +34285,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Assorted Items Package",
-    "expectedVATAmount": 55.54,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 61.38,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-MIXED-019",
@@ -34300,9 +34300,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Workstation Kit",
-    "expectedVATAmount": 38.31,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 42.34,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-MIXED-020",
@@ -34315,9 +34315,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Multi-Category Order",
-    "expectedVATAmount": 23.48,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 25.95,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-MIXED-021",
@@ -34330,9 +34330,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Hybrid Software Bundle",
-    "expectedVATAmount": 50.23,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 55.51,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-MIXED-022",
@@ -34345,9 +34345,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Office Supplies Bundle",
-    "expectedVATAmount": 63.7,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 70.4,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-MIXED-023",
@@ -34360,9 +34360,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Tech Starter Pack",
-    "expectedVATAmount": 9.02,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 9.97,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-MIXED-024",
@@ -34375,9 +34375,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Workstation Kit",
-    "expectedVATAmount": 19.45,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 21.49,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-MIXED-025",
@@ -34390,9 +34390,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Bulk Purchase Order",
-    "expectedVATAmount": 40.1,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 44.32,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-MIXED-026",
@@ -34405,9 +34405,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Office Supplies Bundle",
-    "expectedVATAmount": 16.13,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 17.82,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-MIXED-027",
@@ -34420,9 +34420,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Complete Office Solution",
-    "expectedVATAmount": 80.76,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 89.26,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-MIXED-028",
@@ -34435,9 +34435,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Mixed Products Order",
-    "expectedVATAmount": 85.08,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 94.04,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-MIXED-029",
@@ -34450,9 +34450,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Assorted Items Package",
-    "expectedVATAmount": 68.29,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 75.48,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-MIXED-030",
@@ -34465,9 +34465,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Complete Office Solution",
-    "expectedVATAmount": 69.57,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 76.89,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-MIXED-031",
@@ -34480,9 +34480,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Tech Starter Pack",
-    "expectedVATAmount": 34.06,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 37.64,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "RO-MIXED-032",
@@ -34495,9 +34495,9 @@
     "supplierCountryCode": "FR",
     "productType": "mixed-basket",
     "productDescription": "Multi-Category Order",
-    "expectedVATAmount": 94.99,
-    "expectedVATRate": 19,
-    "validationSource": "internal"
+    "expectedVATAmount": 104.99,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
   },
   {
     "id": "SK-GOODS-000",
@@ -40842,6 +40842,111 @@
     "productDescription": "FR standard current (20%)",
     "expectedVATAmount": 200,
     "expectedVATRate": 20,
+    "validationSource": "oracle"
+  },
+  {
+    "id": "ORACLE-RO-STANDARD-23",
+    "date": "2025-07-31T00:00:00.000Z",
+    "customerCountryCode": "RO",
+    "amount": 1000,
+    "currency": "EUR",
+    "rateType": "standard",
+    "isGoods": true,
+    "supplierCountryCode": "DE",
+    "productType": "oracle-transition",
+    "productDescription": "RO standard pre-increase (19%)",
+    "expectedVATAmount": 190,
+    "expectedVATRate": 19,
+    "validationSource": "oracle"
+  },
+  {
+    "id": "ORACLE-RO-STANDARD-24",
+    "date": "2025-08-01T00:00:00.000Z",
+    "customerCountryCode": "RO",
+    "amount": 1000,
+    "currency": "EUR",
+    "rateType": "standard",
+    "isGoods": true,
+    "supplierCountryCode": "DE",
+    "productType": "oracle-transition",
+    "productDescription": "RO standard post-increase (21%)",
+    "expectedVATAmount": 210,
+    "expectedVATRate": 21,
+    "validationSource": "oracle"
+  },
+  {
+    "id": "ORACLE-RO-REDUCED-25",
+    "date": "2025-07-31T00:00:00.000Z",
+    "customerCountryCode": "RO",
+    "amount": 1000,
+    "currency": "EUR",
+    "rateType": "reduced",
+    "isGoods": false,
+    "supplierCountryCode": "DE",
+    "productType": "oracle-transition",
+    "productDescription": "RO reduced pre-consolidation (5%)",
+    "expectedVATAmount": 50,
+    "expectedVATRate": 5,
+    "validationSource": "oracle"
+  },
+  {
+    "id": "ORACLE-RO-REDUCED-26",
+    "date": "2025-08-01T00:00:00.000Z",
+    "customerCountryCode": "RO",
+    "amount": 1000,
+    "currency": "EUR",
+    "rateType": "reduced",
+    "isGoods": false,
+    "supplierCountryCode": "DE",
+    "productType": "oracle-transition",
+    "productDescription": "RO reduced consolidated (11%)",
+    "expectedVATAmount": 110,
+    "expectedVATRate": 11,
+    "validationSource": "oracle"
+  },
+  {
+    "id": "ORACLE-FI-REDUCED-27",
+    "date": "2025-12-31T00:00:00.000Z",
+    "customerCountryCode": "FI",
+    "amount": 1000,
+    "currency": "EUR",
+    "rateType": "reduced",
+    "isGoods": false,
+    "supplierCountryCode": "DE",
+    "productType": "oracle-transition",
+    "productDescription": "FI reduced pre-reduction (14%)",
+    "expectedVATAmount": 140,
+    "expectedVATRate": 14,
+    "validationSource": "oracle"
+  },
+  {
+    "id": "ORACLE-FI-REDUCED-28",
+    "date": "2026-01-01T00:00:00.000Z",
+    "customerCountryCode": "FI",
+    "amount": 1000,
+    "currency": "EUR",
+    "rateType": "reduced",
+    "isGoods": false,
+    "supplierCountryCode": "DE",
+    "productType": "oracle-transition",
+    "productDescription": "FI reduced post-reduction (13.5%)",
+    "expectedVATAmount": 135,
+    "expectedVATRate": 13.5,
+    "validationSource": "oracle"
+  },
+  {
+    "id": "ORACLE-EE-STANDARD-29",
+    "date": "2026-01-15T00:00:00.000Z",
+    "customerCountryCode": "EE",
+    "amount": 1000,
+    "currency": "EUR",
+    "rateType": "standard",
+    "isGoods": true,
+    "supplierCountryCode": "DE",
+    "productType": "oracle-transition",
+    "productDescription": "EE standard EC-verified current rate (24%)",
+    "expectedVATAmount": 240,
+    "expectedVATRate": 24,
     "validationSource": "oracle"
   }
 ]

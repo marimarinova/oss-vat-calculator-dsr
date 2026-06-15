@@ -178,6 +178,29 @@ describe('VAT Rates Module', () => {
         expect(getVATRate('AT', 'standard', new Date('2026-01-01'))?.rate).toBe(20);
       });
     });
+
+    describe('historical rate transitions (Refactor 1b verified seed)', () => {
+      it('RO standard: 19% until 2025-07-31, 21% from 2025-08-01', () => {
+        expect(getVATRate('RO', 'standard', new Date('2025-07-31'))?.rate).toBe(19);
+        expect(getVATRate('RO', 'standard', new Date('2025-08-01'))?.rate).toBe(21);
+        expect(getVATRate('RO', 'standard', new Date('2026-01-01'))?.rate).toBe(21);
+      });
+
+      it('RO reduced: 5%/9% bands until 2025-07-31, consolidated to 11% from 2025-08-01', () => {
+        expect(getVATRate('RO', 'reduced', new Date('2025-07-31'))?.rate).toBe(5);
+        expect(getVATRate('RO', 'reduced', new Date('2025-08-01'))?.rate).toBe(11);
+        expect(getVATRate('RO', 'reduced', new Date('2026-01-01'))?.rate).toBe(11);
+      });
+
+      it('FI reduced: 14% until 2025-12-31, 13.5% from 2026-01-01', () => {
+        expect(getVATRate('FI', 'reduced', new Date('2025-12-31'))?.rate).toBe(14);
+        expect(getVATRate('FI', 'reduced', new Date('2026-01-01'))?.rate).toBe(13.5);
+      });
+
+      it('EE standard: corrected to the EC-verified current rate of 24%', () => {
+        expect(getVATRate('EE', 'standard', new Date('2026-01-01'))?.rate).toBe(24);
+      });
+    });
   });
 
   describe('verifyVATRate()', () => {
@@ -269,7 +292,7 @@ describe('VAT Rates Module', () => {
         ['CY', 'standard', 19],
         ['CZ', 'standard', 21],
         ['DK', 'standard', 25],
-        ['EE', 'standard', 22],
+        ['EE', 'standard', 24],
         ['FI', 'standard', 25.5],
         ['FR', 'standard', 20],
         ['DE', 'standard', 19],
@@ -284,7 +307,7 @@ describe('VAT Rates Module', () => {
         ['NL', 'standard', 21],
         ['PL', 'standard', 23],
         ['PT', 'standard', 23],
-        ['RO', 'standard', 19],
+        ['RO', 'standard', 21],
         ['SK', 'standard', 23],
         ['SI', 'standard', 22],
         ['ES', 'standard', 21],

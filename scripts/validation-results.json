@@ -1,25 +1,25 @@
 {
   "stats": {
-    "totalTransactions": 2723,
-    "accurateTransactions": 2723,
+    "totalTransactions": 2730,
+    "accurateTransactions": 2730,
     "accuracy": 100,
     "meanAbsoluteError": 0,
     "maxAbsoluteError": 0,
-    "processingTimeMs": 18.727100000000007,
-    "averageTransactionTimeMs": 0.0014963643040760016,
-    "minTransactionTimeMs": 0.0006999999999948159,
-    "maxTransactionTimeMs": 0.23419999999998709,
-    "medianTransactionTimeMs": 0.0010000000000331966,
+    "processingTimeMs": 16.801300000000026,
+    "averageTransactionTimeMs": 0.0018633333333334218,
+    "minTransactionTimeMs": 0.0005999999999630745,
+    "maxTransactionTimeMs": 0.9231000000000336,
+    "medianTransactionTimeMs": 0.0009000000000014552,
     "oracle": {
-      "total": 490,
-      "accurate": 490,
+      "total": 697,
+      "accurate": 697,
       "accuracy": 100,
       "meanAbsoluteError": 0,
       "maxAbsoluteError": 0
     },
     "internal": {
-      "total": 2233,
-      "accurate": 2233,
+      "total": 2033,
+      "accurate": 2033,
       "accuracy": 100,
       "meanAbsoluteError": 0,
       "maxAbsoluteError": 0
