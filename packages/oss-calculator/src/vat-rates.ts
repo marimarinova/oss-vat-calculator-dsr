@@ -3,8 +3,11 @@
  *
  * Source: European Commission TAXUD rate tables (as of Q1 2026), extended
  * in Refactor 1 with verified historical rate transitions and provenance
- * for 5 Member States (BG, DE, FR, NL, AT) - see
- * ./data/eu-vat-history.seed.ts for the full table and sourcing notes.
+ * for 5 Member States (BG, DE, FR, NL, AT), and in Refactor 1b with an
+ * EC-verified pass over all 27 current standard rates plus 2025-2026
+ * transitions for RO, FI, EE (and category-specific caveats for NL, DE,
+ * LT) - see ./data/eu-vat-history.seed.ts for the full table and sourcing
+ * notes.
  *
  * Design Principle 4: Deterministic calculation with transparent rate sources
  */

@@ -2,17 +2,17 @@
 
 ## Executive Summary
 
-This report documents the validation of the OSS VAT Calculator against a synthetic dataset of 2,700 transactions (100 cases for each of the 27 EU Member States, reflecting standard-rated physical goods, reduced-rate digital services, and mixed baskets), plus 23 fixed-date oracle transition checks.
+This report documents the validation of the OSS VAT Calculator against a synthetic dataset of 2,700 transactions (100 cases for each of the 27 EU Member States, reflecting standard-rated physical goods, reduced-rate digital services, and mixed baskets), plus 30 fixed-date oracle transition checks.
 
 The validation has two distinct components:
 
-1. **External oracle validation** (BG, DE, FR, NL, AT, for the rate types with verified history per Refactor 1): expected rates/amounts come from a small hardcoded oracle table (`ORACLE_RATES` in `scripts/synthetic-validation.ts`), transcribed directly from the verified seed sources (PwC, eClear/ASD, Tax Foundation, vatcalc, WTS Klient - see `packages/oss-calculator/src/data/eu-vat-history.seed.ts`). This oracle does **not** call `getVATRate()` - it is an independent check of the engine's output against the source data.
-2. **Internal consistency check** (the remaining 22 Member States, plus FR reduced/super-reduced which has no verified history in R1): expected rates come from `getVATRate()` against the same `EU_VAT_RATES` table the engine uses. This confirms TaxEngine correctly applies the configured rate table, but is not an independent verification of the rate values themselves - that remains future work for those Member States.
+1. **External oracle validation** (BG, DE, FR, NL, AT, RO, FI, EE, for the rate types with verified history per Refactor 1/1b): expected rates/amounts come from a small hardcoded oracle table (`ORACLE_RATES` in `scripts/synthetic-validation.ts`), transcribed directly from the verified seed sources (PwC, eClear/ASD, Tax Foundation, vatcalc, WTS Klient, EC YourEurope, European Commission VAT rates database - see `packages/oss-calculator/src/data/eu-vat-history.seed.ts`). This oracle does **not** call `getVATRate()` - it is an independent check of the engine's output against the source data.
+2. **Internal consistency check** (the remaining Member States, plus rate types within the oracle-covered states that have no verified history, e.g. FR reduced/super-reduced): expected rates come from `getVATRate()` against the same `EU_VAT_RATES` table the engine uses. This confirms TaxEngine correctly applies the configured rate table, but is not an independent verification of the rate values themselves - that remains future work for those Member States.
 
 ## Validation Methodology
 
-1. **Synthetic Data Generation**: Generated 2,700 transactions (100 per EU Member State) with deterministic seeding (PRNG seed: 42) for reproducibility, plus a fixed set of oracle transition-date checks for BG/DE/FR/NL/AT.
-2. **Independent Oracle**: For BG, DE, FR (standard only), NL, and AT, expected rates/amounts are computed from the hardcoded `ORACLE_RATES` table - independent of the engine's rate table.
+1. **Synthetic Data Generation**: Generated 2,700 transactions (100 per EU Member State) with deterministic seeding (PRNG seed: 42) for reproducibility, plus a fixed set of oracle transition-date checks for BG/DE/FR/NL/AT/RO/FI/EE.
+2. **Independent Oracle**: For BG, DE, FR (standard only), NL, AT, RO, FI (reduced only), and EE (standard only), expected rates/amounts are computed from the hardcoded `ORACLE_RATES` table - independent of the engine's rate table.
 3. **Internal Consistency Fallback**: For all other (country, rate type) combinations, expected rates/amounts are computed from `getVATRate()` against `EU_VAT_RATES`.
 4. **Engine Processing**: Ran all transactions through TaxEngine.
 5. **Field-by-Field Comparison**: Compared VAT amounts and applied rates against the expected values from step 2/3.
@@ -23,32 +23,32 @@ The validation has two distinct components:
 
 | Metric                    | Value      |
 | ------------------------- | ---------- |
-| Total Transactions        | 2723       |
-| Accurate Transactions     | 2723       |
+| Total Transactions        | 2730       |
+| Accurate Transactions     | 2730       |
 | Accuracy Rate             | 100.00%    |
 | Mean Absolute Error (EUR) | EUR 0.0000 |
 | Max Absolute Error (EUR)  | EUR 0.0000 |
 
-### External Oracle Validation (BG, DE, FR, NL, AT)
+### External Oracle Validation (BG, DE, FR, NL, AT, RO, FI, EE)
 
 Expected values from the independent `ORACLE_RATES` table (not from `getVATRate()`).
 
 | Metric                    | Value      |
 | ------------------------- | ---------- |
-| Total Transactions        | 490        |
-| Accurate Transactions     | 490        |
+| Total Transactions        | 697        |
+| Accurate Transactions     | 697        |
 | Accuracy Rate             | 100.00%    |
 | Mean Absolute Error (EUR) | EUR 0.0000 |
 | Max Absolute Error (EUR)  | EUR 0.0000 |
 
-### Internal Consistency Check (other 22 Member States + FR reduced/super-reduced)
+### Internal Consistency Check (remaining Member States + FR/RO/FI rate types without verified history)
 
 Expected values from `getVATRate()` against the engine's own `EU_VAT_RATES` table - confirms correct application of the configured table, not an independent check of the rate values.
 
 | Metric                    | Value      |
 | ------------------------- | ---------- |
-| Total Transactions        | 2233       |
-| Accurate Transactions     | 2233       |
+| Total Transactions        | 2033       |
+| Accurate Transactions     | 2033       |
 | Accuracy Rate             | 100.00%    |
 | Mean Absolute Error (EUR) | EUR 0.0000 |
 | Max Absolute Error (EUR)  | EUR 0.0000 |
@@ -57,11 +57,11 @@ Expected values from `getVATRate()` against the engine's own `EU_VAT_RATES` tabl
 
 | Metric                       | Value     |
 | ---------------------------- | --------- |
-| Total Processing Time        | 18.73 ms  |
-| Average Time per Transaction | 0.0015 ms |
-| Minimum Time per Transaction | 0.0007 ms |
-| Maximum Time per Transaction | 0.2342 ms |
-| Median Time per Transaction  | 0.0010 ms |
+| Total Processing Time        | 16.80 ms  |
+| Average Time per Transaction | 0.0019 ms |
+| Minimum Time per Transaction | 0.0006 ms |
+| Maximum Time per Transaction | 0.9231 ms |
+| Median Time per Transaction  | 0.0009 ms |
 
 ### Accuracy by Product Type
 
@@ -103,9 +103,9 @@ Expected values from `getVATRate()` against the engine's own `EU_VAT_RATES` tabl
 | SI           | Slovenia       | 100      | 100   | 100.00%  |
 | SK           | Slovakia       | 100      | 100   | 100.00%  |
 
-### Oracle Transition-Date Checks (BG, DE, FR, NL, AT)
+### Oracle Transition-Date Checks (BG, DE, FR, NL, AT, RO, FI, EE)
 
-Fixed-date checks against `ORACLE_RATES` exercising the verified rate transitions added in Refactor 1.
+Fixed-date checks against `ORACLE_RATES` exercising the verified rate transitions added in Refactor 1 and Refactor 1b.
 
 | Transaction           | Country | Expected Rate | Actual Rate | Expected VAT | Actual VAT | Match |
 | --------------------- | ------- | ------------- | ----------- | ------------ | ---------- | ----- |
@@ -132,11 +132,18 @@ Fixed-date checks against `ORACLE_RATES` exercising the verified rate transition
 | ORACLE-BG-REDUCED-20  | BG      | 9%            | 9%          | EUR 90.00    | EUR 90.00  | Yes   |
 | ORACLE-FR-STANDARD-21 | FR      | 20%           | 20%         | EUR 200.00   | EUR 200.00 | Yes   |
 | ORACLE-FR-STANDARD-22 | FR      | 20%           | 20%         | EUR 200.00   | EUR 200.00 | Yes   |
+| ORACLE-RO-STANDARD-23 | RO      | 19%           | 19%         | EUR 190.00   | EUR 190.00 | Yes   |
+| ORACLE-RO-STANDARD-24 | RO      | 21%           | 21%         | EUR 210.00   | EUR 210.00 | Yes   |
+| ORACLE-RO-REDUCED-25  | RO      | 5%            | 5%          | EUR 50.00    | EUR 50.00  | Yes   |
+| ORACLE-RO-REDUCED-26  | RO      | 11%           | 11%         | EUR 110.00   | EUR 110.00 | Yes   |
+| ORACLE-FI-REDUCED-27  | FI      | 14%           | 14%         | EUR 140.00   | EUR 140.00 | Yes   |
+| ORACLE-FI-REDUCED-28  | FI      | 13.5%         | 13.5%       | EUR 135.00   | EUR 135.00 | Yes   |
+| ORACLE-EE-STANDARD-29 | EE      | 24%           | 24%         | EUR 240.00   | EUR 240.00 | Yes   |
 
 ## Quality Assurance
 
-- **Independent Oracle for 5 Member States**: BG, DE, FR (standard), NL, AT rate expectations are transcribed directly from verified sources (PwC, eClear/ASD, Tax Foundation, vatcalc, WTS Klient), not derived from `getVATRate()`.
-- **Internal Consistency for the Remaining Countries**: The other 22 Member States (and FR reduced/super-reduced) are checked against the engine's own rate table; independent verification of those rates is future work.
+- **Independent Oracle for 8 Member States**: BG, DE, FR (standard), NL, AT, RO, FI (reduced), EE (standard) rate expectations are transcribed directly from verified sources (PwC, eClear/ASD, Tax Foundation, vatcalc, WTS Klient, EC YourEurope, European Commission VAT rates database), not derived from `getVATRate()`.
+- **Internal Consistency for the Remaining Countries**: The other Member States (and FR reduced/super-reduced, RO super-reduced, FI standard) are checked against the engine's own rate table; independent verification of those rates is future work.
 - **Deterministic Validation**: Uses fixed PRNG seed (42) for reproducibility.
 - **Rounding**: All VAT amounts rounded to EUR cent precision (2 decimal places).
 - **Tolerance**: 0.01 EUR (1 cent) for amounts, 0.001 percentage points for rates.
@@ -147,7 +154,7 @@ Fixed-date checks against `ORACLE_RATES` exercising the verified rate transition
 
 - **Countries**: 27 EU Member States
 - **Transactions per Country**: 100 (standard: 34, reduced: 33, mixed: 33)
-- **Oracle Transition Checks**: 23 fixed-date transactions across BG, DE, FR, NL, AT
+- **Oracle Transition Checks**: 30 fixed-date transactions across BG, DE, FR, NL, AT, RO, FI, EE
 - **Date Range (per-country dataset)**: Q1 2026 (January 1 - March 31, 2026)
 - **Amount Range (per-country dataset)**: EUR 5 - EUR 500 per transaction
 - **Currency**: EUR only (no conversion required)
@@ -158,9 +165,9 @@ No discrepancies. All transactions validated successfully.
 
 ## Conclusion
 
-The OSS VAT Calculator processes all 2723 synthetic transactions with **100.00% overall accuracy** (100.00% against the independent oracle for BG/DE/FR/NL/AT, 100.00% on the internal consistency check for the remaining countries). The oracle results confirm that the date-aware, provenance-carrying rate lookup introduced in Refactor 1 reproduces the verified historical rate transitions for the 5 scoped Member States.
+The OSS VAT Calculator processes all 2730 synthetic transactions with **100.00% overall accuracy** (100.00% against the independent oracle for BG/DE/FR/NL/AT/RO/FI/EE, 100.00% on the internal consistency check for the remaining countries). The oracle results confirm that the date-aware, provenance-carrying rate lookup introduced in Refactor 1 (extended in Refactor 1b) reproduces the verified historical rate transitions for the 8 scoped Member States.
 
 ---
 
-**Report Generated**: 2026-06-15T20:54:02.776Z
+**Report Generated**: 2026-06-15T21:23:21.193Z
 **PRNG Seed**: 42 (for reproducibility)

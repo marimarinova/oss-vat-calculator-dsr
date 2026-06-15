@@ -46,6 +46,30 @@
  * All other Member States and rate categories not listed above keep their
  * pre-Refactor-1 single current rate as one open interval starting at
  * BASELINE, marked "current-only, no verified history (future work)".
+ *
+ * Refactor 1b additions (EC-verified current rates + 2025-2026 transitions):
+ *  - EE standard: corrected from a stale 22% to the EC-verified current rate
+ *    of 24% [European Commission - VAT rates database]. Exact transition
+ *    date not verified in this refactor (future work).
+ *  - RO standard: 19% until 2025-07-31; 21% from 2025-08-01
+ *    [EC YourEurope / Tax Foundation 2026]
+ *  - RO reduced: 5% and 9% bands until 2025-07-31, consolidated into a
+ *    single 11% reduced rate from 2025-08-01
+ *    [EC YourEurope / Tax Foundation 2026]
+ *  - FI reduced: 14% until 2025-12-31; 13.5% from 2026-01-01
+ *    [EC YourEurope / Tax Foundation 2026]. Listed ahead of FI's other
+ *    (10%) reduced band so the date-aware lookup surfaces this verified
+ *    transition.
+ *  - Category-specific 2026-01-01 changes that this table's per-rate-type
+ *    granularity cannot represent without a category dimension (documented
+ *    as caveats on the affected entries; tracking by category is future
+ *    work) [EC YourEurope / Tax Foundation 2026]:
+ *     - NL: accommodation/lodging moves from the 9% reduced rate to the
+ *       21% standard rate
+ *     - DE: restaurant/catering food moves from the 19% standard rate to
+ *       the 7% reduced rate
+ *     - LT: certain items move from the 9% reduced rate to a new 12%
+ *       reduced rate
  */
 
 import type { MemberStateRates } from '../vat-rates';
@@ -256,10 +280,13 @@ export const EU_VAT_RATE_HISTORY: Record<string, MemberStateRates> = {
     code: 'EE',
     standard: [
       {
-        rate: 22,
-        effectiveFrom: BASELINE,
-        sourceUrl: UNVERIFIED_SOURCE,
-        legalBasis: UNVERIFIED_BASIS,
+        rate: 24,
+        effectiveFrom: EPOCH,
+        sourceUrl: 'European Commission - VAT rates database (Refactor 1b correction)',
+        legalBasis:
+          'Estonian standard VAT rate of 24% per the EC-verified rate table (Refactor 1b). This ' +
+          'corrects a stale 22% value carried over from the pre-Refactor-1 table. Exact transition ' +
+          'date not verified in this refactor (future work).',
       },
     ],
     reduced: [
@@ -285,13 +312,20 @@ export const EU_VAT_RATE_HISTORY: Record<string, MemberStateRates> = {
     ],
     reduced: [
       {
-        rate: 10,
+        rate: 14,
         effectiveFrom: BASELINE,
-        sourceUrl: UNVERIFIED_SOURCE,
-        legalBasis: UNVERIFIED_BASIS,
+        effectiveTo: new Date('2025-12-31'),
+        sourceUrl: 'EC YourEurope / Tax Foundation 2026 - Finland VAT rate changes',
+        legalBasis: 'Finnish reduced VAT rate of 14% prior to the 2026 reduction to 13.5%.',
       },
       {
-        rate: 14,
+        rate: 13.5,
+        effectiveFrom: new Date('2026-01-01'),
+        sourceUrl: 'EC YourEurope / Tax Foundation 2026 - Finland VAT rate changes',
+        legalBasis: 'Finnish reduced VAT rate reduced from 14% to 13.5% from 2026-01-01.',
+      },
+      {
+        rate: 10,
         effectiveFrom: BASELINE,
         sourceUrl: UNVERIFIED_SOURCE,
         legalBasis: UNVERIFIED_BASIS,
@@ -359,7 +393,12 @@ export const EU_VAT_RATE_HISTORY: Record<string, MemberStateRates> = {
         rate: 19,
         effectiveFrom: new Date('2021-01-01'),
         sourceUrl: 'eClear/ASD - Germany VAT rate history',
-        legalBasis: 'German standard VAT rate of 19% restored from 2021-01-01.',
+        legalBasis:
+          'German standard VAT rate of 19% restored from 2021-01-01. NOTE: from 2026-01-01, ' +
+          'restaurant/catering food supplies move from this 19% standard rate to the 7% reduced ' +
+          'rate [EC YourEurope / Tax Foundation 2026]; category-specific rate tracking is future ' +
+          'work - this table continues to report 19% as the general standard rate for other ' +
+          'goods/services.',
       },
     ],
     reduced: [
@@ -560,7 +599,12 @@ export const EU_VAT_RATE_HISTORY: Record<string, MemberStateRates> = {
         rate: 9,
         effectiveFrom: BASELINE,
         sourceUrl: UNVERIFIED_SOURCE,
-        legalBasis: UNVERIFIED_BASIS,
+        legalBasis:
+          UNVERIFIED_BASIS +
+          '. NOTE: from 2026-01-01, certain items move from this 9% reduced rate to a new 12% ' +
+          'reduced rate [EC YourEurope / Tax Foundation 2026]; category-specific reduced-rate ' +
+          'tracking is future work - this table continues to report 9% as the general reduced ' +
+          'rate for other categories covered by this band.',
       },
     ],
     superReduced: [],
@@ -645,7 +689,12 @@ export const EU_VAT_RATE_HISTORY: Record<string, MemberStateRates> = {
         rate: 9,
         effectiveFrom: new Date('2019-01-01'),
         sourceUrl: 'Tax Foundation - Netherlands VAT rate',
-        legalBasis: 'Dutch reduced VAT rate increased to 9% from 2019-01-01.',
+        legalBasis:
+          'Dutch reduced VAT rate increased to 9% from 2019-01-01. NOTE: from 2026-01-01, ' +
+          'accommodation/lodging services move from this 9% reduced rate to the 21% standard rate ' +
+          '[EC YourEurope / Tax Foundation 2026]; category-specific reduced-rate tracking is future ' +
+          'work - this table continues to report 9% as the general reduced rate for other ' +
+          'categories (e.g. food, books).',
       },
     ],
     superReduced: [],
@@ -711,22 +760,43 @@ export const EU_VAT_RATE_HISTORY: Record<string, MemberStateRates> = {
       {
         rate: 19,
         effectiveFrom: BASELINE,
-        sourceUrl: UNVERIFIED_SOURCE,
-        legalBasis: UNVERIFIED_BASIS,
+        effectiveTo: new Date('2025-07-31'),
+        sourceUrl: 'EC YourEurope / Tax Foundation 2026 - Romania VAT rate increase',
+        legalBasis: 'Romanian standard VAT rate of 19% prior to the 2025 increase to 21%.',
+      },
+      {
+        rate: 21,
+        effectiveFrom: new Date('2025-08-01'),
+        sourceUrl: 'EC YourEurope / Tax Foundation 2026 - Romania VAT rate increase',
+        legalBasis: 'Romanian standard VAT rate increased to 21% from 2025-08-01.',
       },
     ],
     reduced: [
       {
         rate: 5,
         effectiveFrom: BASELINE,
-        sourceUrl: UNVERIFIED_SOURCE,
-        legalBasis: UNVERIFIED_BASIS,
+        effectiveTo: new Date('2025-07-31'),
+        sourceUrl: 'EC YourEurope / Tax Foundation 2026 - Romania VAT rate increase',
+        legalBasis:
+          'Romanian reduced VAT rate of 5%, prior to the 2025-08-01 reform that consolidated the ' +
+          '5% and 9% reduced rates into a single 11% reduced rate.',
       },
       {
         rate: 9,
         effectiveFrom: BASELINE,
-        sourceUrl: UNVERIFIED_SOURCE,
-        legalBasis: UNVERIFIED_BASIS,
+        effectiveTo: new Date('2025-07-31'),
+        sourceUrl: 'EC YourEurope / Tax Foundation 2026 - Romania VAT rate increase',
+        legalBasis:
+          'Romanian reduced VAT rate of 9%, prior to the 2025-08-01 reform that consolidated the ' +
+          '5% and 9% reduced rates into a single 11% reduced rate.',
+      },
+      {
+        rate: 11,
+        effectiveFrom: new Date('2025-08-01'),
+        sourceUrl: 'EC YourEurope / Tax Foundation 2026 - Romania VAT rate increase',
+        legalBasis:
+          'Romanian reduced VAT rate consolidated to a single 11% rate from 2025-08-01, replacing ' +
+          'the previous 5% and 9% reduced rates.',
       },
     ],
     superReduced: [],
