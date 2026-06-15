@@ -82,12 +82,12 @@ describe('VAT Rates Module', () => {
   describe('getVATRate()', () => {
     it('should return standard rate for Germany', () => {
       const rate = getVATRate('DE', 'standard', new Date());
-      expect(rate).toBe(19);
+      expect(rate?.rate).toBe(19);
     });
 
     it('should return reduced rate for Austria (10%)', () => {
       const rate = getVATRate('AT', 'reduced', new Date());
-      expect(rate).toBe(10);
+      expect(rate?.rate).toBe(10);
     });
 
     it('should return null for reduced rate that does not exist in country', () => {
@@ -102,13 +102,81 @@ describe('VAT Rates Module', () => {
 
     it('should return super-reduced rate for France', () => {
       const rate = getVATRate('FR', 'super-reduced', new Date());
-      expect(rate).toBe(2.1);
+      expect(rate?.rate).toBe(2.1);
     });
 
     it('should handle historical date lookups', () => {
       const pastDate = new Date('2020-01-15');
       const rate = getVATRate('BG', 'standard', pastDate);
-      expect(rate).toBe(20); // Should still be effective
+      expect(rate?.rate).toBe(20); // Should still be effective
+    });
+
+    it('should include provenance (sourceUrl, legalBasis) on returned rates', () => {
+      const rate = getVATRate('DE', 'standard', new Date());
+      expect(rate).not.toBeNull();
+      expect(typeof rate?.sourceUrl).toBe('string');
+      expect(rate?.sourceUrl.length).toBeGreaterThan(0);
+      expect(typeof rate?.legalBasis).toBe('string');
+      expect(rate?.legalBasis.length).toBeGreaterThan(0);
+    });
+
+    describe('historical rate transitions (Refactor 1 verified seed)', () => {
+      it('DE standard: 19% until 2020-06-30, 16% during COVID reduction, 19% from 2021-01-01', () => {
+        expect(getVATRate('DE', 'standard', new Date('2020-06-30'))?.rate).toBe(19);
+        expect(getVATRate('DE', 'standard', new Date('2020-07-01'))?.rate).toBe(16);
+        expect(getVATRate('DE', 'standard', new Date('2020-12-31'))?.rate).toBe(16);
+        expect(getVATRate('DE', 'standard', new Date('2021-01-01'))?.rate).toBe(19);
+      });
+
+      it('DE reduced: 7% until 2020-06-30, 5% during COVID reduction, 7% from 2021-01-01', () => {
+        expect(getVATRate('DE', 'reduced', new Date('2020-06-30'))?.rate).toBe(7);
+        expect(getVATRate('DE', 'reduced', new Date('2020-07-01'))?.rate).toBe(5);
+        expect(getVATRate('DE', 'reduced', new Date('2020-12-31'))?.rate).toBe(5);
+        expect(getVATRate('DE', 'reduced', new Date('2021-01-01'))?.rate).toBe(7);
+      });
+
+      it('BG standard: 20% since 1999-04-01, with no interval covering dates before that', () => {
+        expect(getVATRate('BG', 'standard', new Date('1999-03-31'))).toBeNull();
+        expect(getVATRate('BG', 'standard', new Date('1999-04-01'))?.rate).toBe(20);
+        expect(getVATRate('BG', 'standard', new Date('2026-01-01'))?.rate).toBe(20);
+      });
+
+      it('BG reduced (books/periodicals): null before 2020-07-01, 9% from 2020-07-01', () => {
+        expect(getVATRate('BG', 'reduced', new Date('2020-06-30'))).toBeNull();
+        expect(getVATRate('BG', 'reduced', new Date('2020-07-01'))?.rate).toBe(9);
+        expect(getVATRate('BG', 'reduced', new Date('2026-01-01'))?.rate).toBe(9);
+      });
+
+      it('FR standard: 20% since 2014-01-01, with no interval covering dates before that', () => {
+        expect(getVATRate('FR', 'standard', new Date('2013-12-31'))).toBeNull();
+        expect(getVATRate('FR', 'standard', new Date('2014-01-01'))?.rate).toBe(20);
+      });
+
+      it('NL standard: 21% since 2012-10-01, with no interval covering dates before that', () => {
+        expect(getVATRate('NL', 'standard', new Date('2012-09-30'))).toBeNull();
+        expect(getVATRate('NL', 'standard', new Date('2012-10-01'))?.rate).toBe(21);
+      });
+
+      it('NL reduced: 6% until 2018-12-31, 9% from 2019-01-01', () => {
+        expect(getVATRate('NL', 'reduced', new Date('2018-12-31'))?.rate).toBe(6);
+        expect(getVATRate('NL', 'reduced', new Date('2019-01-01'))?.rate).toBe(9);
+      });
+
+      it('AT reduced: 10%/13% pre-COVID, 5% temporary rate 2020-07-01..2021-12-31, 10%/13% restored from 2022-01-01', () => {
+        const preCovid = getVATRate('AT', 'reduced', new Date('2020-06-30'));
+        expect(preCovid?.rate).toBe(10);
+
+        expect(getVATRate('AT', 'reduced', new Date('2020-07-01'))?.rate).toBe(5);
+        expect(getVATRate('AT', 'reduced', new Date('2021-12-31'))?.rate).toBe(5);
+
+        const restored = getVATRate('AT', 'reduced', new Date('2022-01-01'));
+        expect(restored?.rate).toBe(10);
+      });
+
+      it('AT standard: 20% (long-standing, no end date)', () => {
+        expect(getVATRate('AT', 'standard', new Date('2020-07-01'))?.rate).toBe(20);
+        expect(getVATRate('AT', 'standard', new Date('2026-01-01'))?.rate).toBe(20);
+      });
     });
   });
 
@@ -226,7 +294,7 @@ describe('VAT Rates Module', () => {
       const today = new Date();
       for (const [code, rateType, expectedRate] of testCases) {
         const rate = getVATRate(code, rateType, today);
-        expect(rate).toBe(expectedRate);
+        expect(rate?.rate).toBe(expectedRate);
       }
     });
   });
