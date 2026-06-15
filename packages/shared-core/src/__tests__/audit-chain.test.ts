@@ -269,7 +269,12 @@ describe('HMAC-SHA256 Audit Chain', () => {
     const keyB = 'seller-key-epoch-2-after-rotation';
     const rotationDate = new Date('2026-04-01T00:00:00Z');
     const rotatedKeys = new AuditChainKeyRegistry([
-      { epoch: 1, key: keyA, effectiveFrom: new Date('2026-01-01T00:00:00Z'), effectiveTo: rotationDate },
+      {
+        epoch: 1,
+        key: keyA,
+        effectiveFrom: new Date('2026-01-01T00:00:00Z'),
+        effectiveTo: rotationDate,
+      },
       { epoch: 2, key: keyB, effectiveFrom: rotationDate },
     ]);
 
