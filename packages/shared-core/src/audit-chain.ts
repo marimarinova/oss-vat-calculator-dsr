@@ -9,40 +9,6 @@
  * Lightweight alternative to blockchain immutability without the computational overhead.
  */
 
-// Use Node.js crypto if available, otherwise provide browser-compatible fallback
-let createHmac: (
-  algorithm: string,
-  key: string,
-) => { update: (data: string) => { digest: (encoding: string) => string } };
-
-try {
-  const nodeCrypto = require('crypto');
-  createHmac = nodeCrypto.createHmac;
-} catch {
-  // Browser fallback using synchronous approach
-  createHmac = (algorithm: string, key: string) => {
-    let inputData = '';
-    return {
-      update: (data: string) => {
-        inputData = data;
-        return {
-          digest: (_encoding: string) => {
-            // Simple browser-compatible hash (not cryptographically equivalent but functional for demo)
-            let hash = 0;
-            const combined = key + inputData;
-            for (let i = 0; i < combined.length; i++) {
-              const char = combined.charCodeAt(i);
-              hash = (hash << 5) - hash + char;
-              hash = hash & hash; // Convert to 32-bit integer
-            }
-            return Math.abs(hash).toString(16).padStart(16, '0');
-          },
-        };
-      },
-    };
-  };
-}
-
 /**
  * Represents a single entry in the audit chain
  */
@@ -53,6 +19,8 @@ export interface AuditEntry {
   data: Record<string, unknown>;
   /** Unix timestamp in milliseconds */
   timestamp: number;
+  /** Position of this entry in the chain (1 for genesis, strictly +1 each entry) */
+  sequenceNumber: number;
   /** HMAC-SHA256 hash of the previous entry (genesis entry has empty string) */
   previousHash: string;
   /** HMAC-SHA256 hash of this entry (computed with key and data) */
@@ -72,13 +40,41 @@ export interface VerificationResult {
 }
 
 /**
- * Compute HMAC-SHA256 hash of data
+ * Resolve the Web Crypto SubtleCrypto implementation.
+ * Uses the global Web Crypto API when present (browsers, modern Node),
+ * otherwise falls back to Node's webcrypto module.
+ */
+async function getSubtleCrypto(): Promise<SubtleCrypto> {
+  if (globalThis.crypto?.subtle) {
+    return globalThis.crypto.subtle;
+  }
+  const { webcrypto } = await import('node:crypto');
+  return webcrypto.subtle;
+}
+
+/**
+ * Compute HMAC-SHA256 hash of data using the Web Crypto SubtleCrypto API
  * @param data - String data to hash
  * @param key - Secret key for HMAC computation
- * @returns Hexadecimal representation of the hash
+ * @returns Lowercase hexadecimal representation of the hash
  */
-export function computeHmac(data: string, key: string): string {
-  return createHmac('sha256', key).update(data).digest('hex');
+export async function computeHmac(data: string, key: string): Promise<string> {
+  const subtle = await getSubtleCrypto();
+  const encoder = new TextEncoder();
+
+  const cryptoKey = await subtle.importKey(
+    'raw',
+    encoder.encode(key),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign'],
+  );
+
+  const signature = await subtle.sign('HMAC', cryptoKey, encoder.encode(data));
+
+  return Array.from(new Uint8Array(signature))
+    .map((byte) => byte.toString(16).padStart(2, '0'))
+    .join('');
 }
 
 /**
@@ -89,12 +85,14 @@ function serializeForHashing(
   id: string,
   data: Record<string, unknown>,
   timestamp: number,
+  sequenceNumber: number,
   previousHash: string,
 ): string {
   return JSON.stringify({
     id,
     data,
     timestamp,
+    sequenceNumber,
     previousHash,
   });
 }
@@ -104,28 +102,31 @@ function serializeForHashing(
  * @param data - The data to record
  * @param previousHash - Hash of the previous entry (empty string for genesis)
  * @param key - Secret key derived from seller's authentication credential
+ * @param sequenceNumber - Position of this entry in the chain (1 for genesis, strictly +1 each entry)
  * @param id - Optional ID for the entry (will be generated if not provided)
  * @returns The new audit entry with computed hash
  */
-export function createAuditEntry(
+export async function createAuditEntry(
   data: Record<string, unknown>,
   previousHash: string,
   key: string,
+  sequenceNumber: number,
   id?: string,
-): AuditEntry {
+): Promise<AuditEntry> {
   const entryId = id || generateEntryId();
   const timestamp = Date.now();
 
   // Serialize the entry data for hashing
-  const serialized = serializeForHashing(entryId, data, timestamp, previousHash);
+  const serialized = serializeForHashing(entryId, data, timestamp, sequenceNumber, previousHash);
 
   // Compute HMAC-SHA256 hash
-  const hash = computeHmac(serialized, key);
+  const hash = await computeHmac(serialized, key);
 
   return {
     id: entryId,
     data,
     timestamp,
+    sequenceNumber,
     previousHash,
     hash,
   };
@@ -137,7 +138,10 @@ export function createAuditEntry(
  * @param key - Secret key used to compute the hashes
  * @returns Verification result indicating validity and any break point
  */
-export function verifyChain(entries: AuditEntry[], key: string): VerificationResult {
+export async function verifyChain(
+  entries: AuditEntry[],
+  key: string,
+): Promise<VerificationResult> {
   if (entries.length === 0) {
     return {
       valid: true,
@@ -155,14 +159,24 @@ export function verifyChain(entries: AuditEntry[], key: string): VerificationRes
     };
   }
 
+  // Verify genesis sequence number
+  if (firstEntry.sequenceNumber !== 1) {
+    return {
+      valid: false,
+      brokenAt: 0,
+      details: 'Genesis entry must have sequenceNumber 1',
+    };
+  }
+
   // Verify first entry's hash
   const firstSerialized = serializeForHashing(
     firstEntry.id,
     firstEntry.data,
     firstEntry.timestamp,
+    firstEntry.sequenceNumber,
     firstEntry.previousHash,
   );
-  const firstComputedHash = computeHmac(firstSerialized, key);
+  const firstComputedHash = await computeHmac(firstSerialized, key);
   if (firstComputedHash !== firstEntry.hash) {
     return {
       valid: false,
@@ -185,14 +199,28 @@ export function verifyChain(entries: AuditEntry[], key: string): VerificationRes
       };
     }
 
+    // Check that the sequence number is exactly one greater than the previous entry
+    // (catches gaps, duplicates and non-monotonic sequences, e.g. from deleted or
+    // truncated entries)
+    if (current.sequenceNumber !== previous.sequenceNumber + 1) {
+      return {
+        valid: false,
+        brokenAt: i,
+        details: `Entry ${i} sequenceNumber ${current.sequenceNumber} is not the expected ${
+          previous.sequenceNumber + 1
+        } (entry deletion or reordering detected)`,
+      };
+    }
+
     // Recompute this entry's hash
     const serialized = serializeForHashing(
       current.id,
       current.data,
       current.timestamp,
+      current.sequenceNumber,
       current.previousHash,
     );
-    const computedHash = computeHmac(serialized, key);
+    const computedHash = await computeHmac(serialized, key);
 
     if (computedHash !== current.hash) {
       return {
@@ -225,8 +253,14 @@ function generateEntryId(): string {
  * @param key - The secret key
  * @returns True if the entry's hash is valid, false otherwise
  */
-export function verifySingleEntry(entry: AuditEntry, key: string): boolean {
-  const serialized = serializeForHashing(entry.id, entry.data, entry.timestamp, entry.previousHash);
-  const computedHash = computeHmac(serialized, key);
+export async function verifySingleEntry(entry: AuditEntry, key: string): Promise<boolean> {
+  const serialized = serializeForHashing(
+    entry.id,
+    entry.data,
+    entry.timestamp,
+    entry.sequenceNumber,
+    entry.previousHash,
+  );
+  const computedHash = await computeHmac(serialized, key);
   return computedHash === entry.hash;
 }
