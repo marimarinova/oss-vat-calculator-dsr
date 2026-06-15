@@ -18,6 +18,9 @@ export * from './types';
 // HMAC-SHA256 Audit Chain (Design Principle 2)
 export * from './audit-chain';
 
+// Audit Chain Key Rotation (Refactor 4.3)
+export * from './key-rotation';
+
 // Data Lifecycle Taxonomy (Design Principle 3)
 export * from './taxonomy';
 

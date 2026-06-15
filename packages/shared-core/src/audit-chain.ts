@@ -21,6 +21,12 @@ export interface AuditEntry {
   timestamp: number;
   /** Position of this entry in the chain (1 for genesis, strictly +1 each entry) */
   sequenceNumber: number;
+  /**
+   * The signing key epoch this entry was hashed under (see key-rotation.ts).
+   * Required to select the correct key when verifying the chain across a
+   * key rotation boundary.
+   */
+  keyEpoch: number;
   /** HMAC-SHA256 hash of the previous entry (genesis entry has empty string) */
   previousHash: string;
   /** HMAC-SHA256 hash of this entry (computed with key and data) */
@@ -44,7 +50,7 @@ export interface VerificationResult {
  * Uses the global Web Crypto API when present (browsers, modern Node),
  * otherwise falls back to Node's webcrypto module.
  */
-async function getSubtleCrypto(): Promise<SubtleCrypto> {
+export async function getSubtleCrypto(): Promise<SubtleCrypto> {
   if (globalThis.crypto?.subtle) {
     return globalThis.crypto.subtle;
   }
@@ -86,6 +92,7 @@ function serializeForHashing(
   data: Record<string, unknown>,
   timestamp: number,
   sequenceNumber: number,
+  keyEpoch: number,
   previousHash: string,
 ): string {
   return JSON.stringify({
@@ -93,6 +100,7 @@ function serializeForHashing(
     data,
     timestamp,
     sequenceNumber,
+    keyEpoch,
     previousHash,
   });
 }
@@ -101,7 +109,8 @@ function serializeForHashing(
  * Create a new audit entry
  * @param data - The data to record
  * @param previousHash - Hash of the previous entry (empty string for genesis)
- * @param key - Secret key derived from seller's authentication credential
+ * @param key - Secret key for the given keyEpoch, derived from seller's authentication credential
+ * @param keyEpoch - The signing key epoch `key` belongs to (see key-rotation.ts)
  * @param sequenceNumber - Position of this entry in the chain (1 for genesis, strictly +1 each entry)
  * @param id - Optional ID for the entry (will be generated if not provided)
  * @returns The new audit entry with computed hash
@@ -110,6 +119,7 @@ export async function createAuditEntry(
   data: Record<string, unknown>,
   previousHash: string,
   key: string,
+  keyEpoch: number,
   sequenceNumber: number,
   id?: string,
 ): Promise<AuditEntry> {
@@ -117,7 +127,14 @@ export async function createAuditEntry(
   const timestamp = Date.now();
 
   // Serialize the entry data for hashing
-  const serialized = serializeForHashing(entryId, data, timestamp, sequenceNumber, previousHash);
+  const serialized = serializeForHashing(
+    entryId,
+    data,
+    timestamp,
+    sequenceNumber,
+    keyEpoch,
+    previousHash,
+  );
 
   // Compute HMAC-SHA256 hash
   const hash = await computeHmac(serialized, key);
@@ -127,20 +144,33 @@ export async function createAuditEntry(
     data,
     timestamp,
     sequenceNumber,
+    keyEpoch,
     previousHash,
     hash,
   };
 }
 
 /**
+ * Resolves the signing key for a given audit chain key epoch.
+ * Implemented by AuditChainKeyRegistry (see key-rotation.ts), but kept as a
+ * minimal interface here so audit-chain.ts has no dependency on the
+ * key-rotation module.
+ */
+export interface AuditChainKeyProvider {
+  getKey(keyEpoch: number): string;
+}
+
+/**
  * Verify an entire audit chain
  * @param entries - Array of audit entries to verify, in chronological order
- * @param key - Secret key used to compute the hashes
+ * @param keys - Provides the signing key for each entry's keyEpoch. A chain
+ *   spanning multiple key-rotation epochs verifies correctly as long as the
+ *   provider can resolve every epoch referenced by the entries.
  * @returns Verification result indicating validity and any break point
  */
 export async function verifyChain(
   entries: AuditEntry[],
-  key: string,
+  keys: AuditChainKeyProvider,
 ): Promise<VerificationResult> {
   if (entries.length === 0) {
     return {
@@ -174,9 +204,22 @@ export async function verifyChain(
     firstEntry.data,
     firstEntry.timestamp,
     firstEntry.sequenceNumber,
+    firstEntry.keyEpoch,
     firstEntry.previousHash,
   );
-  const firstComputedHash = await computeHmac(firstSerialized, key);
+  let firstKey: string;
+  try {
+    firstKey = keys.getKey(firstEntry.keyEpoch);
+  } catch (error) {
+    return {
+      valid: false,
+      brokenAt: 0,
+      details: `No signing key available for entry 0's keyEpoch ${firstEntry.keyEpoch}: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+    };
+  }
+  const firstComputedHash = await computeHmac(firstSerialized, firstKey);
   if (firstComputedHash !== firstEntry.hash) {
     return {
       valid: false,
@@ -212,15 +255,29 @@ export async function verifyChain(
       };
     }
 
-    // Recompute this entry's hash
+    // Recompute this entry's hash using the key for its own keyEpoch, so
+    // entries signed before and after a key rotation both verify correctly.
     const serialized = serializeForHashing(
       current.id,
       current.data,
       current.timestamp,
       current.sequenceNumber,
+      current.keyEpoch,
       current.previousHash,
     );
-    const computedHash = await computeHmac(serialized, key);
+    let currentKey: string;
+    try {
+      currentKey = keys.getKey(current.keyEpoch);
+    } catch (error) {
+      return {
+        valid: false,
+        brokenAt: i,
+        details: `No signing key available for entry ${i}'s keyEpoch ${current.keyEpoch}: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+      };
+    }
+    const computedHash = await computeHmac(serialized, currentKey);
 
     if (computedHash !== current.hash) {
       return {
@@ -250,7 +307,7 @@ function generateEntryId(): string {
 /**
  * Verify a single entry's hash (for integrity check without full chain verification)
  * @param entry - The entry to verify
- * @param key - The secret key
+ * @param key - The secret key for the entry's keyEpoch
  * @returns True if the entry's hash is valid, false otherwise
  */
 export async function verifySingleEntry(entry: AuditEntry, key: string): Promise<boolean> {
@@ -259,6 +316,7 @@ export async function verifySingleEntry(entry: AuditEntry, key: string): Promise
     entry.data,
     entry.timestamp,
     entry.sequenceNumber,
+    entry.keyEpoch,
     entry.previousHash,
   );
   const computedHash = await computeHmac(serialized, key);
