@@ -93,15 +93,15 @@ export class TaxEngine {
     }
 
     // Validate VAT rate is reasonable
-    if (vatRate < 0 || vatRate > 100) {
-      throw new InvalidVATRateError(vatRate);
+    if (vatRate.rate < 0 || vatRate.rate > 100) {
+      throw new InvalidVATRateError(vatRate.rate);
     }
 
     // Convert to EUR if needed
     const amountEUR = this.convertToEUR(transaction.amount, transaction.currency, transaction.date);
 
     // Calculate VAT amount
-    const vatAmount = (amountEUR * vatRate) / 100;
+    const vatAmount = (amountEUR * vatRate.rate) / 100;
 
     return {
       transactionId: transaction.id,
@@ -110,7 +110,7 @@ export class TaxEngine {
       amountEUR,
       amountLocal: transaction.amount,
       currency: transaction.currency,
-      vatRate,
+      vatRate: vatRate.rate,
       vatAmount: this.roundToEURCents(vatAmount),
       totalAmountEUR: this.roundToEURCents(amountEUR + vatAmount),
       rateType: transaction.rateType,
@@ -169,7 +169,7 @@ export class TaxEngine {
       .filter((v, i, a) => a.indexOf(v) === i); // deduplicate
 
     return {
-      standard: standardRate,
+      standard: standardRate?.rate ?? null,
       reduced: reducedRates,
       superReduced: superReducedRates,
     };
