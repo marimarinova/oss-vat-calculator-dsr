@@ -139,7 +139,8 @@ export class DistanceSalesMonitor {
         timestamp: Date.now(),
         cumulativeEUR: this.cumulativeEUR,
         transactionId: transaction.id,
-        details: 'Cumulative cross-border B2C distance-sales/TBE supplies reached 80% of the EUR 10,000 threshold.',
+        details:
+          'Cumulative cross-border B2C distance-sales/TBE supplies reached 80% of the EUR 10,000 threshold.',
       });
     }
 
@@ -150,7 +151,8 @@ export class DistanceSalesMonitor {
         timestamp: Date.now(),
         cumulativeEUR: this.cumulativeEUR,
         transactionId: transaction.id,
-        details: 'Cumulative cross-border B2C distance-sales/TBE supplies reached 95% of the EUR 10,000 threshold.',
+        details:
+          'Cumulative cross-border B2C distance-sales/TBE supplies reached 95% of the EUR 10,000 threshold.',
       });
     }
 
@@ -162,7 +164,8 @@ export class DistanceSalesMonitor {
         timestamp: Date.now(),
         cumulativeEUR: this.cumulativeEUR,
         transactionId: transaction.id,
-        details: 'EUR 10,000 union-wide distance-sales/TBE threshold (Art. 59c) crossed; destination taxation applies from this transaction.',
+        details:
+          'EUR 10,000 union-wide distance-sales/TBE threshold (Art. 59c) crossed; destination taxation applies from this transaction.',
       });
     }
 

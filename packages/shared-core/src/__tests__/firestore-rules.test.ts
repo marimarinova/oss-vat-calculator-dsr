@@ -63,9 +63,7 @@ describe.skip('Firestore Security Rules (requires Firebase Emulator + Java)', ()
     const { hash, previousHash, sequenceNumber, ...withoutAuditFields } = baseTransaction;
     const db = testEnv.authenticatedContext(OWNER_UID).firestore();
 
-    await assertFails(
-      setDoc(doc(db, `users/${OWNER_UID}/transactions/tx-1`), withoutAuditFields),
-    );
+    await assertFails(setDoc(doc(db, `users/${OWNER_UID}/transactions/tx-1`), withoutAuditFields));
     void hash;
     void previousHash;
     void sequenceNumber;
@@ -73,7 +71,10 @@ describe.skip('Firestore Security Rules (requires Firebase Emulator + Java)', ()
 
   it('rejects an update to a transaction', async () => {
     await testEnv.withSecurityRulesDisabled(async (context) => {
-      await setDoc(doc(context.firestore(), `users/${OWNER_UID}/transactions/tx-2`), baseTransaction);
+      await setDoc(
+        doc(context.firestore(), `users/${OWNER_UID}/transactions/tx-2`),
+        baseTransaction,
+      );
     });
 
     const db = testEnv.authenticatedContext(OWNER_UID).firestore();
@@ -84,11 +85,17 @@ describe.skip('Firestore Security Rules (requires Firebase Emulator + Java)', ()
     const db = testEnv.authenticatedContext(OWNER_UID).firestore();
 
     await assertFails(
-      setDoc(doc(db, `users/${OWNER_UID}/transactions/tx-gr`), { ...baseTransaction, countryCode: 'GR' }),
+      setDoc(doc(db, `users/${OWNER_UID}/transactions/tx-gr`), {
+        ...baseTransaction,
+        countryCode: 'GR',
+      }),
     );
 
     await assertSucceeds(
-      setDoc(doc(db, `users/${OWNER_UID}/transactions/tx-el`), { ...baseTransaction, countryCode: 'EL' }),
+      setDoc(doc(db, `users/${OWNER_UID}/transactions/tx-el`), {
+        ...baseTransaction,
+        countryCode: 'EL',
+      }),
     );
   });
 
@@ -96,7 +103,10 @@ describe.skip('Firestore Security Rules (requires Firebase Emulator + Java)', ()
     const db = testEnv.authenticatedContext(OWNER_UID).firestore();
 
     await assertFails(
-      setDoc(doc(db, `users/${OWNER_UID}/transactions/tx-gb`), { ...baseTransaction, countryCode: 'GB' }),
+      setDoc(doc(db, `users/${OWNER_UID}/transactions/tx-gb`), {
+        ...baseTransaction,
+        countryCode: 'GB',
+      }),
     );
   });
 
@@ -109,7 +119,10 @@ describe.skip('Firestore Security Rules (requires Firebase Emulator + Java)', ()
     };
 
     await testEnv.withSecurityRulesDisabled(async (context) => {
-      await setDoc(doc(context.firestore(), `users/${OWNER_UID}/quarterlyReports/report-1`), submittedReport);
+      await setDoc(
+        doc(context.firestore(), `users/${OWNER_UID}/quarterlyReports/report-1`),
+        submittedReport,
+      );
     });
 
     const db = testEnv.authenticatedContext(OWNER_UID).firestore();

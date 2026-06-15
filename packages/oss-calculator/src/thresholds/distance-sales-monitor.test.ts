@@ -65,36 +65,36 @@ describe('DistanceSalesMonitor', () => {
       }),
       { minLength: 1, maxLength: 20 },
     ),
+  ])('domestic and B2B supplies never advance the cumulative total', (transactions) => {
+    const monitor = new DistanceSalesMonitor(false);
+
+    transactions.forEach((t, index) => {
+      monitor.recordTransaction(
+        relevantTransaction(`tx-${index}`, t.netAmountEUR, {
+          isB2C: t.isB2C,
+          customerCountry: t.sameCountry ? BE : DE,
+          category: t.category,
+        }),
+      );
+    });
+
+    const expectedTotal = transactions
+      .filter(
+        (t) =>
+          t.isB2C &&
+          !t.sameCountry &&
+          (t.category === SupplyCategory.GOODS_DISTANCE ||
+            t.category === SupplyCategory.TBE_SERVICES),
+      )
+      .reduce((sum, t) => sum + t.netAmountEUR, 0);
+
+    expect(monitor.getCumulativeEUR()).toBeCloseTo(expectedTotal, 5);
+  });
+
+  test.prop([
+    fc.boolean(),
+    fc.array(fc.float({ min: 0, max: 5000, noNaN: true }), { maxLength: 10 }),
   ])(
-    'domestic and B2B supplies never advance the cumulative total',
-    (transactions) => {
-      const monitor = new DistanceSalesMonitor(false);
-
-      transactions.forEach((t, index) => {
-        monitor.recordTransaction(
-          relevantTransaction(`tx-${index}`, t.netAmountEUR, {
-            isB2C: t.isB2C,
-            customerCountry: t.sameCountry ? BE : DE,
-            category: t.category,
-          }),
-        );
-      });
-
-      const expectedTotal = transactions
-        .filter(
-          (t) =>
-            t.isB2C &&
-            !t.sameCountry &&
-            (t.category === SupplyCategory.GOODS_DISTANCE ||
-              t.category === SupplyCategory.TBE_SERVICES),
-        )
-        .reduce((sum, t) => sum + t.netAmountEUR, 0);
-
-      expect(monitor.getCumulativeEUR()).toBeCloseTo(expectedTotal, 5);
-    },
-  );
-
-  test.prop([fc.boolean(), fc.array(fc.float({ min: 0, max: 5000, noNaN: true }), { maxLength: 10 })])(
     'a supplier who exceeded the threshold in the prior year is immediately locked in, regardless of current-year activity',
     (_unused, currentYearAmounts) => {
       const monitor = new DistanceSalesMonitor(true);

@@ -1,6 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { test, fc } from '@fast-check/vitest';
-import { SME_UNION_TURNOVER_THRESHOLD_EUR, SMECrossBorderMonitor } from './sme-cross-border-monitor';
+import {
+  SME_UNION_TURNOVER_THRESHOLD_EUR,
+  SMECrossBorderMonitor,
+} from './sme-cross-border-monitor';
 
 const CURRENT_YEAR = 2026;
 
@@ -25,7 +28,11 @@ describe('SMECrossBorderMonitor', () => {
   );
 
   test.prop([
-    fc.float({ min: Math.fround(SME_UNION_TURNOVER_THRESHOLD_EUR + 0.01), max: 1_000_000, noNaN: true }),
+    fc.float({
+      min: Math.fround(SME_UNION_TURNOVER_THRESHOLD_EUR + 0.01),
+      max: 1_000_000,
+      noNaN: true,
+    }),
     fc.float({ min: 0, max: Math.fround(SME_UNION_TURNOVER_THRESHOLD_EUR), noNaN: true }),
   ])(
     'is not eligible when current year turnover exceeds EUR 100,000, regardless of previous year',
@@ -40,7 +47,11 @@ describe('SMECrossBorderMonitor', () => {
 
   test.prop([
     fc.float({ min: 0, max: Math.fround(SME_UNION_TURNOVER_THRESHOLD_EUR), noNaN: true }),
-    fc.float({ min: Math.fround(SME_UNION_TURNOVER_THRESHOLD_EUR + 0.01), max: 1_000_000, noNaN: true }),
+    fc.float({
+      min: Math.fround(SME_UNION_TURNOVER_THRESHOLD_EUR + 0.01),
+      max: 1_000_000,
+      noNaN: true,
+    }),
   ])(
     'is not eligible when previous year turnover exceeded EUR 100,000, even if current year is within the cap',
     (currentTurnover, previousTurnover) => {
