@@ -19,7 +19,7 @@ service cloud.firestore {
     // Helper function to validate country code against 27 EU member states
     function isValidEUCountryCode(code) {
       return code in ['AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE',
-                      'FI', 'FR', 'DE', 'GR', 'HU', 'IE', 'IT', 'LV',
+                      'FI', 'FR', 'DE', 'EL', 'HU', 'IE', 'IT', 'LV',
                       'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK',
                       'SI', 'ES', 'SE'];
     }
@@ -80,10 +80,10 @@ service cloud.firestore {
       match /lineItems/{itemId} {
         allow read: if isOwner(userId);
         allow create, update: if isOwner(userId) &&
-                                  data.quantity > 0 &&
-                                  data.unitPrice >= 0 &&
-                                  data.vatRate >= 0 &&
-                                  data.vatRate <= 100;
+                                  request.resource.data.quantity > 0 &&
+                                  request.resource.data.unitPrice >= 0 &&
+                                  request.resource.data.vatRate >= 0 &&
+                                  request.resource.data.vatRate <= 100;
         allow delete: if false;
       }
     }

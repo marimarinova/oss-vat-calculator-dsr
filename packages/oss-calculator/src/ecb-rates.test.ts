@@ -163,7 +163,7 @@ describe('ECB Decimal Places Configuration', () => {
   });
 
   it('should have decimal places for all EU currencies', () => {
-    const euCurrencies = ['BGN', 'HRK', 'CZK', 'DKK', 'HUF', 'PLN', 'RON', 'SEK'];
+    const euCurrencies = ['BGN', 'CZK', 'DKK', 'HUF', 'PLN', 'RON', 'SEK'];
     for (const currency of euCurrencies) {
       expect(ECB_DECIMAL_PLACES[currency]).toBeDefined();
     }

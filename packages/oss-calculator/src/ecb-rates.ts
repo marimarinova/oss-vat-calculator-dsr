@@ -15,6 +15,12 @@ export interface ExchangeRate {
 }
 
 /**
+ * Date the Croatian Kuna (HRK) was retired as legal tender.
+ * Croatia adopted the euro on this date; HRK is no longer a valid currency code.
+ */
+export const HRK_RETIRED_AT = '2023-01-01';
+
+/**
  * ECB-compliant decimal places for currency rounding
  * EUR always 2, others per ECB convention
  */
@@ -28,12 +34,11 @@ export const ECB_DECIMAL_PLACES: Record<string, number> = {
   DKK: 2,
   NOK: 2,
   BGN: 2,
-  HRK: 2,
+  // HRK removed: see HRK_RETIRED_AT
   CZK: 2,
   HUF: 2,
   PLN: 2,
   RON: 2,
-  HNL: 2,
   TRY: 2,
   RUB: 2,
   CNY: 2,

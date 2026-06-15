@@ -66,7 +66,6 @@ const EU_MEMBER_STATES: Record<string, string> = {
   ES: 'Spain',
   FI: 'Finland',
   FR: 'France',
-  GB: 'United Kingdom',
   EL: 'Greece',
   HU: 'Hungary',
   IE: 'Ireland',
