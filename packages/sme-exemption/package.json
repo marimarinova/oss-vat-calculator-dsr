@@ -2,9 +2,20 @@
   "name": "@oss-vat/sme-exemption",
   "version": "0.0.1",
   "description": "Cross-border SME exemption calculator (Directive 2020/285) — post-defence artefact",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "private": true,
-  "scripts": {},
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run"
+  },
   "dependencies": {
     "@oss-vat/shared-core": "workspace:*"
+  },
+  "devDependencies": {
+    "@fast-check/vitest": "^0.3.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^2.1.9"
   }
 }
