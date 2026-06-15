@@ -8,7 +8,7 @@ import { useAppContext } from '../context/AppContext';
 import { ReturnPreview } from '../components/ReturnPreview';
 
 export const Filing: React.FC = () => {
-  const { transactions, filings, addFiling, updateFiling } = useAppContext();
+  const { transactions, filings, addFiling } = useAppContext();
   const [selectedQuarter, setSelectedQuarter] = useState(1);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [activeTab, setActiveTab] = useState<'draft' | 'history'>('draft');
@@ -51,9 +51,8 @@ export const Filing: React.FC = () => {
     );
   };
 
-  const handleSubmitFiling = () => {
-    const filingId = `filing_Q${selectedQuarter}_${selectedYear}_${Date.now()}`;
-    addFiling({
+  const handleSubmitFiling = async () => {
+    await addFiling({
       period: `${selectedYear}-Q${selectedQuarter}`,
       status: 'submitted',
       createdAt: Date.now(),

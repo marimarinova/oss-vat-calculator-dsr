@@ -9,8 +9,7 @@ import { TransactionForm } from '../components/TransactionForm';
 import { getMemberStateName } from '@oss-vat/shared-core';
 
 export const Transactions: React.FC = () => {
-  const { transactions, addTransaction, updateTransaction, deleteTransaction } = useAppContext();
-  const [editingId, setEditingId] = useState<string | null>(null);
+  const { transactions, addTransaction, deleteTransaction } = useAppContext();
   const [filterCountry, setFilterCountry] = useState<string>('');
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -23,7 +22,7 @@ export const Transactions: React.FC = () => {
     return matchesCountry && matchesSearch;
   });
 
-  const handleAddTransaction = (data: {
+  const handleAddTransaction = async (data: {
     date: string;
     buyerCountry: string;
     amount: number;
@@ -31,7 +30,7 @@ export const Transactions: React.FC = () => {
     description: string;
     productType: 'goods' | 'services';
   }) => {
-    addTransaction({
+    await addTransaction({
       date: data.date,
       buyerCountry: data.buyerCountry,
       amount: Math.round(data.amount * 100), // Convert to cents
@@ -41,9 +40,9 @@ export const Transactions: React.FC = () => {
     });
   };
 
-  const handleDeleteTransaction = (id: string) => {
+  const handleDeleteTransaction = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this transaction?')) {
-      deleteTransaction(id);
+      await deleteTransaction(id);
     }
   };
 
