@@ -18,14 +18,23 @@ interface TransactionFormProps {
   }) => void;
 }
 
+interface TransactionFormState {
+  date: string;
+  buyerCountry: string;
+  amount: number | '';
+  currency: string;
+  description: string;
+  productType: 'goods' | 'services';
+}
+
 export const TransactionForm: React.FC<TransactionFormProps> = ({ onSubmit }) => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<TransactionFormState>({
     date: new Date().toISOString().split('T')[0],
     buyerCountry: 'BG',
     amount: '',
     currency: 'EUR',
     description: '',
-    productType: 'goods' as const,
+    productType: 'goods',
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -45,8 +54,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onSubmit }) =>
 
     // Update VAT preview
     if (name === 'amount' || name === 'buyerCountry') {
+      const currentAmount = typeof formData.amount === 'number' ? formData.amount : 0;
       updateVatPreview(
-        name === 'amount' ? parseFloat(value) : formData.amount,
+        name === 'amount' ? parseFloat(value) || 0 : currentAmount,
         name === 'buyerCountry' ? value : formData.buyerCountry,
       );
     }
@@ -73,7 +83,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onSubmit }) =>
 
     if (!formData.date) newErrors.date = 'Date is required';
     if (!formData.buyerCountry) newErrors.buyerCountry = 'Country is required';
-    if (!formData.amount || formData.amount <= 0) {
+    if (!formData.amount || (typeof formData.amount === 'number' && formData.amount <= 0)) {
       newErrors.amount = 'Amount must be greater than 0';
     }
     if (!formData.description.trim()) {
@@ -87,7 +97,10 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onSubmit }) =>
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
-      onSubmit(formData);
+      onSubmit({
+        ...formData,
+        amount: typeof formData.amount === 'number' ? formData.amount : 0,
+      });
       setFormData({
         date: new Date().toISOString().split('T')[0],
         buyerCountry: 'BG',
