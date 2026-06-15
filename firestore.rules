@@ -59,9 +59,10 @@ service cloud.firestore {
     // Design Principle 3: Validate transaction fields per VAT compliance requirements
     match /users/{userId}/transactions/{transactionId} {
       allow read: if isOwner(userId);
-      allow create, update: if isOwner(userId) &&
-                                validateTransaction(request.resource.data);
-      allow delete: if false; // Transactions are immutable once created
+      allow create: if isOwner(userId) &&
+                       validateTransaction(request.resource.data) &&
+                       validateAuditFields(request.resource.data);
+      allow update, delete: if false; // Transactions are immutable once written; use corrections
 
       // Validate transaction structure and VAT compliance
       function validateTransaction(data) {
@@ -76,6 +77,14 @@ service cloud.firestore {
                (data.status == null || data.status in ['draft', 'submitted', 'archived']);
       }
 
+      // Validate hash-chain audit fields (Refactor 4.2: cryptographic audit chain)
+      function validateAuditFields(data) {
+        return data.hash is string &&
+               data.previousHash is string &&
+               data.sequenceNumber is number &&
+               data.sequenceNumber > 0;
+      }
+
       // Subcollection: Line Items
       match /lineItems/{itemId} {
         allow read: if isOwner(userId);
@@ -85,6 +94,28 @@ service cloud.firestore {
                                   request.resource.data.vatRate >= 0 &&
                                   request.resource.data.vatRate <= 100;
         allow delete: if false;
+      }
+    }
+
+    // CORRECTIONS COLLECTION
+    // Refactor 4.1: Append-only corrections sibling to immutable transactions.
+    // A correction references the original transaction and continues the
+    // hash chain; the original transaction is never modified or deleted.
+    match /users/{userId}/corrections/{correctionId} {
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId) &&
+                       validateCorrection(request.resource.data);
+      allow update, delete: if false; // Corrections are append-only
+
+      function validateCorrection(data) {
+        return data.keys().hasAll([
+                 'originalTransactionId', 'reasonCode', 'createdAt', 'hash', 'previousHash'
+               ]) &&
+               data.originalTransactionId is string &&
+               data.reasonCode in ['UI-ERROR', 'PRICE-CHANGE', 'CUSTOMER-REFUND', 'WRONG-MS', 'WRONG-TAXCODE'] &&
+               data.createdAt is timestamp &&
+               data.hash is string &&
+               data.previousHash is string;
       }
     }
 
@@ -114,8 +145,13 @@ service cloud.firestore {
     match /users/{userId}/quarterlyReports/{reportId} {
       allow read: if isOwner(userId);
 
-      allow create, update: if isOwner(userId) &&
-                               validateQuarterlyReport(request.resource.data);
+      allow create: if isOwner(userId) &&
+                       validateQuarterlyReport(request.resource.data);
+
+      // Once a report is 'submitted', it can no longer be edited
+      allow update: if isOwner(userId) &&
+                       resource.data.status == 'draft' &&
+                       validateQuarterlyReport(request.resource.data);
 
       allow delete: if false; // Reports are archived, not deleted
 
