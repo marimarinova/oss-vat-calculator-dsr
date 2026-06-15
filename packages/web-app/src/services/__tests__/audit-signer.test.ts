@@ -55,6 +55,11 @@ describe('CloudFunctionAuditSigner', () => {
       previousHash: '',
       sequenceNumber: 1,
     });
-    expect(result).toEqual({ hash: 'server-hash', previousHash: '', sequenceNumber: 1, keyEpoch: 3 });
+    expect(result).toEqual({
+      hash: 'server-hash',
+      previousHash: '',
+      sequenceNumber: 1,
+      keyEpoch: 3,
+    });
   });
 });

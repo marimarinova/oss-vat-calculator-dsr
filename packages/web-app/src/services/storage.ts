@@ -342,7 +342,9 @@ class FirestoreStorageService {
    * the genesis values (empty previousHash, sequenceNumber 1) when the
    * chain is empty.
    */
-  private async getChainHead(uid: string): Promise<{ previousHash: string; sequenceNumber: number }> {
+  private async getChainHead(
+    uid: string,
+  ): Promise<{ previousHash: string; sequenceNumber: number }> {
     const [transactions, corrections] = await Promise.all([
       this.getTransactions(uid),
       this.getCorrections(uid),
