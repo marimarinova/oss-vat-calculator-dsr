@@ -19,15 +19,14 @@ import {
   Firestore,
   collection,
   query,
-  where,
   getDocs,
+  getDoc,
   setDoc,
   doc,
   QueryConstraint,
   DocumentData,
   CollectionReference,
   QueryDocumentSnapshot,
-  SnapshotOptions,
 } from 'firebase/firestore';
 
 /**
@@ -78,6 +77,11 @@ export class FirebaseService {
 
   isDemoMode(): boolean {
     return this.demoMode;
+  }
+
+  /** The initialized Firebase app, or null in demo mode. */
+  getApp(): FirebaseApp | null {
+    return this.app;
   }
 
   // Auth Methods
@@ -132,6 +136,24 @@ export class FirebaseService {
 
     if (!this.firestore) throw new Error('Firestore not initialized');
     await setDoc(doc(this.firestore, collectionName, docId), data);
+  }
+
+  /**
+   * Fetch a single document by collection path + ID.
+   * Returns null if the document does not exist.
+   */
+  async getDocument<T extends DocumentData>(
+    collectionName: string,
+    docId: string,
+  ): Promise<T | null> {
+    if (this.demoMode) {
+      const raw = localStorage.getItem(`${collectionName}:${docId}`);
+      return raw ? (JSON.parse(raw) as T) : null;
+    }
+
+    if (!this.firestore) throw new Error('Firestore not initialized');
+    const snapshot = await getDoc(doc(this.firestore, collectionName, docId));
+    return snapshot.exists() ? (snapshot.data() as T) : null;
   }
 
   async queryData<T extends DocumentData>(
