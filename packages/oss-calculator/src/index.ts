@@ -47,12 +47,16 @@ export { Transaction, VATCalculationResult, TaxEngineConfig, TaxEngine } from '.
 
 // Threshold monitoring
 export {
-  ThresholdStatus,
-  MonthlySupply,
-  ThresholdMonitorState,
-  ThresholdMonitor,
-  YearlyThresholdMonitor,
-} from './threshold-monitor';
+  DISTANCE_SALES_THRESHOLD_EUR,
+  SupplyCategory,
+  DistanceSalesStatus,
+  DistanceSalesEventType,
+  DistanceSalesEvent,
+  DistanceSalesTransaction,
+  DistanceSalesMonitor,
+  IOSS_CONSIGNMENT_CAP_EUR,
+  IOSSConsignmentMonitor,
+} from './thresholds';
 
 // Quarterly aggregation
 export {
