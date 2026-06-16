@@ -33,14 +33,20 @@ export {
   isValidEUCountry,
 } from './vat-rates';
 
-// ECB currency conversion
+// ECB daily currency conversion (Art. 91(2) VAT Directive)
 export {
-  ExchangeRate,
+  ConversionPolicy,
+  DailyECBRate,
+  ConversionResult,
   ECB_DECIMAL_PLACES,
-  ECBRateProvider,
-  CurrencyConverter,
-  createDefaultECBProvider,
+  HRK_RETIRED_AT,
+  registerDailyRate,
+  clearDailyRates,
+  convert,
 } from './ecb-rates';
+
+// ECB XML feed parser
+export { parseECBDailyXML } from './ecb-feed';
 
 // Tax calculation engine
 export { Transaction, VATCalculationResult, TaxEngineConfig, TaxEngine } from './tax-engine';

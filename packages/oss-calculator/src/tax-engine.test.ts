@@ -1,17 +1,20 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { TaxEngine, Transaction, VATCalculationResult } from './tax-engine';
-import { MissingCountryCodeError, RateMismatchError } from './errors';
-import { ECBRateProvider, CurrencyConverter, createDefaultECBProvider } from './ecb-rates';
+import { MissingCountryCodeError, RateMismatchError, ECBRateNotFoundError } from './errors';
+import { registerDailyRate, clearDailyRates } from './ecb-rates';
+
+// EUR/USD = 1.09 → 1 USD = 1/1.09 ≈ 0.9174 EUR
+const TEST_EUR_USD = 1.09;
+const TEST_DATE = '2026-01-15'; // Wednesday — ECB publishing day
 
 describe('Tax Engine', () => {
   let engine: TaxEngine;
-  let rateProvider: ECBRateProvider;
-  let converter: CurrencyConverter;
 
   beforeEach(() => {
-    rateProvider = createDefaultECBProvider();
-    converter = new CurrencyConverter(rateProvider);
-    engine = new TaxEngine({ currencyConverter: converter });
+    clearDailyRates();
+    // Register a USD rate for tests that need currency conversion
+    registerDailyRate({ base: 'EUR', target: 'USD', rate: TEST_EUR_USD, publishedOn: TEST_DATE });
+    engine = new TaxEngine();
   });
 
   describe('Single VAT calculation', () => {
@@ -32,7 +35,7 @@ describe('Tax Engine', () => {
       expect(result.customerCountryCode).toBe('DE');
       expect(result.amountEUR).toBe(100);
       expect(result.vatRate).toBe(19);
-      expect(result.vatAmount).toBe(19); // 100 * 19%
+      expect(result.vatAmount).toBe(19);
       expect(result.totalAmountEUR).toBe(119);
     });
 
@@ -49,8 +52,8 @@ describe('Tax Engine', () => {
 
       const result = engine.calculateVAT(transaction);
 
-      expect(result.vatRate).toBe(20); // France standard rate
-      expect(result.vatAmount).toBe(20); // 100 * 20%
+      expect(result.vatRate).toBe(20);
+      expect(result.vatAmount).toBe(20);
     });
 
     it('should use reduced VAT rate when specified', () => {
@@ -66,8 +69,8 @@ describe('Tax Engine', () => {
 
       const result = engine.calculateVAT(transaction);
 
-      expect(result.vatRate).toBe(7); // Germany reduced rate
-      expect(result.vatAmount).toBe(7); // 100 * 7%
+      expect(result.vatRate).toBe(7);
+      expect(result.vatAmount).toBe(7);
     });
 
     it('should use super-reduced VAT rate when specified', () => {
@@ -83,7 +86,7 @@ describe('Tax Engine', () => {
 
       const result = engine.calculateVAT(transaction);
 
-      expect(result.vatRate).toBe(2.1); // France super-reduced
+      expect(result.vatRate).toBe(2.1);
       expect(result.vatAmount).toBeCloseTo(2.1, 2);
     });
 
@@ -110,7 +113,7 @@ describe('Tax Engine', () => {
       const transaction: Transaction = {
         id: 'TX006',
         date: new Date('2026-01-15'),
-        customerCountryCode: 'XX', // Invalid
+        customerCountryCode: 'XX',
         amount: 100,
         currency: 'EUR',
         rateType: 'standard',
@@ -120,11 +123,11 @@ describe('Tax Engine', () => {
       expect(() => engine.calculateVAT(transaction)).toThrow(MissingCountryCodeError);
     });
 
-    it('should throw MissingCountryCodeError for undefined country code', () => {
+    it('should throw MissingCountryCodeError for empty country code', () => {
       const transaction: Transaction = {
         id: 'TX007',
         date: new Date('2026-01-15'),
-        customerCountryCode: '', // Empty
+        customerCountryCode: '',
         amount: 100,
         currency: 'EUR',
         rateType: 'standard',
@@ -138,7 +141,7 @@ describe('Tax Engine', () => {
       const transaction: Transaction = {
         id: 'TX008',
         date: new Date('2026-01-15'),
-        customerCountryCode: 'DK', // Denmark has no reduced rate
+        customerCountryCode: 'DK',
         amount: 100,
         currency: 'EUR',
         rateType: 'reduced',
@@ -150,12 +153,12 @@ describe('Tax Engine', () => {
   });
 
   describe('Currency conversion', () => {
-    it('should convert USD to EUR', () => {
+    it('should convert USD to EUR using daily ECB rate', () => {
       const transaction: Transaction = {
         id: 'TX009',
         date: new Date('2026-01-15'),
         customerCountryCode: 'DE',
-        amount: 100, // 100 USD
+        amount: 100,
         currency: 'USD',
         rateType: 'standard',
         isGoods: true,
@@ -164,15 +167,16 @@ describe('Tax Engine', () => {
 
       const result = engine.calculateVAT(transaction);
 
-      // 100 USD * ~0.9174 EUR/USD = ~91.74 EUR
+      // 100 USD / 1.09 ≈ 91.74 EUR
       expect(result.amountEUR).toBeCloseTo(91.74, 1);
       expect(result.currency).toBe('USD');
       expect(result.amountLocal).toBe(100);
       expect(result.vatRate).toBe(19);
     });
 
-    it('should throw error if currency converter not configured for non-EUR', () => {
-      const engineNoCurrency = new TaxEngine({});
+    it('should throw ECBRateNotFoundError when no rate is registered for the currency', () => {
+      clearDailyRates(); // remove all rates including USD
+
       const transaction: Transaction = {
         id: 'TX010',
         date: new Date('2026-01-15'),
@@ -183,9 +187,7 @@ describe('Tax Engine', () => {
         isGoods: true,
       };
 
-      expect(() => engineNoCurrency.calculateVAT(transaction)).toThrow(
-        /Currency converter not configured/,
-      );
+      expect(() => engine.calculateVAT(transaction)).toThrow(ECBRateNotFoundError);
     });
   });
 
@@ -275,7 +277,6 @@ describe('Tax Engine', () => {
 
     it('should include super-reduced rates where applicable', () => {
       const info = engine.getCountryRateInfo('FR');
-
       expect(info?.superReduced).toContain(2.1);
     });
   });
@@ -312,8 +313,8 @@ describe('Tax Engine', () => {
 
       const result = engine.calculateVAT(transaction);
 
-      expect(result.vatRate).toBe(20); // From EU_VAT_RATES
-      expect(result.customerCountryCode).toBe('BG'); // Clear rate source
+      expect(result.vatRate).toBe(20);
+      expect(result.customerCountryCode).toBe('BG');
     });
   });
 });

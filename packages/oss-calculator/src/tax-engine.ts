@@ -5,20 +5,20 @@
  *
  * Core VAT calculation engine:
  * - Apply destination-country rate to each transaction
- * - Currency conversion using ECB quarterly reference rates
- * - Comprehensive error handling for missing codes, rate mismatches, and rounding divergence
+ * - Currency conversion using ECB daily reference rates (Art. 91(2) VAT Directive)
+ * - Comprehensive error handling for missing codes, rate mismatches
  */
 
 import { MissingCountryCodeError, RateMismatchError, InvalidVATRateError } from './errors';
 import { getMemberStateRates, getVATRate, isValidEUCountry } from './vat-rates';
-import { CurrencyConverter } from './ecb-rates';
+import { convert, ConversionPolicy } from './ecb-rates';
 
 /**
  * Single transaction for VAT calculation
  */
 export interface Transaction {
   id: string; // Unique transaction identifier
-  date: Date; // Transaction date (used for rate lookup)
+  date: Date; // Transaction date (used as chargeable event date for Art. 91(2))
   customerCountryCode: string; // 2-letter country code of B2C buyer
   amount: number; // Transaction amount
   currency: string; // ISO 4217 currency code (e.g., 'EUR', 'USD')
@@ -49,33 +49,30 @@ export interface VATCalculationResult {
  */
 export interface TaxEngineConfig {
   defaultCurrency?: string; // Default currency if not specified (default: 'EUR')
-  currencyConverter?: CurrencyConverter; // Currency converter (required for non-EUR)
 }
 
 /**
- * Main VAT tax calculation engine
+ * Main VAT tax calculation engine.
+ * Currency conversion uses the module-level ECB daily rate store from ecb-rates.ts.
+ * Load rates via registerDailyRate() / parseECBDailyXML() before converting non-EUR
+ * transactions. The conversion policy is Art. 91(2) DAILY_AT_CHARGEABLE_EVENT.
  */
 export class TaxEngine {
-  private config: TaxEngineConfig & { defaultCurrency: string };
+  private readonly defaultCurrency: string;
 
   constructor(config: TaxEngineConfig = {}) {
-    this.config = {
-      defaultCurrency: config.defaultCurrency ?? 'EUR',
-      currencyConverter: config.currencyConverter,
-    };
+    this.defaultCurrency = config.defaultCurrency ?? 'EUR';
   }
 
   /**
-   * Calculate VAT for a single transaction
-   * Applies destination-country rate and converts currency if needed
+   * Calculate VAT for a single transaction.
+   * Applies destination-country rate and converts currency if needed.
    */
   public calculateVAT(transaction: Transaction): VATCalculationResult {
-    // Validate country code
     if (!transaction.customerCountryCode || !isValidEUCountry(transaction.customerCountryCode)) {
       throw new MissingCountryCodeError(transaction.customerCountryCode, transaction.id);
     }
 
-    // Get VAT rate for destination country
     const vatRate = getVATRate(
       transaction.customerCountryCode,
       transaction.rateType,
@@ -86,21 +83,24 @@ export class TaxEngine {
       throw new RateMismatchError(
         transaction.customerCountryCode,
         transaction.rateType,
-        0, // We don't have expected value, use 0 as indicator
+        0,
         0,
         transaction.date,
       );
     }
 
-    // Validate VAT rate is reasonable
     if (vatRate.rate < 0 || vatRate.rate > 100) {
       throw new InvalidVATRateError(vatRate.rate);
     }
 
-    // Convert to EUR if needed
-    const amountEUR = this.convertToEUR(transaction.amount, transaction.currency, transaction.date);
+    // Art. 91(2): use the ECB rate on the date VAT becomes chargeable
+    const chargeableEventDate = transaction.date.toISOString().slice(0, 10);
+    const amountEUR = this.convertToEUR(
+      transaction.amount,
+      transaction.currency,
+      chargeableEventDate,
+    );
 
-    // Calculate VAT amount
     const vatAmount = (amountEUR * vatRate.rate) / 100;
 
     return {
@@ -119,40 +119,35 @@ export class TaxEngine {
   }
 
   /**
-   * Calculate VAT for multiple transactions
-   * Returns array of results, maintaining transaction order
+   * Calculate VAT for multiple transactions.
    */
   public calculateBatch(transactions: Transaction[]): VATCalculationResult[] {
     return transactions.map((t) => this.calculateVAT(t));
   }
 
   /**
-   * Convert amount to EUR using configured currency converter
+   * Convert amount to EUR using the module-level ECB daily rate store.
+   * Throws ECBRateNotFoundError if no rate is available for the given date.
    */
-  private convertToEUR(amount: number, currency: string, asOfDate: Date): number {
-    if (currency === 'EUR' || !currency) {
+  private convertToEUR(amount: number, currency: string, chargeableEventDate: string): number {
+    if (!currency || currency === 'EUR') {
       return amount;
     }
-
-    if (!this.config.currencyConverter) {
-      throw new Error(
-        `Currency converter not configured. Cannot convert from ${currency} to EUR. ` +
-          `Provide a CurrencyConverter instance in TaxEngineConfig.`,
-      );
-    }
-
-    return this.config.currencyConverter.convert(amount, currency, 'EUR', asOfDate);
+    return convert(
+      amount,
+      currency,
+      'EUR',
+      chargeableEventDate,
+      ConversionPolicy.DAILY_AT_CHARGEABLE_EVENT,
+    ).amount;
   }
 
-  /**
-   * Round to EUR cent precision (2 decimal places)
-   */
   private roundToEURCents(amount: number): number {
     return Math.round(amount * 100) / 100;
   }
 
   /**
-   * Get information about available VAT rates for a country
+   * Get information about available VAT rates for a country.
    */
   public getCountryRateInfo(
     countryCode: string,
@@ -163,10 +158,10 @@ export class TaxEngine {
     const today = new Date();
 
     const standardRate = getVATRate(countryCode, 'standard', today);
-    const reducedRates = rates.reduced.map((r) => r.rate).filter((v, i, a) => a.indexOf(v) === i); // deduplicate
+    const reducedRates = rates.reduced.map((r) => r.rate).filter((v, i, a) => a.indexOf(v) === i);
     const superReducedRates = rates.superReduced
       .map((r) => r.rate)
-      .filter((v, i, a) => a.indexOf(v) === i); // deduplicate
+      .filter((v, i, a) => a.indexOf(v) === i);
 
     return {
       standard: standardRate?.rate ?? null,
