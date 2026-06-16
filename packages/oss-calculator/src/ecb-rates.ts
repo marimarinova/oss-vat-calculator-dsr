@@ -1,46 +1,67 @@
 /**
- * ECB Currency Exchange Rate Infrastructure
+ * ECB Daily Reference Rate Infrastructure
  *
- * Manages exchange rates from the European Central Bank quarterly reference rates
- * Implements rounding conventions: EUR to 2 decimal places, other currencies per ECB spec
- * Configurable lookup (not hardcoded) for quarterly rate updates
+ * Art. 91(2) VAT Directive: currency conversion uses the ECB rate published
+ * on the date VAT becomes chargeable (chargeable event date).
+ * Art. 61c Implementing Reg. (EU) 282/2011: for OSS quarterly returns the
+ * rate is that of the last day of the reporting period.
+ *
+ * Design: module-level daily-rate store populated via registerDailyRate()
+ * (fed by parseECBDailyXML() from ecb-feed.ts). No hardcoded rates.
  */
 
-import { ECBRateNotFoundError, CurrencyRoundingError } from './errors';
+import { ECBRateNotFoundError } from './errors';
 
-export interface ExchangeRate {
-  rate: number; // EUR/1 of the foreign currency
-  effectiveFrom: Date;
-  effectiveTo?: Date;
+// ---------------------------------------------------------------------------
+// Policy & types
+// ---------------------------------------------------------------------------
+
+export enum ConversionPolicy {
+  /** Art. 91(2): ECB rate on the date VAT becomes chargeable. */
+  DAILY_AT_CHARGEABLE_EVENT = 'DAILY_AT_CHARGEABLE_EVENT',
+  /** Art. 61c IR 282/2011: ECB rate on the last day of the OSS reporting period. */
+  LAST_DAY_OF_PERIOD = 'LAST_DAY_OF_PERIOD',
 }
 
-/**
- * Date the Croatian Kuna (HRK) was retired as legal tender.
- * Croatia adopted the euro on this date; HRK is no longer a valid currency code.
- */
-export const HRK_RETIRED_AT = '2023-01-01';
+/** A single ECB daily reference rate entry (1 EUR = rate target-units). */
+export interface DailyECBRate {
+  base: 'EUR';
+  target: string; // ISO 4217 currency code
+  rate: number; // 1 EUR = this many target-currency units
+  publishedOn: string; // YYYY-MM-DD
+}
+
+/** Return value of convert() — amount plus provenance. */
+export interface ConversionResult {
+  amount: number; // Converted amount, rounded to ISO 4217 minor units
+  rate: number; // Effective cross-rate: 1 source-unit = rate target-units
+  rateDate: string; // YYYY-MM-DD the ECB rate was published
+  policy: ConversionPolicy;
+}
+
+// ---------------------------------------------------------------------------
+// ISO 4217 minor-unit table
+// ---------------------------------------------------------------------------
 
 /**
- * ECB-compliant decimal places for currency rounding
- * EUR always 2, others per ECB convention
+ * ECB-standard decimal places for currency rounding.
+ * 0 = no subdivision (JPY, KRW), 2 = cent-style (default).
  */
 export const ECB_DECIMAL_PLACES: Record<string, number> = {
   EUR: 2,
   USD: 2,
   GBP: 2,
-  JPY: 0, // Japanese Yen is not subdivided
+  JPY: 0,
   CHF: 2,
   SEK: 2,
   DKK: 2,
   NOK: 2,
   BGN: 2,
-  // HRK removed: see HRK_RETIRED_AT
   CZK: 2,
   HUF: 2,
   PLN: 2,
   RON: 2,
   TRY: 2,
-  RUB: 2,
   CNY: 2,
   INR: 2,
   BRL: 2,
@@ -50,218 +71,149 @@ export const ECB_DECIMAL_PLACES: Record<string, number> = {
   NZD: 2,
   SGD: 2,
   HKD: 2,
-  KRW: 0, // Korean Won is not typically subdivided
+  KRW: 0,
   ZAR: 2,
+  ISK: 0,
+  MYR: 2,
+  PHP: 2,
+  THB: 2,
 };
 
-/**
- * Manages exchange rates with quarterly updates
- * Supports lookup of historical and current rates
- */
-export class ECBRateProvider {
-  private rates: Map<string, ExchangeRate[]> = new Map();
+/** Date the Croatian Kuna (HRK) was retired. Croatia adopted EUR on this date. */
+export const HRK_RETIRED_AT = '2023-01-01';
 
-  /**
-   * Register an exchange rate pair with effective dates
-   * The rate represents EUR/1 of the foreign currency
-   * For example: EUR/USD = 1.1 means 1 EUR = 1.1 USD
-   */
-  public registerRate(
-    sourceCurrency: string,
-    targetCurrency: string,
-    rate: number,
-    effectiveFrom: Date,
-    effectiveTo?: Date,
-  ): void {
-    if (sourceCurrency === targetCurrency) {
-      // Identity rate
-      this.setRateForPair(sourceCurrency, targetCurrency, 1, effectiveFrom, effectiveTo);
-      return;
-    }
+// ---------------------------------------------------------------------------
+// Module-level daily-rate store
+// ---------------------------------------------------------------------------
 
-    // Store with specific ordering: source -> target
-    this.setRateForPair(sourceCurrency, targetCurrency, rate, effectiveFrom, effectiveTo);
+// Keyed by publishedOn (YYYY-MM-DD) → Map<ISO4217, rate> where rate = 1 EUR = X currency.
+const _store = new Map<string, Map<string, number>>();
+
+/** Register a single ECB daily rate in the module store. */
+export function registerDailyRate(rate: DailyECBRate): void {
+  let dayMap = _store.get(rate.publishedOn);
+  if (!dayMap) {
+    dayMap = new Map<string, number>();
+    _store.set(rate.publishedOn, dayMap);
   }
-
-  /**
-   * Get exchange rate for a currency pair as of a specific date
-   * Returns null if rate not found
-   */
-  public getRate(sourceCurrency: string, targetCurrency: string, asOfDate: Date): number | null {
-    if (sourceCurrency === targetCurrency) {
-      return 1;
-    }
-
-    const key = this.getPairKey(sourceCurrency, targetCurrency);
-    const rates = this.rates.get(key);
-
-    if (!rates || rates.length === 0) {
-      return null;
-    }
-
-    const effectiveRate = rates.find(
-      (r) => r.effectiveFrom <= asOfDate && (!r.effectiveTo || r.effectiveTo >= asOfDate),
-    );
-
-    return effectiveRate?.rate ?? null;
-  }
-
-  /**
-   * Register a batch of quarterly rates
-   * Useful for loading ECB Q1, Q2, Q3, Q4 data
-   */
-  public registerQuarterlyRates(
-    rates: Array<{
-      source: string;
-      target: string;
-      rate: number;
-      quarter: number; // 1-4
-      year: number;
-    }>,
-  ): void {
-    const quarterDates: Record<number, number> = {
-      1: 0, // January 1
-      2: 3, // April 1
-      3: 6, // July 1
-      4: 9, // October 1
-    };
-
-    for (const rate of rates) {
-      const effectiveFrom = new Date(Date.UTC(rate.year, quarterDates[rate.quarter], 1));
-      const nextQuarter = (rate.quarter % 4) + 1;
-      const nextYear = nextQuarter === 1 ? rate.year + 1 : rate.year;
-      // Day 0 of next quarter month = last day of current quarter (inclusive)
-      const effectiveTo = new Date(Date.UTC(nextYear, quarterDates[nextQuarter], 0));
-
-      this.registerRate(rate.source, rate.target, rate.rate, effectiveFrom, effectiveTo);
-    }
-  }
-
-  private setRateForPair(
-    source: string,
-    target: string,
-    rate: number,
-    effectiveFrom: Date,
-    effectiveTo?: Date,
-  ): void {
-    const key = this.getPairKey(source, target);
-    if (!this.rates.has(key)) {
-      this.rates.set(key, []);
-    }
-    this.rates.get(key)!.push({
-      rate,
-      effectiveFrom,
-      effectiveTo,
-    });
-  }
-
-  private getPairKey(source: string, target: string): string {
-    return `${source}/${target}`;
-  }
+  dayMap.set(rate.target, rate.rate);
 }
 
 /**
- * Currency converter with ECB rate lookup and rounding compliance
+ * Remove all registered rates.
+ * Call in test beforeEach to ensure isolation across test files.
  */
-export class CurrencyConverter {
-  constructor(private rateProvider: ECBRateProvider) {}
-
-  /**
-   * Convert amount from source to target currency
-   * Applies ECB decimal place rounding conventions
-   */
-  public convert(
-    amount: number,
-    sourceCurrency: string,
-    targetCurrency: string,
-    asOfDate: Date,
-  ): number {
-    if (sourceCurrency === targetCurrency) {
-      return amount;
-    }
-
-    const rate = this.rateProvider.getRate(sourceCurrency, targetCurrency, asOfDate);
-    if (rate === null) {
-      throw new ECBRateNotFoundError(sourceCurrency, targetCurrency, asOfDate);
-    }
-
-    const converted = amount * rate;
-    const sourceDecimalPlaces = this.getDecimalPlaces(sourceCurrency);
-    const targetDecimalPlaces = this.getDecimalPlaces(targetCurrency);
-
-    // Round to target currency decimal places
-    const rounded = this.roundToDecimalPlaces(converted, targetDecimalPlaces);
-
-    // Verify no significant divergence from ECB convention
-    this.verifyRoundingCompliance(amount, sourceDecimalPlaces, targetDecimalPlaces, targetCurrency);
-
-    return rounded;
-  }
-
-  /**
-   * Round amount to specified decimal places
-   * Uses banker's rounding (round to nearest even)
-   */
-  private roundToDecimalPlaces(amount: number, places: number): number {
-    const factor = Math.pow(10, places);
-    return Math.round(amount * factor) / factor;
-  }
-
-  /**
-   * Get ECB-standard decimal places for a currency
-   */
-  private getDecimalPlaces(currency: string): number {
-    return ECB_DECIMAL_PLACES[currency] ?? 2; // Default to 2 if not specified
-  }
-
-  /**
-   * Verify rounding compliance with ECB conventions
-   * Throws error if decimal places diverge significantly
-   */
-  private verifyRoundingCompliance(
-    amount: number,
-    sourceDecimalPlaces: number,
-    targetDecimalPlaces: number,
-    targetCurrency: string,
-  ): void {
-    const ecbConventionPlaces = this.getDecimalPlaces(targetCurrency);
-
-    // If target decimal places don't match ECB convention, flag as potential divergence
-    if (targetDecimalPlaces !== ecbConventionPlaces) {
-      throw new CurrencyRoundingError(
-        amount,
-        sourceDecimalPlaces,
-        targetDecimalPlaces,
-        ecbConventionPlaces,
-        targetCurrency,
-      );
-    }
-  }
+export function clearDailyRates(): void {
+  _store.clear();
 }
 
+// ---------------------------------------------------------------------------
+// Conversion
+// ---------------------------------------------------------------------------
+
 /**
- * Create a default ECB rate provider with sample Q1 2026 rates
- * This can be extended with real ECB quarterly data
+ * Convert amount from sourceCurrency to targetCurrency.
+ *
+ * Lookup date is determined by policy:
+ *   DAILY_AT_CHARGEABLE_EVENT → chargeableEventDate
+ *   LAST_DAY_OF_PERIOD        → reportingPeriodEnd (falls back to chargeableEventDate)
+ *
+ * The most recent published ECB date ≤ lookup date is used, walking back
+ * up to 4 calendar days to skip weekends and public holidays.
+ *
+ * When neither source nor target is EUR the conversion goes via EUR as a
+ * triangular cross-rate (Art. 91(2) basis).
+ *
+ * The result is rounded to the ISO 4217 minor units of the target currency.
  */
-export function createDefaultECBProvider(): ECBRateProvider {
-  const provider = new ECBRateProvider();
+export function convert(
+  amount: number,
+  sourceCurrency: string,
+  targetCurrency: string,
+  chargeableEventDate: string,
+  policy: ConversionPolicy = ConversionPolicy.DAILY_AT_CHARGEABLE_EVENT,
+  reportingPeriodEnd?: string,
+): ConversionResult {
+  const lookupDate =
+    policy === ConversionPolicy.LAST_DAY_OF_PERIOD
+      ? (reportingPeriodEnd ?? chargeableEventDate)
+      : chargeableEventDate;
 
-  // Sample Q1 2026 rates (these are realistic but illustrative)
-  // In production, these would be loaded from official ECB data
-  provider.registerQuarterlyRates([
-    // EUR base pairs for Q1 2026
-    { source: 'EUR', target: 'USD', rate: 1.09, quarter: 1, year: 2026 },
-    { source: 'EUR', target: 'GBP', rate: 0.85, quarter: 1, year: 2026 },
-    { source: 'EUR', target: 'JPY', rate: 160.5, quarter: 1, year: 2026 },
-    { source: 'EUR', target: 'CHF', rate: 0.96, quarter: 1, year: 2026 },
-    { source: 'EUR', target: 'SEK', rate: 11.45, quarter: 1, year: 2026 },
-    { source: 'EUR', target: 'DKK', rate: 7.46, quarter: 1, year: 2026 },
-    { source: 'EUR', target: 'NOK', rate: 11.82, quarter: 1, year: 2026 },
-    // Reverse pairs for conversion convenience
-    { source: 'USD', target: 'EUR', rate: 0.9174, quarter: 1, year: 2026 },
-    { source: 'GBP', target: 'EUR', rate: 1.176, quarter: 1, year: 2026 },
-    { source: 'JPY', target: 'EUR', rate: 0.00623, quarter: 1, year: 2026 },
-  ]);
+  if (sourceCurrency === targetCurrency) {
+    return { amount, rate: 1, rateDate: lookupDate, policy };
+  }
 
-  return provider;
+  const rateDate = findPublishedDate(lookupDate, sourceCurrency, targetCurrency);
+
+  const sourceEurRate = eurRate(sourceCurrency, rateDate); // 1 EUR = sourceEurRate source-units
+  const targetEurRate = eurRate(targetCurrency, rateDate); // 1 EUR = targetEurRate target-units
+
+  let converted: number;
+  let effectiveRate: number;
+
+  if (sourceCurrency === 'EUR') {
+    // EUR → target: multiply by ECB rate
+    converted = amount * targetEurRate;
+    effectiveRate = targetEurRate;
+  } else if (targetCurrency === 'EUR') {
+    // source → EUR: divide by ECB rate
+    converted = amount / sourceEurRate;
+    effectiveRate = 1 / sourceEurRate;
+  } else {
+    // Cross-rate via EUR: source → EUR → target
+    converted = (amount / sourceEurRate) * targetEurRate;
+    effectiveRate = targetEurRate / sourceEurRate;
+  }
+
+  const decimals = ECB_DECIMAL_PLACES[targetCurrency] ?? 2;
+  const factor = Math.pow(10, decimals);
+  const rounded = Math.round(converted * factor) / factor;
+
+  return { amount: rounded, rate: effectiveRate, rateDate, policy };
+}
+
+// ---------------------------------------------------------------------------
+// Internal helpers
+// ---------------------------------------------------------------------------
+
+/**
+ * Walk back from fromDate up to 4 calendar days to find a date that has
+ * published ECB rates for all required currencies.
+ * Throws ECBRateNotFoundError if no suitable date is found.
+ */
+function findPublishedDate(
+  fromDate: string,
+  sourceCurrency: string,
+  targetCurrency: string,
+): string {
+  for (let i = 0; i <= 4; i++) {
+    const candidate = subtractDays(fromDate, i);
+    const dayMap = _store.get(candidate);
+    if (!dayMap) continue;
+    // EUR is always implicitly available (identity); check non-EUR currencies
+    const needSource = sourceCurrency !== 'EUR' && !dayMap.has(sourceCurrency);
+    const needTarget = targetCurrency !== 'EUR' && !dayMap.has(targetCurrency);
+    if (!needSource && !needTarget) {
+      return candidate;
+    }
+  }
+  throw new ECBRateNotFoundError(sourceCurrency, targetCurrency, new Date(fromDate));
+}
+
+/** Return the ECB rate for currency on a specific date (1 EUR = X currency). */
+function eurRate(currency: string, date: string): number {
+  if (currency === 'EUR') return 1;
+  const rate = _store.get(date)?.get(currency);
+  if (rate === undefined) {
+    throw new ECBRateNotFoundError(currency, 'EUR', new Date(date));
+  }
+  return rate;
+}
+
+/** Subtract `days` calendar days from a YYYY-MM-DD string, returning YYYY-MM-DD. */
+function subtractDays(dateStr: string, days: number): string {
+  const [y, m, d] = dateStr.split('-').map(Number);
+  const dt = new Date(Date.UTC(y, m - 1, d));
+  dt.setUTCDate(dt.getUTCDate() - days);
+  return dt.toISOString().slice(0, 10);
 }
