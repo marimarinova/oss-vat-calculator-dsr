@@ -29,6 +29,8 @@ export const Transactions: React.FC = () => {
     currency: string;
     description: string;
     productType: 'goods' | 'services';
+    quantity: number;
+    invoiceNumber?: string;
   }) => {
     await addTransaction({
       date: data.date,
@@ -37,6 +39,8 @@ export const Transactions: React.FC = () => {
       currency: data.currency,
       description: data.description,
       productType: data.productType,
+      quantity: data.quantity,
+      invoiceNumber: data.invoiceNumber,
     });
   };
 

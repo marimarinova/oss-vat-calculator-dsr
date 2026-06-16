@@ -67,13 +67,16 @@ service cloud.firestore {
       // Validate transaction structure and VAT compliance
       function validateTransaction(data) {
         return data.keys().hasAll([
-                 'date', 'amount', 'countryCode', 'description', 'createdAt'
+                 'date', 'amount', 'countryCode', 'description', 'createdAt', 'quantity'
                ]) &&
                isValidDate(data.date) &&
                isValidAmount(data.amount) &&
                isValidEUCountryCode(data.countryCode) &&
                data.description is string &&
                data.amount > 0 &&
+               data.quantity is number &&
+               data.quantity >= 1 &&
+               (data.invoiceNumber == null || data.invoiceNumber is string) &&
                (data.status == null || data.status in ['draft', 'submitted', 'archived']);
       }
 
@@ -109,10 +112,12 @@ service cloud.firestore {
 
       function validateCorrection(data) {
         return data.keys().hasAll([
-                 'originalTransactionId', 'reasonCode', 'createdAt', 'hash', 'previousHash'
+                 'originalTransactionId', 'reasonCode', 'adjustedAmount', 'createdAt', 'hash', 'previousHash'
                ]) &&
                data.originalTransactionId is string &&
                data.reasonCode in ['UI-ERROR', 'PRICE-CHANGE', 'CUSTOMER-REFUND', 'WRONG-MS', 'WRONG-TAXCODE'] &&
+               data.adjustedAmount is number &&
+               data.adjustedAmount >= 0 &&
                data.createdAt is timestamp &&
                data.hash is string &&
                data.previousHash is string;
