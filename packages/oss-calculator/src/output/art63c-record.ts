@@ -35,6 +35,29 @@ export type NotCaptured = typeof NOT_CAPTURED;
 // StorageTransaction / StorageCorrection in packages/web-app/src/services/storage.ts.
 // ---------------------------------------------------------------------------
 
+/** A single payment received for a transaction (Art. 63c(1)(h) and (i)). */
+export interface Art63cPayment {
+  id: string;
+  date: string; // ISO date YYYY-MM-DD
+  amount: number; // in cents
+  currency: string; // ISO 4217
+  isAdvance: boolean; // true = received before the supply (Art. 63c(1)(i))
+}
+
+/** One piece of customer-location evidence (Art. 63c(1)(k) / Art. 63c(2)). */
+export interface Art63cLocationEvidenceItem {
+  evidenceType: string; // e.g. 'billing-country', 'ip-country', 'bank-country'
+  value: string; // e.g. 'DE', '192.0.2.1'
+}
+
+/** A return of goods entry (Art. 63c(1)(l) / Art. 63c(3)). */
+export interface Art63cReturn {
+  id: string;
+  date: string; // ISO date YYYY-MM-DD
+  returnedAmount: number; // taxable amount returned, in cents
+  vatRate: number; // VAT rate that applied, as a percentage
+}
+
 /**
  * Minimal transaction shape required to build an Art. 63c record.
  * Structurally compatible with `StorageTransaction` (amount in cents).
@@ -50,6 +73,9 @@ export interface Art63cInputTransaction {
   quantity: number; // number of units supplied (Art. 63c(1)(b)); default 1
   invoiceNumber?: string; // optional invoice reference (Art. 63c(1)(j))
   vatRate?: number; // as a percentage (e.g. 19 for 19%)
+  payments?: Art63cPayment[]; // payments received (Art. 63c(1)(h) and (i))
+  locationEvidence?: Art63cLocationEvidenceItem[]; // 1-2 items (Art. 63c(1)(k))
+  returns?: Art63cReturn[]; // returns of goods (Art. 63c(1)(l))
 }
 
 /**
@@ -72,15 +98,12 @@ export interface Art63cInputCorrection {
 /**
  * A single Art. 63c OSS record entry.
  *
- * Field naming convention: `art63c_1X_description` where X is the
- * sub-paragraph letter. Sub-fields within a single paragraph share the
- * same prefix.
- *
- * Remaining schema gaps (after Refactor 7b):
- *   - Field 8 (payment tracking): add a payments subcollection
- *   - Field 9 (advance payments): add advance payment tracking
- *   - Field 11 (location evidence): capture customer location proof at transaction time
- *   - Field 12 (returns): add a returns subcollection with taxableAmount + vatRate
+ * All 12 statutory data elements are now populated when the corresponding
+ * data is present (Refactor 7c). Empty lists produce 'none', not NOT_CAPTURED.
+ * The only remaining NOT_CAPTURED scenarios are:
+ *   - Field 5 (taxableAmountAdjustment): no corrections linked to this transaction
+ *   - Field 6 (vatRateApplied): vatRate absent from the transaction
+ *   - Field 7 (vatAmountPayable): vatRate absent (same condition)
  */
 export interface Art63cRecord {
   /** Internal transaction reference (not a statutory Art. 63c field) */
@@ -101,7 +124,6 @@ export interface Art63cRecord {
   taxableAmountCurrency: string; // ISO 4217
 
   // Art. 63c(1)(e): Any subsequent increase or reduction of the taxable amount
-  // Populated when a correction with adjustedAmount references this transaction.
   taxableAmountAdjustment: string; // NOT_CAPTURED or 'CORRECTION(adjustedAmount:X EUR; ...)'
 
   // Art. 63c(1)(f): VAT rate applied
@@ -109,33 +131,26 @@ export interface Art63cRecord {
 
   // Art. 63c(1)(g): Amount of VAT payable + currency
   vatAmountPayable: number | NotCaptured;
-  vatAmountCurrency: string; // known from transaction even when rate is absent
+  vatAmountCurrency: string;
 
   // Art. 63c(1)(h): Date and amount of payments received
-  /** TODO: add a payments subcollection to StorageTransaction */
-  paymentDate: NotCaptured;
-  /** TODO: add a payments subcollection to StorageTransaction */
-  paymentAmount: NotCaptured;
+  // 'none' when no payments have been recorded; serialised list otherwise.
+  paymentInformation: string;
 
   // Art. 63c(1)(i): Any payments on account received before the supply
-  /** TODO: add advance payment tracking to StorageTransaction */
-  advancePaymentInfo: NotCaptured;
+  // 'none' when no advance payments; serialised list otherwise.
+  advancePaymentInfo: string;
 
   // Art. 63c(1)(j): Invoice information (where an invoice was issued)
-  invoiceInformation: string | NotCaptured; // populated from invoiceNumber when present
+  invoiceInformation: string | NotCaptured;
 
   // Art. 63c(1)(k): Information used to determine the place of the customer
-  // (services) or place of dispatch and arrival (goods)
-  /** TODO: capture customer location evidence and dispatch/arrival data at transaction time */
-  customerLocationEvidence: NotCaptured;
+  // 'none' when no evidence recorded; '; '-joined list otherwise.
+  customerLocationEvidence: string;
 
   // Art. 63c(1)(l): Proof of any returns of goods (taxable amount + VAT rate)
-  /** TODO: add a returns subcollection with returnAmount and returnVatRate */
-  returnProof: NotCaptured;
-  /** TODO: add `returnTaxableAmount: number` to returns subcollection */
-  returnTaxableAmount: NotCaptured;
-  /** TODO: add `returnVatRate: number` to returns subcollection */
-  returnVatRate: NotCaptured;
+  // 'none' when no returns; serialised list otherwise.
+  returnInformation: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -190,14 +205,11 @@ const CSV_COLUMNS: ReadonlyArray<CsvColumn> = [
   { key: 'vatRateApplied', header: 'art63c_1f_vat_rate_applied' },
   { key: 'vatAmountPayable', header: 'art63c_1g_vat_amount_payable' },
   { key: 'vatAmountCurrency', header: 'art63c_1g_vat_amount_currency' },
-  { key: 'paymentDate', header: 'art63c_1h_payment_date' },
-  { key: 'paymentAmount', header: 'art63c_1h_payment_amount' },
+  { key: 'paymentInformation', header: 'art63c_1h_payment_information' },
   { key: 'advancePaymentInfo', header: 'art63c_1i_advance_payment_info' },
   { key: 'invoiceInformation', header: 'art63c_1j_invoice_information' },
   { key: 'customerLocationEvidence', header: 'art63c_1k_customer_location_evidence' },
-  { key: 'returnProof', header: 'art63c_1l_return_proof' },
-  { key: 'returnTaxableAmount', header: 'art63c_1l_return_taxable_amount' },
-  { key: 'returnVatRate', header: 'art63c_1l_return_vat_rate' },
+  { key: 'returnInformation', header: 'art63c_1l_return_information' },
 ] as const;
 
 // Export for tests
@@ -220,7 +232,7 @@ export function retentionUntil(supplyYear: number): string {
 /**
  * Builds a single Art. 63c record for one transaction.
  *
- * @param tx - The transaction to record
+ * @param tx - The transaction to record (may include payments, locationEvidence, returns)
  * @param corrections - All corrections for this user/period; linked entries are
  *   referenced in field 5 (taxableAmountAdjustment). Pass [] if corrections are
  *   not available in the current context.
@@ -232,7 +244,6 @@ export function buildArt63cRecord(
   const taxableAmountEUR = tx.amount / 100;
 
   // Field 5: link any corrections that reference this transaction.
-  // adjustedAmount is now carried by StorageCorrection, so we can report the real amount.
   const linkedCorrections = corrections.filter((c) => c.originalTransactionId === tx.id);
   const taxableAmountAdjustment: string =
     linkedCorrections.length === 0
@@ -250,6 +261,41 @@ export function buildArt63cRecord(
     tx.vatRate !== undefined
       ? Math.round(((taxableAmountEUR * tx.vatRate) / 100) * 100) / 100
       : NOT_CAPTURED;
+
+  // Field 8 (Art. 63c(1)(h)): payments received — date and amount
+  const payments = tx.payments ?? [];
+  const paymentInformation =
+    payments.length === 0
+      ? 'none'
+      : payments
+          .map((p) => `PAYMENT(date:${p.date}; amount:${p.amount / 100} ${p.currency})`)
+          .join('; ');
+
+  // Field 9 (Art. 63c(1)(i)): advance payments (isAdvance = true)
+  const advances = payments.filter((p) => p.isAdvance);
+  const advancePaymentInfo =
+    advances.length === 0
+      ? 'none'
+      : advances
+          .map((a) => `ADVANCE(date:${a.date}; amount:${a.amount / 100} ${a.currency})`)
+          .join('; ');
+
+  // Field 11 (Art. 63c(1)(k)): customer location evidence
+  const evidence = tx.locationEvidence ?? [];
+  const customerLocationEvidence =
+    evidence.length === 0 ? 'none' : evidence.map((e) => `${e.evidenceType}:${e.value}`).join('; ');
+
+  // Field 12 (Art. 63c(1)(l)): returns of goods
+  const returns = tx.returns ?? [];
+  const returnInformation =
+    returns.length === 0
+      ? 'none'
+      : returns
+          .map(
+            (r) =>
+              `RETURN(date:${r.date}; returnedAmount:${r.returnedAmount / 100} ${tx.currency}; vatRate:${r.vatRate}%)`,
+          )
+          .join('; ');
 
   return {
     transactionId: tx.id,
@@ -271,18 +317,15 @@ export function buildArt63cRecord(
     vatAmountPayable,
     vatAmountCurrency: tx.currency,
     // Field 8
-    paymentDate: NOT_CAPTURED,
-    paymentAmount: NOT_CAPTURED,
+    paymentInformation,
     // Field 9
-    advancePaymentInfo: NOT_CAPTURED,
+    advancePaymentInfo,
     // Field 10
     invoiceInformation: tx.invoiceNumber ?? NOT_CAPTURED,
     // Field 11
-    customerLocationEvidence: NOT_CAPTURED,
+    customerLocationEvidence,
     // Field 12
-    returnProof: NOT_CAPTURED,
-    returnTaxableAmount: NOT_CAPTURED,
-    returnVatRate: NOT_CAPTURED,
+    returnInformation,
   };
 }
 
@@ -291,7 +334,8 @@ export function buildArt63cRecord(
  * Filters `transactions` to the requested `periodYear` and attaches metadata
  * with the correct `retentionUntil` date and `scheme = 'UNION_OSS'`.
  *
- * @param transactions - All transactions for the user (unfiltered)
+ * @param transactions - All transactions for the user (unfiltered); may include
+ *   payments, locationEvidence, and returns if they have been loaded and attached.
  * @param corrections - All corrections for the user (used for field 5)
  * @param periodYear - Calendar year to export (e.g. 2024)
  * @param sellerInfo - Optional seller identification for the metadata header
