@@ -5,10 +5,10 @@
     "accuracy": 100,
     "meanAbsoluteError": 0,
     "maxAbsoluteError": 0,
-    "processingTimeMs": 21.22410000000002,
-    "averageTransactionTimeMs": 0.002254102564102632,
+    "processingTimeMs": 21.203599999999994,
+    "averageTransactionTimeMs": 0.0023034432234434613,
     "minTransactionTimeMs": 0.0006999999999948159,
-    "maxTransactionTimeMs": 1.0154999999999745,
+    "maxTransactionTimeMs": 1.059000000000026,
     "medianTransactionTimeMs": 0.0011000000000080945,
     "oracle": {
       "total": 697,
