@@ -15,6 +15,8 @@ interface TransactionFormProps {
     currency: string;
     description: string;
     productType: 'goods' | 'services';
+    quantity: number;
+    invoiceNumber?: string;
   }) => void;
 }
 
@@ -25,6 +27,8 @@ interface TransactionFormState {
   currency: string;
   description: string;
   productType: 'goods' | 'services';
+  quantity: number | '';
+  invoiceNumber: string;
 }
 
 export const TransactionForm: React.FC<TransactionFormProps> = ({ onSubmit }) => {
@@ -35,6 +39,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onSubmit }) =>
     currency: 'EUR',
     description: '',
     productType: 'goods',
+    quantity: 1,
+    invoiceNumber: '',
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -46,9 +52,10 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onSubmit }) =>
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
+    const numericFields = ['amount', 'quantity'];
     setFormData((prev) => ({
       ...prev,
-      [name]: name === 'amount' ? (value === '' ? '' : parseFloat(value)) : value,
+      [name]: numericFields.includes(name) ? (value === '' ? '' : parseFloat(value)) : value,
     }));
     setErrors((prev) => ({ ...prev, [name]: '' }));
 
@@ -98,8 +105,17 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onSubmit }) =>
     e.preventDefault();
     if (validateForm()) {
       onSubmit({
-        ...formData,
+        date: formData.date,
+        buyerCountry: formData.buyerCountry,
         amount: typeof formData.amount === 'number' ? formData.amount : 0,
+        currency: formData.currency,
+        description: formData.description,
+        productType: formData.productType,
+        quantity:
+          typeof formData.quantity === 'number' && formData.quantity >= 1 ? formData.quantity : 1,
+        ...(formData.invoiceNumber.trim() !== ''
+          ? { invoiceNumber: formData.invoiceNumber.trim() }
+          : {}),
       });
       setFormData({
         date: new Date().toISOString().split('T')[0],
@@ -108,6 +124,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onSubmit }) =>
         currency: 'EUR',
         description: '',
         productType: 'goods',
+        quantity: 1,
+        invoiceNumber: '',
       });
       setVatPreview(null);
     }
@@ -202,6 +220,39 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onSubmit }) =>
             <option value="goods">Goods</option>
             <option value="services">Services</option>
           </select>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4 mb-4">
+        {/* Quantity — Art. 63c(1)(b) */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Quantity <span className="text-xs text-gray-400">(Art. 63c)</span>
+          </label>
+          <input
+            type="number"
+            name="quantity"
+            value={formData.quantity}
+            onChange={handleChange}
+            min="1"
+            step="1"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        {/* Invoice Number — Art. 63c(1)(j) */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Invoice No. <span className="text-xs text-gray-400">(optional, Art. 63c)</span>
+          </label>
+          <input
+            type="text"
+            name="invoiceNumber"
+            value={formData.invoiceNumber}
+            onChange={handleChange}
+            placeholder="e.g. INV-2024-001"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
         </div>
       </div>
 
