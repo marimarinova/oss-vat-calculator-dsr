@@ -6,6 +6,7 @@
 import React, { useState, useMemo } from 'react';
 import { useAppContext } from '../context/AppContext';
 import { ReturnPreview } from '../components/ReturnPreview';
+import { buildArt63cDocument, exportArt63cCSV } from '@oss-vat/oss-calculator';
 
 export const Filing: React.FC = () => {
   const { transactions, filings, addFiling } = useAppContext();
@@ -49,6 +50,18 @@ export const Filing: React.FC = () => {
         `Format: NAP Bulgaria Sections 2A–2D\n` +
         `Transactions: ${stats.transactionCount}`,
     );
+  };
+
+  const handleDownloadArt63cCSV = () => {
+    const doc = buildArt63cDocument(transactions, [], selectedYear);
+    const result = exportArt63cCSV(doc);
+    const blob = new Blob([result.csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = result.filename;
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   const handleSubmitFiling = async () => {
@@ -181,6 +194,25 @@ export const Filing: React.FC = () => {
                 </button>
               </div>
 
+              {/* Art. 63c Legal Record */}
+              <div className="bg-white rounded-lg border border-gray-200 p-6">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <h3 className="font-semibold text-gray-900">Art. 63c OSS Record</h3>
+                    <p className="text-sm text-gray-500 mt-1">
+                      Mandatory 10-year retention record per IR (EU) 282/2011 Art. 63c — full year{' '}
+                      {selectedYear}, retained until {selectedYear + 10}-12-31
+                    </p>
+                  </div>
+                  <button
+                    onClick={handleDownloadArt63cCSV}
+                    className="flex-shrink-0 flex items-center gap-2 px-5 py-2.5 bg-white border-2 border-purple-600 text-purple-600 font-semibold rounded-lg hover:bg-purple-50 transition"
+                  >
+                    ⬇ Art. 63c CSV
+                  </button>
+                </div>
+              </div>
+
               {/* System Info */}
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
                 <h3 className="font-semibold text-blue-900 mb-3">
@@ -198,6 +230,11 @@ export const Filing: React.FC = () => {
                   <li>
                     <strong>UBL 2.1/EN 16931:</strong> XML structure for forward compatibility with
                     ViDA (2025) reforms
+                  </li>
+                  <li>
+                    <strong>Art. 63c Record:</strong> Mandatory OSS record per IR (EU) 282/2011 with
+                    10-year retention; fields not yet captured in the transaction schema are flagged
+                    as NOT_CAPTURED
                   </li>
                 </ul>
               </div>
