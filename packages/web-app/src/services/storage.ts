@@ -24,6 +24,12 @@ import { Timestamp } from 'firebase/firestore';
 import { firebaseService } from './firebase';
 import { AuditSigner, CloudFunctionAuditSigner, DevAuditSigner } from './audit-signer';
 
+/** One piece of place-of-supply evidence (Art. 63c(1)(k) / Art. 63c(2)). */
+export interface LocationEvidenceItem {
+  evidenceType: 'billing-country' | 'ip-country' | 'bank-country' | 'phone-country' | 'other';
+  value: string; // e.g. 'DE', '192.0.2.1'
+}
+
 export interface StorageTransaction {
   id: string;
   date: string; // ISO date (YYYY-MM-DD)
@@ -34,6 +40,7 @@ export interface StorageTransaction {
   productType: 'goods' | 'services';
   quantity: number; // number of units supplied; default 1 (Art. 63c(1)(b))
   invoiceNumber?: string; // optional invoice reference (Art. 63c(1)(j))
+  locationEvidence?: LocationEvidenceItem[]; // 1-2 items (Art. 63c(1)(k))
   vatRate?: number;
   timestamp: number; // ms since epoch, derived from Firestore createdAt
 
@@ -43,6 +50,25 @@ export interface StorageTransaction {
   previousHash: string;
   sequenceNumber: number;
   keyEpoch: number;
+}
+
+/** A payment received for a transaction (subcollection Art. 63c(1)(h) and (i)). */
+export interface StoragePayment {
+  id: string;
+  date: string; // ISO date YYYY-MM-DD
+  amount: number; // in cents
+  currency: string; // ISO 4217
+  isAdvance: boolean; // true = received before the supply (Art. 63c(1)(i))
+  createdAt: number; // ms since epoch
+}
+
+/** A return of goods entry (subcollection Art. 63c(1)(l)). */
+export interface StorageReturn {
+  id: string;
+  date: string; // ISO date YYYY-MM-DD
+  returnedAmount: number; // taxable amount returned, in cents
+  vatRate: number; // VAT rate that applied (percentage)
+  createdAt: number; // ms since epoch
 }
 
 export interface StorageSellerInfo {
@@ -84,12 +110,30 @@ interface FirestoreTransactionDoc {
   productType: 'goods' | 'services';
   quantity: number;
   invoiceNumber?: string;
+  locationEvidence?: Array<{ evidenceType: string; value: string }>;
   vatRate?: number;
   createdAt: Timestamp | number;
   hash: string;
   previousHash: string;
   sequenceNumber: number;
   keyEpoch: number;
+}
+
+/** Raw shape of a payment document in a transaction's payments subcollection. */
+interface FirestorePaymentDoc {
+  date: string;
+  amount: number;
+  currency: string;
+  isAdvance: boolean;
+  createdAt: Timestamp | number;
+}
+
+/** Raw shape of a return document in a transaction's returns subcollection. */
+interface FirestoreReturnDoc {
+  date: string;
+  returnedAmount: number;
+  vatRate: number;
+  createdAt: Timestamp | number;
 }
 
 /** Raw shape of a correction document as stored in Firestore. */
@@ -240,6 +284,7 @@ class FirestoreStorageService {
       productType: tx.productType,
       quantity: tx.quantity,
       ...(tx.invoiceNumber !== undefined ? { invoiceNumber: tx.invoiceNumber } : {}),
+      ...(tx.locationEvidence !== undefined ? { locationEvidence: tx.locationEvidence } : {}),
       ...(tx.vatRate !== undefined ? { vatRate: tx.vatRate } : {}),
       createdAt: nowForStorage(),
       hash: auditFields.hash,
@@ -281,6 +326,7 @@ class FirestoreStorageService {
       productType: data.productType,
       quantity: data.quantity ?? 1, // default 1 for documents written before Refactor 7b
       invoiceNumber: data.invoiceNumber,
+      locationEvidence: data.locationEvidence as LocationEvidenceItem[] | undefined,
       vatRate: data.vatRate,
       timestamp: toMillis(data.createdAt),
       hash: data.hash,
@@ -347,6 +393,86 @@ class FirestoreStorageService {
       previousHash: data.previousHash,
       sequenceNumber: data.sequenceNumber,
       keyEpoch: data.keyEpoch,
+    };
+  }
+
+  // ---------------------------------------------------------------------
+  // Payments - users/{uid}/transactions/{txId}/payments/{paymentId}
+  // Append-only subcollection; no update/delete (enforced by firestore.rules).
+  // ---------------------------------------------------------------------
+
+  async getPayments(uid: string, txId: string): Promise<StoragePayment[]> {
+    const snapshots = await firebaseService.queryData<FirestorePaymentDoc>(
+      `users/${uid}/transactions/${txId}/payments`,
+      [],
+    );
+    return snapshots.map((snap) => this.toStoragePayment(snap.id, snap.data()));
+  }
+
+  async addPayment(
+    uid: string,
+    txId: string,
+    payment: Pick<StoragePayment, 'date' | 'amount' | 'currency' | 'isAdvance'>,
+  ): Promise<StoragePayment> {
+    const id = generateId('pay');
+    const docData: FirestorePaymentDoc = {
+      date: payment.date,
+      amount: payment.amount,
+      currency: payment.currency,
+      isAdvance: payment.isAdvance,
+      createdAt: nowForStorage(),
+    };
+    await firebaseService.saveData(`users/${uid}/transactions/${txId}/payments`, id, docData);
+    return this.toStoragePayment(id, docData);
+  }
+
+  private toStoragePayment(id: string, data: FirestorePaymentDoc): StoragePayment {
+    return {
+      id,
+      date: data.date,
+      amount: data.amount,
+      currency: data.currency,
+      isAdvance: data.isAdvance,
+      createdAt: toMillis(data.createdAt),
+    };
+  }
+
+  // ---------------------------------------------------------------------
+  // Returns - users/{uid}/transactions/{txId}/returns/{returnId}
+  // Append-only subcollection; no update/delete (enforced by firestore.rules).
+  // ---------------------------------------------------------------------
+
+  async getReturns(uid: string, txId: string): Promise<StorageReturn[]> {
+    const snapshots = await firebaseService.queryData<FirestoreReturnDoc>(
+      `users/${uid}/transactions/${txId}/returns`,
+      [],
+    );
+    return snapshots.map((snap) => this.toStorageReturn(snap.id, snap.data()));
+  }
+
+  async addReturn(
+    uid: string,
+    txId: string,
+    ret: Pick<StorageReturn, 'date' | 'returnedAmount' | 'vatRate'>,
+  ): Promise<StorageReturn> {
+    const id = generateId('ret');
+    const docData: FirestoreReturnDoc = {
+      date: ret.date,
+      returnedAmount: ret.returnedAmount,
+      vatRate: ret.vatRate,
+      createdAt: nowForStorage(),
+    };
+    await firebaseService.saveData(`users/${uid}/transactions/${txId}/returns`, id, docData);
+    return this.toStorageReturn(id, docData);
+  }
+
+  private toStorageReturn(id: string, data: FirestoreReturnDoc): StorageReturn {
+    return {
+      id,
+      date: data.date,
+      returnedAmount: data.returnedAmount,
+      vatRate: data.vatRate,
+      createdAt: toMillis(data.createdAt),
     };
   }
 

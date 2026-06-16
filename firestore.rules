@@ -77,6 +77,10 @@ service cloud.firestore {
                data.quantity is number &&
                data.quantity >= 1 &&
                (data.invoiceNumber == null || data.invoiceNumber is string) &&
+               (data.locationEvidence == null || (
+                 data.locationEvidence is list &&
+                 data.locationEvidence.size() <= 2
+               )) &&
                (data.status == null || data.status in ['draft', 'submitted', 'archived']);
       }
 
@@ -97,6 +101,43 @@ service cloud.firestore {
                                   request.resource.data.vatRate >= 0 &&
                                   request.resource.data.vatRate <= 100;
         allow delete: if false;
+      }
+
+      // Subcollection: Payments (Art. 63c(1)(h) and (i))
+      // Append-only: records payments received and advance payments on account.
+      match /payments/{paymentId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) && validatePayment(request.resource.data);
+        allow update, delete: if false;
+
+        function validatePayment(data) {
+          return data.keys().hasAll(['date', 'amount', 'currency', 'isAdvance', 'createdAt']) &&
+                 isValidDate(data.date) &&
+                 data.amount is number &&
+                 data.amount > 0 &&
+                 data.currency is string &&
+                 data.isAdvance is bool &&
+                 data.createdAt is timestamp;
+        }
+      }
+
+      // Subcollection: Returns (Art. 63c(1)(l))
+      // Append-only: records returns of goods with taxable amount and VAT rate.
+      match /returns/{returnId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) && validateReturn(request.resource.data);
+        allow update, delete: if false;
+
+        function validateReturn(data) {
+          return data.keys().hasAll(['date', 'returnedAmount', 'vatRate', 'createdAt']) &&
+                 isValidDate(data.date) &&
+                 data.returnedAmount is number &&
+                 data.returnedAmount >= 0 &&
+                 data.vatRate is number &&
+                 data.vatRate >= 0 &&
+                 data.vatRate <= 100 &&
+                 data.createdAt is timestamp;
+        }
       }
     }
 
