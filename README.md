@@ -71,12 +71,12 @@ pnpm format
 
 ### Monorepo Structure
 
-| Package                   | Description                                                                | Status             |
-| ------------------------- | -------------------------------------------------------------------------- | ------------------ |
-| `@oss-vat/shared-core`    | Authentication, multi-tenancy, data lifecycle taxonomy, HMAC audit chain   | Active development |
-| `@oss-vat/oss-calculator` | Primary OSS compliance artefact with Layer 2 & 3 implementation (v1.0)     | Active development |
-| `@oss-vat/sme-exemption`  | SME exemption monitor — `SMECrossBorderMonitor`, EUR 100,000 cap           | Implemented        |
-| `@oss-vat/web-app`        | Firebase-hosted frontend (React + Vite); Firestore + localStorage fallback | Built              |
+| Package                   | Description                                                                                                | Status             |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------- | ------------------ |
+| `@oss-vat/shared-core`    | Authentication, multi-tenancy, data lifecycle taxonomy, HMAC audit chain                                   | Active development |
+| `@oss-vat/oss-calculator` | Primary OSS compliance artefact with Layer 2 & 3 implementation (v1.0)                                     | Active development |
+| `@oss-vat/sme-exemption`  | SME exemption monitor — `SMECrossBorderMonitor`, EUR 100,000 cap                                           | Implemented        |
+| `@oss-vat/web-app`        | Firebase-hosted frontend (React + Vite); Firestore persistence (authoritative); localStorage demo fallback | Built              |
 
 ---
 
@@ -164,7 +164,8 @@ Firestore subcollections:
 The `@oss-vat/web-app` package is a **built React + Vite application** with Firebase hosting:
 
 - Pages: Dashboard, Transactions, Calculator, Filing, Settings, Login
-- Firestore persistence (user-scoped, append-only) with a localStorage fallback for demo use without Firebase credentials
+- **Firestore** is the authoritative, compliance-grade persistence store (user-scoped, append-only)
+- **localStorage fallback** — DEMO-ONLY degraded path for exploring the UI without Firebase credentials; not suitable for compliance use and not covered by Firestore security rules
 - Transaction corrections via supplementary entries (no in-place mutation)
 - Threshold alerts via `ThresholdAlert` component
 - VAT return preview via `ReturnPreview` component
@@ -243,7 +244,7 @@ Required variables:
 ### Firestore Security Rules
 
 - User-scoped data access (`match on userId`)
-- Append-only audit logs — updates and deletes are rejected at the rules layer
+- Audit log documents are **immutable**: the rules allow `create` only; `update` and `delete` are denied. The `action` field on each log entry records the type of business event that occurred (e.g. `'create'`, `'update'`, `'delete'`, `'archive'`, `'export'`) — these values identify what happened to a _business entity_ (such as a transaction), not operations on the log entry itself.
 - Payment and return subcollections: create-only with field-level validation
 - VAT transaction field validation: `amount > 0`, valid ISO 3166-1 EU country code, ISO 8601 date, VAT rate 0–100%
 
@@ -322,8 +323,8 @@ This artefact implements **five core design principles** for automating cross-bo
 - User authentication via Firebase Auth
 - Row-level security via Firestore rules
 - HMAC-SHA256 audit chain (Web Crypto SubtleCrypto) — signing key server-side only
-- Append-only audit logs enforced at the Firestore rules layer
-- OWASP-aligned headers (X-Frame-Options, X-Content-Type-Options, CSP)
+- Audit log documents are immutable at the Firestore rules layer (create-only; `update`/`delete` denied); action-type values such as `'update'` or `'export'` label the business event recorded, not a mutation of the log document itself
+- OWASP-aligned headers: `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Content-Security-Policy` (restricts scripts, styles, and connect sources to `'self'` + Firebase/Google APIs)
 
 ---
 

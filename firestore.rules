@@ -145,6 +145,14 @@ service cloud.firestore {
     // Refactor 4.1: Append-only corrections sibling to immutable transactions.
     // A correction references the original transaction and continues the
     // hash chain; the original transaction is never modified or deleted.
+    //
+    // PENDING ALIGNMENT (Rate Architecture task, Q3/Q5):
+    //   When Transaction.date is renamed to supplyDate (Q3), the transaction
+    //   validateTransaction() function below must validate data.supplyDate
+    //   instead of data.date.
+    //   When the Correction TypeScript type gains originalSupplyDate,
+    //   originalVATRate, and originalDatasetVersion (Q5), validateCorrection()
+    //   must require those fields so Firestore rules match the TypeScript model.
     match /users/{userId}/corrections/{correctionId} {
       allow read: if isOwner(userId);
       allow create: if isOwner(userId) &&
@@ -167,7 +175,12 @@ service cloud.firestore {
 
     // AUDIT LOG COLLECTION
     // Design Principle 3: Append-only audit trail (no updates, no deletes)
-    // Enforces immutability and compliance with data integrity requirements
+    // Audit log DOCUMENTS are immutable: only 'create' is permitted; 'update'
+    // and 'delete' are unconditionally denied. The 'action' field records the
+    // type of business event that occurred (e.g. a transaction was exported or
+    // archived) — values such as 'update', 'delete', 'archive', 'export' are
+    // labels for what happened to a BUSINESS ENTITY, NOT operations on the log
+    // entry itself. Log entries are always created, never mutated.
     match /users/{userId}/auditLog/{logId} {
       allow read: if isOwner(userId);
 
