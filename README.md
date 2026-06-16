@@ -361,6 +361,6 @@ This is an academic research artefact. Contributions are welcome through GitHub 
 ## Contact
 
 **Author**: Marieta Marinova  
-**Email**: kavaznia@gmail.com  
+**Email**: marietaim@uni-sofia.bg  
 **Institution**: Sofia University "St. Kliment Ohridski", Department of Finance and Accounting  
 **GitHub**: https://github.com/marimarinova/oss-vat-calculator
