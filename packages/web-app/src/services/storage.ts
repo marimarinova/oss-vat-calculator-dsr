@@ -32,6 +32,8 @@ export interface StorageTransaction {
   currency: string; // ISO 4217
   description: string;
   productType: 'goods' | 'services';
+  quantity: number; // number of units supplied; default 1 (Art. 63c(1)(b))
+  invoiceNumber?: string; // optional invoice reference (Art. 63c(1)(j))
   vatRate?: number;
   timestamp: number; // ms since epoch, derived from Firestore createdAt
 
@@ -64,6 +66,7 @@ export interface StorageCorrection {
   id: string;
   originalTransactionId: string;
   reasonCode: 'UI-ERROR' | 'PRICE-CHANGE' | 'CUSTOMER-REFUND' | 'WRONG-MS' | 'WRONG-TAXCODE';
+  adjustedAmount: number; // corrected taxable amount in cents (Art. 63c(1)(e)); 0 = voided
   createdAt: number; // ms since epoch
   hash: string;
   previousHash: string;
@@ -79,6 +82,8 @@ interface FirestoreTransactionDoc {
   currency: string;
   description: string;
   productType: 'goods' | 'services';
+  quantity: number;
+  invoiceNumber?: string;
   vatRate?: number;
   createdAt: Timestamp | number;
   hash: string;
@@ -91,6 +96,7 @@ interface FirestoreTransactionDoc {
 interface FirestoreCorrectionDoc {
   originalTransactionId: string;
   reasonCode: StorageCorrection['reasonCode'];
+  adjustedAmount: number;
   createdAt: Timestamp | number;
   hash: string;
   previousHash: string;
@@ -218,6 +224,7 @@ class FirestoreStorageService {
       currency: tx.currency,
       description: tx.description,
       productType: tx.productType,
+      quantity: tx.quantity,
       vatRate: tx.vatRate ?? null,
     };
 
@@ -231,6 +238,8 @@ class FirestoreStorageService {
       currency: tx.currency,
       description: tx.description,
       productType: tx.productType,
+      quantity: tx.quantity,
+      ...(tx.invoiceNumber !== undefined ? { invoiceNumber: tx.invoiceNumber } : {}),
       ...(tx.vatRate !== undefined ? { vatRate: tx.vatRate } : {}),
       createdAt: nowForStorage(),
       hash: auditFields.hash,
@@ -270,6 +279,8 @@ class FirestoreStorageService {
       currency: data.currency,
       description: data.description,
       productType: data.productType,
+      quantity: data.quantity ?? 1, // default 1 for documents written before Refactor 7b
+      invoiceNumber: data.invoiceNumber,
       vatRate: data.vatRate,
       timestamp: toMillis(data.createdAt),
       hash: data.hash,
@@ -295,7 +306,7 @@ class FirestoreStorageService {
 
   async addCorrection(
     uid: string,
-    correction: Pick<StorageCorrection, 'originalTransactionId' | 'reasonCode'>,
+    correction: Pick<StorageCorrection, 'originalTransactionId' | 'reasonCode' | 'adjustedAmount'>,
     signer: AuditSigner = this.getDefaultSigner(),
   ): Promise<StorageCorrection> {
     const { previousHash, sequenceNumber } = await this.getChainHead(uid);
@@ -303,6 +314,7 @@ class FirestoreStorageService {
     const auditableData: Record<string, unknown> = {
       originalTransactionId: correction.originalTransactionId,
       reasonCode: correction.reasonCode,
+      adjustedAmount: correction.adjustedAmount,
     };
 
     const auditFields = await signer.sign(auditableData, previousHash, sequenceNumber);
@@ -311,6 +323,7 @@ class FirestoreStorageService {
     const docData: FirestoreCorrectionDoc = {
       originalTransactionId: correction.originalTransactionId,
       reasonCode: correction.reasonCode,
+      adjustedAmount: correction.adjustedAmount,
       createdAt: nowForStorage(),
       hash: auditFields.hash,
       previousHash: auditFields.previousHash,
@@ -328,6 +341,7 @@ class FirestoreStorageService {
       id,
       originalTransactionId: data.originalTransactionId,
       reasonCode: data.reasonCode,
+      adjustedAmount: data.adjustedAmount ?? 0, // default 0 for documents written before Refactor 7b
       createdAt: toMillis(data.createdAt),
       hash: data.hash,
       previousHash: data.previousHash,

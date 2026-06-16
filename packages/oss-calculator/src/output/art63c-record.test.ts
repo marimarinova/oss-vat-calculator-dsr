@@ -23,6 +23,8 @@ const TX_SERVICE: Art63cInputTransaction = {
   currency: 'EUR',
   description: 'SaaS subscription',
   productType: 'services',
+  quantity: 1,
+  invoiceNumber: 'INV-2024-001',
   vatRate: 19,
 };
 
@@ -34,7 +36,9 @@ const TX_GOODS_NO_RATE: Art63cInputTransaction = {
   currency: 'EUR',
   description: 'Printed book',
   productType: 'goods',
+  quantity: 3,
   // vatRate intentionally absent
+  // invoiceNumber intentionally absent
 };
 
 const TX_2023: Art63cInputTransaction = {
@@ -45,6 +49,7 @@ const TX_2023: Art63cInputTransaction = {
   currency: 'EUR',
   description: 'Consulting',
   productType: 'services',
+  quantity: 1,
   vatRate: 22,
 };
 
@@ -53,6 +58,7 @@ const CORRECTION: Art63cInputCorrection = {
   originalTransactionId: 'tx-001',
   reasonCode: 'PRICE-CHANGE',
   createdAt: 1710000000000,
+  adjustedAmount: 8000, // corrected to 80.00 EUR
 };
 
 // ---------------------------------------------------------------------------
@@ -129,8 +135,8 @@ describe('buildArt63cRecord()', () => {
       expect(record.supplyDescription).toContain('services');
     });
 
-    it('Field 2b: supplyQuantity = NOT_CAPTURED', () => {
-      expect(record.supplyQuantity).toBe(NOT_CAPTURED);
+    it('Field 2b: supplyQuantity = tx.quantity (1)', () => {
+      expect(record.supplyQuantity).toBe(1);
     });
 
     it('Field 3: dateOfSupply = ISO date string', () => {
@@ -178,8 +184,8 @@ describe('buildArt63cRecord()', () => {
       expect(record.advancePaymentInfo).toBe(NOT_CAPTURED);
     });
 
-    it('Field 10 (invoiceInformation) = NOT_CAPTURED', () => {
-      expect(record.invoiceInformation).toBe(NOT_CAPTURED);
+    it('Field 10 (invoiceInformation) = invoiceNumber when present', () => {
+      expect(record.invoiceInformation).toBe('INV-2024-001');
     });
 
     it('Field 11 (customerLocationEvidence) = NOT_CAPTURED', () => {
@@ -213,15 +219,25 @@ describe('buildArt63cRecord()', () => {
     it('Field 4: taxableAmountEUR still computed (50.00 EUR)', () => {
       expect(record.taxableAmountEUR).toBe(50);
     });
+
+    it('Field 2b: supplyQuantity = 3 (from TX_GOODS_NO_RATE.quantity)', () => {
+      expect(record.supplyQuantity).toBe(3);
+    });
+
+    it('Field 10: invoiceInformation = NOT_CAPTURED when invoiceNumber absent', () => {
+      expect(record.invoiceInformation).toBe(NOT_CAPTURED);
+    });
   });
 
-  describe('Field 5: correction linking', () => {
-    it('references correction id and reasonCode when linked', () => {
+  describe('Field 5: correction linking with adjustedAmount', () => {
+    it('includes adjustedAmount in EUR, reasonCode, and corrId when linked', () => {
       const record = buildArt63cRecord(TX_SERVICE, [CORRECTION]);
-      expect(record.taxableAmountAdjustment).toContain('CORRECTION_REFERENCED');
+      expect(record.taxableAmountAdjustment).toContain('CORRECTION');
+      expect(record.taxableAmountAdjustment).toContain('adjustedAmount:80 EUR'); // 8000 cents / 100
       expect(record.taxableAmountAdjustment).toContain('PRICE-CHANGE');
       expect(record.taxableAmountAdjustment).toContain('corr-001');
-      expect(record.taxableAmountAdjustment).toContain('NOT_CAPTURED');
+      // adjustment amount is now populated — no NOT_CAPTURED in this field
+      expect(record.taxableAmountAdjustment).not.toContain('adjustment amount NOT_CAPTURED');
     });
 
     it('does not link corrections for a different transaction', () => {
@@ -240,6 +256,7 @@ describe('buildArt63cRecord()', () => {
         currency: 'EUR',
         description: 'Test',
         productType: 'services',
+        quantity: 1,
         vatRate: 20, // 3.33 * 20% = 0.666 → rounds to 0.67
       };
       const record = buildArt63cRecord(tx, []);
@@ -373,6 +390,7 @@ describe('exportArt63cCSV()', () => {
       currency: 'EUR',
       description: 'Course, workshop, and training',
       productType: 'services',
+      quantity: 1,
     };
     const d = buildArt63cDocument([tx], [], 2024);
     const r = exportArt63cCSV(d);
@@ -417,8 +435,8 @@ describe('exportArt63cJSON()', () => {
     expect(rec['memberStateOfConsumption']).toBe('DE');
     expect(rec['dateOfSupply']).toBe('2024-03-15');
     expect(rec['taxableAmountEUR']).toBe(100);
-    expect(rec['supplyQuantity']).toBe(NOT_CAPTURED);
-    expect(rec['paymentDate']).toBe(NOT_CAPTURED);
-    expect(rec['invoiceInformation']).toBe(NOT_CAPTURED);
+    expect(rec['supplyQuantity']).toBe(1); // now populated
+    expect(rec['invoiceInformation']).toBe('INV-2024-001'); // now populated
+    expect(rec['paymentDate']).toBe(NOT_CAPTURED); // still NOT_CAPTURED
   });
 });

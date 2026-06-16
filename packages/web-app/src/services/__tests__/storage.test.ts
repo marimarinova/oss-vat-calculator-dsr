@@ -45,6 +45,7 @@ const baseTransaction = {
   currency: 'EUR',
   description: 'Widget sale',
   productType: 'goods' as const,
+  quantity: 1,
   vatRate: 19,
 };
 
@@ -83,6 +84,7 @@ describe('FirestoreStorageService - demo mode fallback', () => {
             currency: tx1.currency,
             description: tx1.description,
             productType: tx1.productType,
+            quantity: tx1.quantity,
             vatRate: tx1.vatRate,
             createdAt: Date.now(),
             hash: tx1.hash,

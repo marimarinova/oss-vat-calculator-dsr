@@ -47,23 +47,21 @@ export interface Art63cInputTransaction {
   currency: string; // ISO 4217
   description: string;
   productType: 'goods' | 'services';
+  quantity: number; // number of units supplied (Art. 63c(1)(b)); default 1
+  invoiceNumber?: string; // optional invoice reference (Art. 63c(1)(j))
   vatRate?: number; // as a percentage (e.g. 19 for 19%)
 }
 
 /**
  * Minimal correction shape required to satisfy Art. 63c(1)(e).
  * Structurally compatible with `StorageCorrection`.
- *
- * NOTE: the current correction schema stores a `reasonCode` and a
- * reference to the original transaction but does NOT store the
- * adjustment amount — so Art. 63c(1)(e) is only partially satisfiable
- * from the current schema (see `taxableAmountAdjustment` field).
  */
 export interface Art63cInputCorrection {
   id: string;
   originalTransactionId: string;
   reasonCode: string;
   createdAt: number; // ms since epoch
+  adjustedAmount: number; // corrected taxable amount in cents (Art. 63c(1)(e))
 }
 
 // ---------------------------------------------------------------------------
@@ -78,12 +76,9 @@ export interface Art63cInputCorrection {
  * sub-paragraph letter. Sub-fields within a single paragraph share the
  * same prefix.
  *
- * Schema gaps (current as of Refactor 7):
- *   - Field 2 (quantity): add `quantity: number` to StorageTransaction
- *   - Field 5 (adjustment amount): add `adjustedAmount: number` to StorageCorrection
+ * Remaining schema gaps (after Refactor 7b):
  *   - Field 8 (payment tracking): add a payments subcollection
  *   - Field 9 (advance payments): add advance payment tracking
- *   - Field 10 (invoice info): add `invoiceNumber: string` to StorageTransaction
  *   - Field 11 (location evidence): capture customer location proof at transaction time
  *   - Field 12 (returns): add a returns subcollection with taxableAmount + vatRate
  */
@@ -96,8 +91,7 @@ export interface Art63cRecord {
 
   // Art. 63c(1)(b): Type of service or description and quantity of goods
   supplyDescription: string; // description + productType
-  /** TODO: add `quantity: number` to StorageTransaction */
-  supplyQuantity: NotCaptured;
+  supplyQuantity: number; // number of units supplied
 
   // Art. 63c(1)(c): Date of the supply
   dateOfSupply: string; // ISO date YYYY-MM-DD
@@ -107,10 +101,8 @@ export interface Art63cRecord {
   taxableAmountCurrency: string; // ISO 4217
 
   // Art. 63c(1)(e): Any subsequent increase or reduction of the taxable amount
-  // Corrections reference the original transaction but carry NO adjustment amount
-  // in the current schema. When corrections are linked, their IDs and reason codes
-  // are listed; the amount is still NOT_CAPTURED until StorageCorrection is extended.
-  taxableAmountAdjustment: string; // 'NOT_CAPTURED' or 'CORRECTION_REFERENCED(…) – adjustment amount NOT_CAPTURED'
+  // Populated when a correction with adjustedAmount references this transaction.
+  taxableAmountAdjustment: string; // NOT_CAPTURED or 'CORRECTION(adjustedAmount:X EUR; ...)'
 
   // Art. 63c(1)(f): VAT rate applied
   vatRateApplied: number | NotCaptured;
@@ -130,8 +122,7 @@ export interface Art63cRecord {
   advancePaymentInfo: NotCaptured;
 
   // Art. 63c(1)(j): Invoice information (where an invoice was issued)
-  /** TODO: add `invoiceNumber: string` to StorageTransaction */
-  invoiceInformation: NotCaptured;
+  invoiceInformation: string | NotCaptured; // populated from invoiceNumber when present
 
   // Art. 63c(1)(k): Information used to determine the place of the customer
   // (services) or place of dispatch and arrival (goods)
@@ -241,15 +232,17 @@ export function buildArt63cRecord(
   const taxableAmountEUR = tx.amount / 100;
 
   // Field 5: link any corrections that reference this transaction.
-  // The current StorageCorrection schema does NOT carry an adjustedAmount,
-  // so we can reference the correction but cannot report the amount.
+  // adjustedAmount is now carried by StorageCorrection, so we can report the real amount.
   const linkedCorrections = corrections.filter((c) => c.originalTransactionId === tx.id);
   const taxableAmountAdjustment: string =
     linkedCorrections.length === 0
       ? NOT_CAPTURED
       : linkedCorrections
-          .map((c) => `CORRECTION_REFERENCED(reasonCode:${c.reasonCode}/corrId:${c.id})`)
-          .join('; ') + ' – adjustment amount NOT_CAPTURED';
+          .map((c) => {
+            const adjustedEUR = c.adjustedAmount / 100;
+            return `CORRECTION(adjustedAmount:${adjustedEUR} ${tx.currency}; reasonCode:${c.reasonCode}; corrId:${c.id})`;
+          })
+          .join('; ');
 
   // Fields 6 & 7: VAT
   const vatRateApplied: number | NotCaptured = tx.vatRate !== undefined ? tx.vatRate : NOT_CAPTURED;
@@ -264,7 +257,7 @@ export function buildArt63cRecord(
     memberStateOfConsumption: tx.buyerCountry,
     // Field 2
     supplyDescription: `${tx.description} [${tx.productType}]`,
-    supplyQuantity: NOT_CAPTURED,
+    supplyQuantity: tx.quantity,
     // Field 3
     dateOfSupply: tx.date,
     // Field 4
@@ -283,7 +276,7 @@ export function buildArt63cRecord(
     // Field 9
     advancePaymentInfo: NOT_CAPTURED,
     // Field 10
-    invoiceInformation: NOT_CAPTURED,
+    invoiceInformation: tx.invoiceNumber ?? NOT_CAPTURED,
     // Field 11
     customerLocationEvidence: NOT_CAPTURED,
     // Field 12
