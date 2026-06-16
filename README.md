@@ -14,7 +14,7 @@ Developed as part of a doctoral dissertation at the Department of Finance and Ac
 
 - Node.js >= 20.0.0
 - pnpm >= 9.0.0
-- Firebase CLI (for deployment)
+- Firebase CLI (for deployment — see [Deployment](#deployment) below)
 
 ### Installation & Development
 
@@ -35,22 +35,6 @@ pnpm test
 pnpm format
 ```
 
-### Firebase Setup
-
-```bash
-# Install Firebase CLI
-npm install -g firebase-tools
-
-# Login to Firebase (creates .firebaserc config)
-firebase login
-
-# Deploy to development environment
-firebase deploy --only hosting,firestore:rules,firestore:indexes --project oss-vat-calculator-dev
-
-# Deploy to production
-firebase deploy --only hosting,firestore:rules,firestore:indexes --project oss-vat-calculator
-```
-
 ---
 
 ## Architecture Overview
@@ -62,7 +46,7 @@ firebase deploy --only hosting,firestore:rules,firestore:indexes --project oss-v
 │ Layer 3: Localization (i18n, currency, country names)       │
 │          - 27 EU member state support                        │
 │          - Multi-language message bundles (BG, EN, DE, FR)   │
-│          - Currency conversion (ECB + BNB rates)             │
+│          - ECB daily reference-rate currency conversion      │
 └─────────────────────────────────────────────────────────────┘
                             ↑
 ┌─────────────────────────────────────────────────────────────┐
@@ -75,82 +59,130 @@ firebase deploy --only hosting,firestore:rules,firestore:indexes --project oss-v
                             ↑
 ┌─────────────────────────────────────────────────────────────┐
 │ Layer 1: Core Engine (regulation-neutral business logic)     │
-│          - Transaction recording (63-column canonical schema)│
+│          - Transaction recording (canonical schema)          │
 │          - VAT rate lookup & calculation                     │
 │          - Four-tier data lifecycle enforcement (T0-T4)      │
-│          - HMAC audit chain computation                      │
+│          - HMAC-SHA256 audit chain (Web Crypto SubtleCrypto) │
 │          - Quarterly aggregation engine                      │
 │          - Correction & credit note processing               │
+│          - Threshold monitoring (Art. 59c, Dir. 2020/285)    │
 └─────────────────────────────────────────────────────────────┘
 ```
 
 ### Monorepo Structure
 
-| Package                   | Description                                                              | Status                  |
-| ------------------------- | ------------------------------------------------------------------------ | ----------------------- |
-| `@oss-vat/shared-core`    | Authentication, multi-tenancy, data lifecycle taxonomy, HMAC audit chain | Active development      |
-| `@oss-vat/oss-calculator` | Primary OSS compliance artefact with Layer 2 & 3 implementation (v1.0)   | Active development      |
-| `@oss-vat/sme-exemption`  | SME exemption calculator (Directive 2020/285)                            | Reserved (post-defence) |
-| `@oss-vat/web-app`        | Firebase-hosted frontend (React + Vite)                                  | Planned                 |
+| Package                   | Description                                                                | Status             |
+| ------------------------- | -------------------------------------------------------------------------- | ------------------ |
+| `@oss-vat/shared-core`    | Authentication, multi-tenancy, data lifecycle taxonomy, HMAC audit chain   | Active development |
+| `@oss-vat/oss-calculator` | Primary OSS compliance artefact with Layer 2 & 3 implementation (v1.0)     | Active development |
+| `@oss-vat/sme-exemption`  | SME exemption monitor — `SMECrossBorderMonitor`, EUR 100,000 cap           | Implemented        |
+| `@oss-vat/web-app`        | Firebase-hosted frontend (React + Vite); Firestore + localStorage fallback | Built              |
 
 ---
 
 ## Key Features
 
-### Design Principle 1: Multi-Tenancy Architecture
+### VAT Rates: Date-Aware Historical Lookup
 
-- Isolated user data per authentication context
-- Row-level security enforcement via Firestore rules
-- Support for 27 EU member states simultaneously
+VAT rates are looked up from `EU_VAT_RATES`, which stores date-versioned rate histories. Each rate entry carries `sourceUrl` and `legalBasis` provenance metadata.
 
-### Design Principle 2: Data Access Control
+- **11 countries with fully verified rate history**: BG, DE, FR, NL, AT, EE, FI, SK, LU, IE, CZ — historical changes verified against official government sources
+- **Remaining 16 EU member states**: current standard rate verified against the EU Commission's published rate table; historical snapshots are not yet covered
+- All 27 current standard rates have been independently verified
 
-- User-scoped transaction collection (users/{userId}/transactions/{transactionId})
-- Append-only audit log enforcement (no updates/deletes)
-- Read-only access to archived data
-- Comprehensive Firestore security rules implementation
+### Threshold Monitoring
 
-### Design Principle 3: Validated Data Lifecycle
+Three statutory monitors are implemented:
 
-- Transaction-level field validation (amount > 0, valid country code, valid date)
-- VAT rate validation (0-100%)
-- EU country code enforcement (27 MS only)
-- Date format validation (ISO 8601: YYYY-MM-DD)
+| Monitor                  | Threshold   | Legal basis                                       |
+| ------------------------ | ----------- | ------------------------------------------------- |
+| `DistanceSalesMonitor`   | EUR 10,000  | Art. 59c VAT Directive — OSS registration trigger |
+| `SMECrossBorderMonitor`  | EUR 100,000 | Dir. (EU) 2020/285 — cross-border SME exemption   |
+| `IOSSConsignmentMonitor` | EUR 150     | IOSS consignment value cap                        |
 
-### Design Principle 4: Regulatory Output Alignment
+`DistanceSalesMonitor` tracks union-wide distance sales of goods and electronically supplied services; crossing the EUR 10,000 threshold triggers mandatory OSS registration. `SMECrossBorderMonitor` tracks union-wide annual turnover across both the current and preceding calendar year; exceeding the cap in either year removes eligibility for the cross-border SME exemption.
 
-- NAP Bulgarian portal CSV format export
-- PDF invoice generation per Directive 2006/112/EC Article 226
-- EN 16931 / UBL 2.1 XML for future ViDA compliance (2035)
+### ECB Daily Reference-Rate Currency Conversion
 
-### Design Principle 5: Forward Compatibility
+Currency conversion implements **Article 91(2) of Directive 2006/112/EC** (ECB rate on the date VAT becomes chargeable) and **Article 61c of Implementing Regulation (EU) 282/2011** (ECB rate on the last day of the OSS reporting period).
 
-- ViDA SVR support skeleton (ready for 2028 expansion)
-- PEPPOL invoicing profile compatibility
-- Extensible adapter pattern for future MS implementations
+- `ConversionPolicy.DAILY_AT_CHARGEABLE_EVENT` — Art. 91(2): rate on the chargeable event date
+- `ConversionPolicy.LAST_DAY_OF_PERIOD` — Art. 61c: rate on the last day of the reporting quarter
+- Weekend and public-holiday rollback: walks back up to 4 calendar days to find the most recent published ECB rate
+- Cross-rate via EUR: non-EUR to non-EUR pairs use triangular conversion (source → EUR → target)
+- ISO 4217 minor-unit rounding via `ECB_DECIMAL_PLACES` table (29 currencies; 0 decimals for JPY, KRW, ISK)
+- Module-level rate store (`registerDailyRate` / `clearDailyRates`) populated from ECB eurofxref-daily XML via `parseECBDailyXML()`
+- Scheduled ingestion via a Cloud Function stub (`functions/ecb-daily-fetcher.stub.ts`) — illustrative only, not deployed
+
+### HMAC-SHA256 Audit Chain
+
+The audit chain is implemented using the **Web Crypto SubtleCrypto API** with HMAC-SHA256:
+
+- Each audit entry carries `sequenceNumber`, `previousHash`, and `keyEpoch`
+- Sequential gaps in `sequenceNumber` are detected as truncation attempts
+- Key rotation by epoch: the correct key is selected per-entry when verifying a chain that spans a key rotation boundary
+- The HMAC signing key never leaves the server — browser-side code calls an `AuditSigner` interface implemented as a Cloud Function stub (`functions/sign-audit-entry.stub.ts`)
+- `shared-core` exports `AuditChain`, `AuditEntry`, `verifyChain`, `appendEntry`
+
+### Art. 63c OSS Record Keeping
+
+**Article 63c of Council Implementing Regulation (EU) 282/2011** mandates 10-year retention of 12 enumerated data elements for every OSS supply.
+
+All 12 statutory fields are implemented (`Art63cRecord`):
+
+| Field group                 | Art. 63c ref | Implementation                                        |
+| --------------------------- | ------------ | ----------------------------------------------------- |
+| Member state of consumption | (a)          | `memberStateOfConsumption`                            |
+| Supply type                 | (b)          | `supplyType` (goods / services / digital)             |
+| Date of supply              | (c)          | `dateOfSupply`                                        |
+| Taxable amount + currency   | (d)          | `taxableAmount`, `currency`                           |
+| VAT rate applied            | (e)          | `vatRateApplied`                                      |
+| VAT amount                  | (f)          | `vatAmount`                                           |
+| Date & amount of payment    | (g)–(h)      | `paymentInformation` (from `/payments` subcollection) |
+| Advance payments            | (i)          | `advancePaymentInfo`                                  |
+| Invoice details             | (j)          | `invoiceNumber`, `invoiceDate`                        |
+| Customer location evidence  | (k)          | `customerLocationEvidence` (up to 2 items)            |
+| Return/correction info      | (l)          | `returnInformation` (from `/returns` subcollection)   |
+
+Fields not yet captured in the transaction schema are set to the sentinel `NOT_CAPTURED` (never fabricated).
+
+Export formats: **CSV** (16 columns) and **JSON**. Each record includes `retentionUntil: "${supplyYear + 10}-12-31"` and `scheme: 'UNION_OSS'` metadata.
+
+Firestore subcollections:
+
+- `users/{uid}/transactions/{txId}/payments/{paymentId}` — append-only, validated (date, amount, currency, isAdvance, createdAt)
+- `users/{uid}/transactions/{txId}/returns/{returnId}` — append-only, validated (date, returnedAmount, vatRate, createdAt)
+
+### Regulatory Output
+
+- **NAP Bulgaria CSV** — Bulgarian tax authority portal format (Section 2A/2B/2C/2D aggregation)
+- **PDF invoice** — per Directive 2006/112/EC Article 226 mandatory fields
+- **EN 16931 / UBL 2.1 XML** — semantic invoice standard for future ViDA compliance (2035)
+
+### Web Application
+
+The `@oss-vat/web-app` package is a **built React + Vite application** with Firebase hosting:
+
+- Pages: Dashboard, Transactions, Calculator, Filing, Settings, Login
+- Firestore persistence (user-scoped, append-only) with a localStorage fallback for demo use without Firebase credentials
+- Transaction corrections via supplementary entries (no in-place mutation)
+- Threshold alerts via `ThresholdAlert` component
+- VAT return preview via `ReturnPreview` component
 
 ---
 
-## Documentation
+## Testing & Validation
 
-### Architecture & Design
+### Test Suite
 
-- [Three-Layer Architecture Deep Dive](docs/architecture/three-layer.md) — Layer 1/2/3 design patterns
-- [Data Lifecycle Taxonomy](docs/architecture/taxonomy.md) — T0-T4 lifecycle enforcement
-- [ViDA Scope & Future Roadmap](docs/vida-scope.md) — Post-2028 evolution planning
-- [Regulatory Evolution Log](docs/regulatory-log.md) — VAT directive changes tracked
+417 tests across 4 packages (Vitest v2.1.9, strict TypeScript):
 
-### Implementation Details
-
-- [Layer 3 Output Generation](packages/oss-calculator/LAYER3_IMPLEMENTATION_SUMMARY.md) — PDF/CSV/UBL generators
-- [Layer 2 NAP Adapter](packages/oss-calculator/IMPLEMENTATION.md) — Bulgarian portal integration
-- [Shared Core Types](packages/shared-core/README.md) — Authentication & audit chain
-
----
-
-## Testing
-
-### Run All Tests
+| Package                   | Tests |
+| ------------------------- | ----- |
+| `@oss-vat/oss-calculator` | 270   |
+| `@oss-vat/shared-core`    | 133   |
+| `@oss-vat/sme-exemption`  | 5     |
+| `@oss-vat/web-app`        | 9     |
 
 ```bash
 # Unit tests across all packages
@@ -163,33 +195,32 @@ pnpm test -- --watch
 pnpm test -- --coverage
 ```
 
-### Test Coverage Targets
+### Synthetic Validation
 
-- **@oss-vat/shared-core**: 95%+ (HMAC audit chain, lifecycle enforcement)
-- **@oss-vat/oss-calculator**: 95%+ (105+ test cases for Layer 2 & 3)
-- **@oss-vat/sme-exemption**: 95%+ (post-defence)
+2,730 synthetic transactions verified by `scripts/synthetic-validation.ts`:
+
+- **Verified countries** (11 — BG, DE, FR, NL, AT, EE, FI, SK, LU, IE, CZ): results cross-checked against an independent external oracle derived from official historical rate sources
+- **Remaining 16 countries**: internal consistency check only (correct rate applied, correct arithmetic)
+- Validation report: `scripts/VALIDATION_REPORT.md`
 
 ---
 
-## Firebase Deployment
+## Deployment
 
-### Configuration Files
+> **Not yet deployed.** Production deployment requires a Firebase Blaze plan, project credentials, and active Cloud Functions. The Cloud Function stubs in `functions/` are illustrative and not built or deployed.
 
-- **firebase.json** — Hosting, Firestore rules, and index configuration
-- **firestore.rules** — Security rules enforcing Design Principles 2 & 3
-- **firestore.indexes.json** — Composite indexes for optimized queries
-- **.firebaserc** — Project aliases (dev/production)
+When credentials are available:
 
-### Security Rules Highlights
+```bash
+# Install Firebase CLI
+npm install -g firebase-tools
 
-- User-scoped data access (match on userId)
-- Append-only audit logs (no updates/deletes allowed)
-- Read-only archived data
-- VAT transaction validation:
-  - amount > 0
-  - valid country code (27 EU MS)
-  - valid date format (ISO 8601)
-  - valid VAT rates (0-100%)
+# Login to Firebase (creates .firebaserc config)
+firebase login
+
+# Deploy hosting, Firestore rules and indexes
+firebase deploy --only hosting,firestore:rules,firestore:indexes --project oss-vat-calculator-dev
+```
 
 ### Environment Variables
 
@@ -209,6 +240,26 @@ Required variables:
 - `VITE_FIREBASE_APP_ID`
 - `VITE_FIREBASE_MEASUREMENT_ID`
 
+### Firestore Security Rules
+
+- User-scoped data access (`match on userId`)
+- Append-only audit logs — updates and deletes are rejected at the rules layer
+- Payment and return subcollections: create-only with field-level validation
+- VAT transaction field validation: `amount > 0`, valid ISO 3166-1 EU country code, ISO 8601 date, VAT rate 0–100%
+
+---
+
+## Scope & Known Limitations
+
+This artefact covers **B2C OSS Union Scheme** supplies only. The following are out of scope and not implemented:
+
+- B2B reverse charge transactions
+- Export supplies (outside EU)
+- Deemed supplier / marketplace facilitation (Art. 14a)
+- IOSS transaction processing (separate scheme)
+- Full EU-27 verified VAT rate history (11 countries fully verified; 16 are current-rate only)
+- Production deployment (Firebase Blaze plan, credentials, and live Cloud Functions not configured)
+
 ---
 
 ## Research Context
@@ -218,16 +269,16 @@ Required variables:
 This artefact implements **five core design principles** for automating cross-border VAT compliance:
 
 1. **Multi-Tenancy Architecture** — Isolate user data across 27 EU member states
-2. **Data Access Control** — Enforce user-scoped read/write via Firestore rules
-3. **Validated Data Lifecycle** — Immutable audit trail with field-level validation
-4. **Regulatory Output Alignment** — Direct export to authority portal formats (NAP Bulgaria primary)
+2. **Data Access Control** — Enforce user-scoped read/write via Firestore rules (append-only)
+3. **Validated Data Lifecycle** — Immutable HMAC-SHA256 audit trail with field-level validation
+4. **Regulatory Output Alignment** — Direct export to authority portal formats (NAP Bulgaria primary); Art. 63c OSS records
 5. **Forward Compatibility** — Ready for ViDA SVR expansion (2028) and pan-EU standardization
 
 ### Methodology
 
 - **DSR Approach** (Peffers et al., 2007; Johannesson & Perjons, 2021)
 - **Problem Investigation** — EU regulatory complexity burdens micro-enterprises
-- **Design Artifacts** — Three-layer architecture, 105+ test cases, production code
+- **Design Artifacts** — Three-layer architecture, 417 tests, 2,730 validated synthetic transactions, production code
 - **Evaluation** — Functional completeness, regulatory compliance, type safety
 
 ### Academic Publication
@@ -240,8 +291,10 @@ This artefact implements **five core design principles** for automating cross-bo
 
 ### Regulatory References
 
-- Directive 2006/112/EC (VAT Directive)
+- Directive 2006/112/EC (VAT Directive), Art. 59c, Art. 91(2), Art. 226
+- Directive (EU) 2020/285 (SME exemption)
 - Directive 2024/... (ViDA — VAT in the Digital Age)
+- Council Implementing Regulation (EU) 282/2011, Art. 61c, Art. 63c (as amended by Reg. (EU) 2017/2459)
 - Council Regulation (EU) No 1042/2013 (OSS special scheme)
 - Bulgarian Ordinance on VAT (OSS portal specification)
 
@@ -260,23 +313,16 @@ This artefact implements **five core design principles** for automating cross-bo
 
 ### Type Safety
 
-- 100% TypeScript with strict mode enabled
+- 100% TypeScript with strict mode enabled (`strict: true`, no `any`, no `@ts-ignore`)
 - Full source maps and declaration files
 - Discriminated union types for results (success/error)
-
-### Validation
-
-- 45+ validation rules for invoice generation (Article 226 compliance)
-- 35+ test cases for NAP CSV export format
-- 33+ test cases for EN 16931 / UBL adapter
-- Firestore security rule validation at DB layer
 
 ### Security
 
 - User authentication via Firebase Auth
 - Row-level security via Firestore rules
-- HMAC-based audit chain (Layer 1)
-- Read-only append-only audit logs
+- HMAC-SHA256 audit chain (Web Crypto SubtleCrypto) — signing key server-side only
+- Append-only audit logs enforced at the Firestore rules layer
 - OWASP-aligned headers (X-Frame-Options, X-Content-Type-Options, CSP)
 
 ---
