@@ -228,9 +228,13 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
    */
   const deleteTransaction = async (id: string) => {
     const uid = requireUid();
-    const correction: Pick<StorageCorrection, 'originalTransactionId' | 'reasonCode'> = {
+    const correction: Pick<
+      StorageCorrection,
+      'originalTransactionId' | 'reasonCode' | 'adjustedAmount'
+    > = {
       originalTransactionId: id,
       reasonCode: 'UI-ERROR',
+      adjustedAmount: 0, // voided: new taxable amount is 0
     };
     await storageService.addCorrection(uid, correction);
     setTransactions((prev) => prev.filter((t) => t.id !== id));
