@@ -1,0 +1,19 @@
+# Enforce LF line endings for all text files in the repository.
+# This prevents Windows CRLF from reaching CI (Ubuntu) and breaking
+# prettier --check, which always expects LF.
+* text=auto eol=lf
+
+# Explicitly mark binary formats so git never touches their line endings.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.pdf binary
+
+# Lock file: treat as text with LF so diffs are readable and CI stays clean.
+pnpm-lock.yaml text eol=lf
