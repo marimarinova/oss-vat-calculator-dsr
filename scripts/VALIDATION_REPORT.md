@@ -57,11 +57,11 @@ Expected values from `getVATRate()` against the engine's own `EU_VAT_RATES` tabl
 
 | Metric                       | Value     |
 | ---------------------------- | --------- |
-| Total Processing Time        | 16.80 ms  |
-| Average Time per Transaction | 0.0019 ms |
-| Minimum Time per Transaction | 0.0006 ms |
-| Maximum Time per Transaction | 0.9231 ms |
-| Median Time per Transaction  | 0.0009 ms |
+| Total Processing Time        | 24.34 ms  |
+| Average Time per Transaction | 0.0028 ms |
+| Minimum Time per Transaction | 0.0011 ms |
+| Maximum Time per Transaction | 1.4525 ms |
+| Median Time per Transaction  | 0.0017 ms |
 
 ### Accuracy by Product Type
 
@@ -169,5 +169,5 @@ The OSS VAT Calculator processes all 2730 synthetic transactions with **100.00% 
 
 ---
 
-**Report Generated**: 2026-06-15T21:23:21.193Z
+**Report Generated**: 2026-06-16T06:14:48.188Z
 **PRNG Seed**: 42 (for reproducibility)
