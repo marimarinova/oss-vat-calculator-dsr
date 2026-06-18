@@ -6,6 +6,8 @@ import {
   verifyVATRate,
   getAllCountryCodes,
   isValidEUCountry,
+  assertNoOverlappingIntervals,
+  VATRate,
 } from './vat-rates';
 
 describe('VAT Rates Module', () => {
@@ -282,6 +284,85 @@ describe('VAT Rates Module', () => {
     });
   });
 
+  describe('assertNoOverlappingIntervals()', () => {
+    it('does not throw for non-overlapping adjacent intervals', () => {
+      const rates: VATRate[] = [
+        {
+          rate: 20,
+          effectiveFrom: new Date('2020-01-01'),
+          effectiveTo: new Date('2024-12-31'),
+          sourceUrl: 'test',
+          legalBasis: 'test',
+        },
+        {
+          rate: 23,
+          effectiveFrom: new Date('2025-01-01'),
+          sourceUrl: 'test',
+          legalBasis: 'test',
+        },
+      ];
+      expect(() => assertNoOverlappingIntervals(rates, 'test')).not.toThrow();
+    });
+
+    it('throws when two intervals overlap', () => {
+      const rates: VATRate[] = [
+        {
+          rate: 19,
+          effectiveFrom: new Date('2020-01-01'),
+          effectiveTo: new Date('2022-12-31'),
+          sourceUrl: 'test',
+          legalBasis: 'test',
+        },
+        {
+          rate: 21,
+          effectiveFrom: new Date('2022-06-01'),
+          sourceUrl: 'test',
+          legalBasis: 'test',
+        },
+      ];
+      expect(() => assertNoOverlappingIntervals(rates, 'test')).toThrow(/Overlapping/);
+    });
+
+    it('does not throw for empty or single-entry arrays', () => {
+      expect(() => assertNoOverlappingIntervals([], 'empty')).not.toThrow();
+      const single: VATRate[] = [
+        { rate: 20, effectiveFrom: new Date('2020-01-01'), sourceUrl: 'x', legalBasis: 'x' },
+      ];
+      expect(() => assertNoOverlappingIntervals(single, 'single')).not.toThrow();
+    });
+
+    it('passes for all EU standard rate arrays in the seed data', () => {
+      for (const [code, ms] of Object.entries(EU_VAT_RATES)) {
+        expect(() =>
+          assertNoOverlappingIntervals(ms.standard, `${code} standard`),
+        ).not.toThrow();
+      }
+    });
+  });
+
+  describe('Slovakia (Q4) — verified rate history', () => {
+    it('SK standard: 20% until 2024-12-31, 23% from 2025-01-01', () => {
+      expect(getVATRate('SK', 'standard', new Date('2024-12-31'))?.rate).toBe(20);
+      expect(getVATRate('SK', 'standard', new Date('2025-01-01'))?.rate).toBe(23);
+      expect(getVATRate('SK', 'standard', new Date('2026-01-01'))?.rate).toBe(23);
+    });
+
+    it('SK reduced: 10% until 2024-12-31', () => {
+      expect(getVATRate('SK', 'reduced', new Date('2024-12-31'))?.rate).toBe(10);
+    });
+
+    it('SK second-reduced: 5% retained from BASELINE through 2025 and beyond', () => {
+    expect(getVATRate('SK', 'super-reduced', new Date('2023-01-01'))?.rate).toBe(5);
+    expect(getVATRate('SK', 'super-reduced', new Date('2025-06-01'))?.rate).toBe(5);
+  });
+
+    it('SK reduced: 19% new first-reduced band active from 2025-01-01', () => {
+    // From 2025-01-01 the first-reduced band is 19% (reduced); the 5% second-reduced
+    // rate continues in the superReduced band. Both are simultaneously active.
+    expect(getVATRate('SK', 'reduced', new Date('2025-06-01'))?.rate).toBe(19);
+    expect(getVATRate('SK', 'super-reduced', new Date('2025-06-01'))?.rate).toBe(5);
+  });
+  });
   describe('Rate accuracy per paper specification', () => {
     it('should match all rates from the provided table', () => {
       const testCases: Array<[string, 'standard' | 'reduced' | 'super-reduced', number]> = [

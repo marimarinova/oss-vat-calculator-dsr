@@ -90,6 +90,48 @@ export function getVATRate(
 }
 
 /**
+ * Assert that a VATRate[] array contains no overlapping date intervals.
+ *
+ * Two intervals [A, B] and [C, D] (both inclusive per getVATRate semantics)
+ * overlap when max(A, C) <= min(B, D).
+ *
+ * Intended for STANDARD rate arrays, where exactly one rate must be active
+ * on any given date. A Member State's reduced/super-reduced arrays can
+ * legitimately carry multiple simultaneously active bands (different product
+ * categories) and should NOT be passed to this function.
+ *
+ * Call at module load time or in tests to catch data-entry errors early.
+ * Does NOT alter getVATRate's null-returning contract.
+ *
+ * @param rates - array of VATRate entries to validate
+ * @param label - optional label for error messages (e.g. 'SK standard')
+ * @throws Error if any two intervals overlap
+ */
+export function assertNoOverlappingIntervals(rates: VATRate[], label?: string): void {
+  const MAX_DATE = new Date(8640000000000000);
+  for (let i = 0; i < rates.length; i++) {
+    for (let j = i + 1; j < rates.length; j++) {
+      const a = rates[i];
+      const b = rates[j];
+      const aEnd = a.effectiveTo ?? MAX_DATE;
+      const bEnd = b.effectiveTo ?? MAX_DATE;
+      const overlapStart = a.effectiveFrom > b.effectiveFrom ? a.effectiveFrom : b.effectiveFrom;
+      const overlapEnd = aEnd < bEnd ? aEnd : bEnd;
+      if (overlapStart <= overlapEnd) {
+        const prefix = label ? `[${label}] ` : '';
+        const fmt = (d: Date) => d.toISOString().slice(0, 10);
+        throw new Error(
+          `${prefix}Overlapping VAT rate intervals: ` +
+            `${a.rate}% (${fmt(a.effectiveFrom)}–${a.effectiveTo ? fmt(a.effectiveTo) : '∞'}) ` +
+            `overlaps with ` +
+            `${b.rate}% (${fmt(b.effectiveFrom)}–${b.effectiveTo ? fmt(b.effectiveTo) : '∞'})`,
+        );
+      }
+    }
+  }
+}
+
+/**
  * Verify that a given rate matches the expected rate for a country code and rate type
  * Used for error detection when rate tables may be stale
  */
@@ -115,4 +157,12 @@ export function getAllCountryCodes(): string[] {
  */
 export function isValidEUCountry(countryCode: string): boolean {
   return getMemberStateRates(countryCode) !== null;
+}
+
+// Validate standard rate arrays at module load time — catches data-entry errors on first import.
+// Standard rates must have exactly 0 or 1 active interval per date; overlapping intervals
+// would make getVATRate() non-deterministic. Reduced/super-reduced arrays are intentionally
+// excluded because multiple simultaneous bands (different product categories) are valid there.
+for (const [code, ms] of Object.entries(EU_VAT_RATES)) {
+  assertNoOverlappingIntervals(ms.standard, `${code} standard`);
 }

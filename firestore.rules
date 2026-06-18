@@ -67,9 +67,9 @@ service cloud.firestore {
       // Validate transaction structure and VAT compliance
       function validateTransaction(data) {
         return data.keys().hasAll([
-                 'date', 'amount', 'countryCode', 'description', 'createdAt', 'quantity'
+                 'supplyDate', 'amount', 'countryCode', 'description', 'createdAt', 'quantity'
                ]) &&
-               isValidDate(data.date) &&
+               isValidDate(data.supplyDate) &&
                isValidAmount(data.amount) &&
                isValidEUCountryCode(data.countryCode) &&
                data.description is string &&
@@ -150,20 +150,22 @@ service cloud.firestore {
       allow create: if isOwner(userId) &&
                        validateCorrection(request.resource.data);
       allow update, delete: if false; // Corrections are append-only
-
-      function validateCorrection(data) {
+function validateCorrection(data) {
         return data.keys().hasAll([
-                 'originalTransactionId', 'reasonCode', 'adjustedAmount', 'createdAt', 'hash', 'previousHash'
+                 'originalTransactionId', 'reasonCode', 'adjustedAmount', 'createdAt', 'hash', 'previousHash',
+                 'originalSupplyDate', 'originalVATRate', 'originalDatasetVersion'
                ]) &&
                data.originalTransactionId is string &&
                data.reasonCode in ['UI-ERROR', 'PRICE-CHANGE', 'CUSTOMER-REFUND', 'WRONG-MS', 'WRONG-TAXCODE'] &&
                data.adjustedAmount is number &&
                data.adjustedAmount >= 0 &&
                data.createdAt is timestamp &&
+               isValidDate(data.originalSupplyDate) &&
+               data.originalVATRate is number &&
+               data.originalDatasetVersion is string &&
                data.hash is string &&
                data.previousHash is string;
       }
-    }
 
     // AUDIT LOG COLLECTION
     // Design Principle 3: Append-only audit trail (no updates, no deletes)

@@ -31,6 +31,12 @@ export interface AuditEntry {
   previousHash: string;
   /** HMAC-SHA256 hash of this entry (computed with key and data) */
   hash: string;
+  /**
+   * Version identifier of the VAT rate dataset used when this entry was produced.
+   * Empty string for entries not related to a VAT rate calculation.
+   * Included in the HMAC serialization to make the hash sensitive to dataset version.
+   */
+  rateDatasetVersion: string;
 }
 
 /**
@@ -94,6 +100,7 @@ function serializeForHashing(
   sequenceNumber: number,
   keyEpoch: number,
   previousHash: string,
+  rateDatasetVersion: string,
 ): string {
   return JSON.stringify({
     id,
@@ -102,6 +109,7 @@ function serializeForHashing(
     sequenceNumber,
     keyEpoch,
     previousHash,
+    rateDatasetVersion,
   });
 }
 
@@ -122,6 +130,7 @@ export async function createAuditEntry(
   keyEpoch: number,
   sequenceNumber: number,
   id?: string,
+  rateDatasetVersion: string = '',
 ): Promise<AuditEntry> {
   const entryId = id || generateEntryId();
   const timestamp = Date.now();
@@ -134,6 +143,7 @@ export async function createAuditEntry(
     sequenceNumber,
     keyEpoch,
     previousHash,
+    rateDatasetVersion,
   );
 
   // Compute HMAC-SHA256 hash
@@ -147,6 +157,7 @@ export async function createAuditEntry(
     keyEpoch,
     previousHash,
     hash,
+    rateDatasetVersion,
   };
 }
 
@@ -206,6 +217,7 @@ export async function verifyChain(
     firstEntry.sequenceNumber,
     firstEntry.keyEpoch,
     firstEntry.previousHash,
+    firstEntry.rateDatasetVersion,
   );
   let firstKey: string;
   try {
@@ -264,6 +276,7 @@ export async function verifyChain(
       current.sequenceNumber,
       current.keyEpoch,
       current.previousHash,
+      current.rateDatasetVersion,
     );
     let currentKey: string;
     try {
@@ -318,6 +331,7 @@ export async function verifySingleEntry(entry: AuditEntry, key: string): Promise
     entry.sequenceNumber,
     entry.keyEpoch,
     entry.previousHash,
+    entry.rateDatasetVersion,
   );
   const computedHash = await computeHmac(serialized, key);
   return computedHash === entry.hash;

@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { TaxEngine, Transaction, VATCalculationResult } from './tax-engine';
-import { MissingCountryCodeError, RateMismatchError, ECBRateNotFoundError } from './errors';
+import { TaxEngine, Transaction, Correction, VATCalculationResult } from './tax-engine';
+import { MissingCountryCodeError, RateMismatchError, ECBRateNotFoundError, InvalidVATRateError } from './errors';
 import { registerDailyRate, clearDailyRates } from './ecb-rates';
 
 // EUR/USD = 1.09 → 1 USD = 1/1.09 ≈ 0.9174 EUR
@@ -21,7 +21,7 @@ describe('Tax Engine', () => {
     it('should calculate VAT for EUR transaction', () => {
       const transaction: Transaction = {
         id: 'TX001',
-        date: new Date('2026-01-15'),
+        supplyDate: '2026-01-15',
         customerCountryCode: 'DE',
         amount: 100,
         currency: 'EUR',
@@ -42,7 +42,7 @@ describe('Tax Engine', () => {
     it('should apply destination country VAT rate', () => {
       const transaction: Transaction = {
         id: 'TX002',
-        date: new Date('2026-01-15'),
+        supplyDate: '2026-01-15',
         customerCountryCode: 'FR',
         amount: 100,
         currency: 'EUR',
@@ -59,7 +59,7 @@ describe('Tax Engine', () => {
     it('should use reduced VAT rate when specified', () => {
       const transaction: Transaction = {
         id: 'TX003',
-        date: new Date('2026-01-15'),
+        supplyDate: '2026-01-15',
         customerCountryCode: 'DE',
         amount: 100,
         currency: 'EUR',
@@ -76,7 +76,7 @@ describe('Tax Engine', () => {
     it('should use super-reduced VAT rate when specified', () => {
       const transaction: Transaction = {
         id: 'TX004',
-        date: new Date('2026-01-15'),
+        supplyDate: '2026-01-15',
         customerCountryCode: 'FR',
         amount: 100,
         currency: 'EUR',
@@ -93,7 +93,7 @@ describe('Tax Engine', () => {
     it('should round VAT to EUR cents (2 decimal places)', () => {
       const transaction: Transaction = {
         id: 'TX005',
-        date: new Date('2026-01-15'),
+        supplyDate: '2026-01-15',
         customerCountryCode: 'DE',
         amount: 33.33,
         currency: 'EUR',
@@ -112,7 +112,7 @@ describe('Tax Engine', () => {
     it('should throw MissingCountryCodeError for invalid country code', () => {
       const transaction: Transaction = {
         id: 'TX006',
-        date: new Date('2026-01-15'),
+        supplyDate: '2026-01-15',
         customerCountryCode: 'XX',
         amount: 100,
         currency: 'EUR',
@@ -126,7 +126,7 @@ describe('Tax Engine', () => {
     it('should throw MissingCountryCodeError for empty country code', () => {
       const transaction: Transaction = {
         id: 'TX007',
-        date: new Date('2026-01-15'),
+        supplyDate: '2026-01-15',
         customerCountryCode: '',
         amount: 100,
         currency: 'EUR',
@@ -140,7 +140,7 @@ describe('Tax Engine', () => {
     it('should throw error when rate type does not exist in country', () => {
       const transaction: Transaction = {
         id: 'TX008',
-        date: new Date('2026-01-15'),
+        supplyDate: '2026-01-15',
         customerCountryCode: 'DK',
         amount: 100,
         currency: 'EUR',
@@ -156,7 +156,7 @@ describe('Tax Engine', () => {
     it('should convert USD to EUR using daily ECB rate', () => {
       const transaction: Transaction = {
         id: 'TX009',
-        date: new Date('2026-01-15'),
+        supplyDate: '2026-01-15',
         customerCountryCode: 'DE',
         amount: 100,
         currency: 'USD',
@@ -179,7 +179,7 @@ describe('Tax Engine', () => {
 
       const transaction: Transaction = {
         id: 'TX010',
-        date: new Date('2026-01-15'),
+        supplyDate: '2026-01-15',
         customerCountryCode: 'DE',
         amount: 100,
         currency: 'USD',
@@ -196,7 +196,7 @@ describe('Tax Engine', () => {
       const transactions: Transaction[] = [
         {
           id: 'TX011',
-          date: new Date('2026-01-15'),
+          supplyDate: '2026-01-15',
           customerCountryCode: 'DE',
           amount: 100,
           currency: 'EUR',
@@ -205,7 +205,7 @@ describe('Tax Engine', () => {
         },
         {
           id: 'TX012',
-          date: new Date('2026-01-15'),
+          supplyDate: '2026-01-15',
           customerCountryCode: 'FR',
           amount: 200,
           currency: 'EUR',
@@ -225,7 +225,7 @@ describe('Tax Engine', () => {
       const transactions: Transaction[] = [
         {
           id: 'TX013',
-          date: new Date('2026-01-15'),
+          supplyDate: '2026-01-15',
           customerCountryCode: 'DE',
           amount: 100,
           currency: 'EUR',
@@ -234,7 +234,7 @@ describe('Tax Engine', () => {
         },
         {
           id: 'TX014',
-          date: new Date('2026-01-15'),
+          supplyDate: '2026-01-15',
           customerCountryCode: 'FR',
           amount: 200,
           currency: 'EUR',
@@ -243,7 +243,7 @@ describe('Tax Engine', () => {
         },
         {
           id: 'TX015',
-          date: new Date('2026-01-15'),
+          supplyDate: '2026-01-15',
           customerCountryCode: 'IT',
           amount: 300,
           currency: 'EUR',
@@ -281,11 +281,76 @@ describe('Tax Engine', () => {
     });
   });
 
+  describe('calculateCorrectionVAT', () => {
+    it('applies originalVATRate regardless of current rate', () => {
+      // DE standard was 19% on 2020-06-30; dropped to 16% from 2020-07-01.
+      // A correction for a supply made on 2020-06-30 must use 19%, even if
+      // the correction is issued today.
+      const correction: Correction = {
+        id: 'COR001',
+        originalTransactionId: 'TX001',
+        originalSupplyDate: '2020-06-30',
+        originalVATRate: 19,
+        originalDatasetVersion: 'v1.0.0',
+        adjustedAmount: 100,
+        currency: 'EUR',
+        reasonCode: 'PRICE-CHANGE',
+        customerCountryCode: 'DE',
+        rateType: 'standard',
+        isGoods: true,
+      };
+
+      const result = engine.calculateCorrectionVAT(correction);
+
+      expect(result.vatRate).toBe(19);
+      expect(result.vatAmount).toBe(19);
+      expect(result.amountEUR).toBe(100);
+      expect(result.transactionId).toBe('COR001');
+      expect(result.customerCountryCode).toBe('DE');
+    });
+
+    it('throws MissingCountryCodeError for invalid country code', () => {
+      const correction: Correction = {
+        id: 'COR002',
+        originalTransactionId: 'TX002',
+        originalSupplyDate: '2026-01-15',
+        originalVATRate: 20,
+        originalDatasetVersion: 'v1.0.0',
+        adjustedAmount: 100,
+        currency: 'EUR',
+        reasonCode: 'UI-ERROR',
+        customerCountryCode: 'XX',
+        rateType: 'standard',
+        isGoods: true,
+      };
+
+      expect(() => engine.calculateCorrectionVAT(correction)).toThrow(MissingCountryCodeError);
+    });
+
+    it('throws InvalidVATRateError when originalVATRate is out of range', () => {
+      const correction: Correction = {
+        id: 'COR003',
+        originalTransactionId: 'TX003',
+        originalSupplyDate: '2026-01-15',
+        originalVATRate: 150,
+        originalDatasetVersion: 'v1.0.0',
+        adjustedAmount: 100,
+        currency: 'EUR',
+        reasonCode: 'UI-ERROR',
+        customerCountryCode: 'DE',
+        rateType: 'standard',
+        isGoods: true,
+      };
+
+      expect(() => engine.calculateCorrectionVAT(correction)).toThrow(InvalidVATRateError);
+    });
+  });
+
   describe('Deterministic calculation', () => {
     it('should produce consistent results for same input', () => {
       const transaction: Transaction = {
         id: 'TX016',
-        date: new Date('2026-01-15'),
+        supplyDate: '2026-01-15',
         customerCountryCode: 'DE',
         amount: 123.45,
         currency: 'EUR',
@@ -302,7 +367,7 @@ describe('Tax Engine', () => {
     it('should be transparent about rate sources', () => {
       const transaction: Transaction = {
         id: 'TX017',
-        date: new Date('2026-01-15'),
+        supplyDate: '2026-01-15',
         customerCountryCode: 'BG',
         amount: 100,
         currency: 'EUR',

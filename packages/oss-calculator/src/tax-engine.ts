@@ -18,13 +18,33 @@ import { convert, ConversionPolicy } from './ecb-rates';
  */
 export interface Transaction {
   id: string; // Unique transaction identifier
-  date: Date; // Transaction date (used as chargeable event date for Art. 91(2))
+  supplyDate: string; // YYYY-MM-DD — customer's local date in the Member State of consumption (chargeable-event date, Art. 63 VAT Directive)
   customerCountryCode: string; // 2-letter country code of B2C buyer
   amount: number; // Transaction amount
   currency: string; // ISO 4217 currency code (e.g., 'EUR', 'USD')
   rateType: 'standard' | 'reduced' | 'super-reduced'; // VAT rate category
   isGoods: boolean; // true = goods, false = services
   supplierCountryCode?: string; // 2-letter country code of supplier (for context)
+}
+
+/**
+ * A corrective entry referencing an earlier supply.
+ * calculateCorrectionVAT() applies the ORIGINAL rate directly
+ * (Art. 91(2): credit notes use the rate in effect at the original chargeable-event date).
+ */
+export interface Correction {
+  id: string;
+  originalTransactionId: string;
+  originalSupplyDate: string; // YYYY-MM-DD — date of the original supply
+  originalVATRate: number; // VAT percentage that applied to the original supply (e.g. 19)
+  originalDatasetVersion: string; // rate-dataset version that was active for the original supply
+  reasonCode: string; // e.g. 'UI-ERROR' | 'PRICE-CHANGE' | 'CUSTOMER-REFUND' | 'WRONG-MS' | 'WRONG-TAXCODE'
+  adjustedAmount: number; // corrected taxable amount (positive = additional charge, negative = credit)
+  currency: string; // ISO 4217
+  customerCountryCode: string;
+  rateType: 'standard' | 'reduced' | 'super-reduced';
+  isGoods: boolean;
+  supplierCountryCode?: string;
 }
 
 /**
@@ -76,7 +96,7 @@ export class TaxEngine {
     const vatRate = getVATRate(
       transaction.customerCountryCode,
       transaction.rateType,
-      transaction.date,
+      new Date(transaction.supplyDate),
     );
 
     if (vatRate === null) {
@@ -85,7 +105,7 @@ export class TaxEngine {
         transaction.rateType,
         0,
         0,
-        transaction.date,
+        new Date(transaction.supplyDate),
       );
     }
 
@@ -94,7 +114,7 @@ export class TaxEngine {
     }
 
     // Art. 91(2): use the ECB rate on the date VAT becomes chargeable
-    const chargeableEventDate = transaction.date.toISOString().slice(0, 10);
+    const chargeableEventDate = transaction.supplyDate;
     const amountEUR = this.convertToEUR(
       transaction.amount,
       transaction.currency,
@@ -144,6 +164,46 @@ export class TaxEngine {
 
   private roundToEURCents(amount: number): number {
     return Math.round(amount * 100) / 100;
+  }
+
+  /**
+   * Calculate VAT for a correction / credit note.
+   * Applies the ORIGINAL VAT rate directly without re-looking up the current rate.
+   * Art. 91(2): the exchange rate used is that of the ORIGINAL supply date.
+   */
+  public calculateCorrectionVAT(correction: Correction): VATCalculationResult {
+    if (!correction.customerCountryCode || !isValidEUCountry(correction.customerCountryCode)) {
+      throw new MissingCountryCodeError(correction.customerCountryCode, correction.id);
+    }
+
+    const vatRate = correction.originalVATRate;
+
+    if (vatRate < 0 || vatRate > 100) {
+      throw new InvalidVATRateError(vatRate);
+    }
+
+    // Art. 91(2): use the ECB rate on the ORIGINAL chargeable-event date
+    const amountEUR = this.convertToEUR(
+      correction.adjustedAmount,
+      correction.currency,
+      correction.originalSupplyDate,
+    );
+
+    const vatAmount = (amountEUR * vatRate) / 100;
+
+    return {
+      transactionId: correction.id,
+      customerCountryCode: correction.customerCountryCode,
+      supplierCountryCode: correction.supplierCountryCode,
+      amountEUR,
+      amountLocal: correction.adjustedAmount,
+      currency: correction.currency,
+      vatRate,
+      vatAmount: this.roundToEURCents(vatAmount),
+      totalAmountEUR: this.roundToEURCents(amountEUR + vatAmount),
+      rateType: correction.rateType,
+      isGoods: correction.isGoods,
+    };
   }
 
   /**

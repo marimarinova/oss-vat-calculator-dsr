@@ -39,7 +39,7 @@ function snapshot<T>(id: string, data: T) {
 }
 
 const baseTransaction = {
-  date: '2026-01-15',
+  supplyDate: '2026-01-15',
   buyerCountry: 'DE',
   amount: 1999,
   currency: 'EUR',
@@ -78,7 +78,7 @@ describe('FirestoreStorageService - demo mode fallback', () => {
       if (collection === 'users/user1/transactions') {
         return [
           snapshot(tx1.id, {
-            date: tx1.date,
+            supplyDate: tx1.supplyDate,
             countryCode: tx1.buyerCountry,
             amount: tx1.amount,
             currency: tx1.currency,
@@ -105,7 +105,7 @@ describe('FirestoreStorageService - demo mode fallback', () => {
 
   it('returns transactions written via getTransactions', async () => {
     const stored = {
-      date: '2026-02-01',
+      supplyDate: '2026-02-01',
       countryCode: 'FR',
       amount: 500,
       currency: 'EUR',

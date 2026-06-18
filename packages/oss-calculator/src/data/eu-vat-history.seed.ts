@@ -806,27 +806,54 @@ export const EU_VAT_RATE_HISTORY: Record<string, MemberStateRates> = {
     code: 'SK',
     standard: [
       {
-        rate: 23,
+        rate: 20,
         effectiveFrom: BASELINE,
-        sourceUrl: UNVERIFIED_SOURCE,
-        legalBasis: UNVERIFIED_BASIS,
+        effectiveTo: new Date('2024-12-31'),
+        sourceUrl: 'EC TEDB / Slovak Finance Ministry - Slovakia VAT rates',
+        legalBasis:
+          'Slovak standard VAT rate of 20%, in effect until the increase to 23% on 2025-01-01 ' +
+          '(Act No. 530/2011 Coll., as amended by the 2024 consolidation package).',
+      },
+      {
+        rate: 23,
+        effectiveFrom: new Date('2025-01-01'),
+        sourceUrl: 'EC TEDB / Slovak Finance Ministry - Slovakia VAT rates',
+        legalBasis:
+          'Slovak standard VAT rate increased from 20% to 23% from 2025-01-01 under the ' +
+          '2024 fiscal consolidation package.',
       },
     ],
     reduced: [
       {
-        rate: 5,
-        effectiveFrom: BASELINE,
-        sourceUrl: UNVERIFIED_SOURCE,
-        legalBasis: UNVERIFIED_BASIS,
-      },
-      {
         rate: 10,
         effectiveFrom: BASELINE,
-        sourceUrl: UNVERIFIED_SOURCE,
-        legalBasis: UNVERIFIED_BASIS,
+        effectiveTo: new Date('2024-12-31'),
+        sourceUrl: 'EC TEDB / Slovak Finance Ministry - Slovakia VAT rates',
+        legalBasis:
+          'Slovak "first reduced" VAT rate of 10%, prior to the 2025-01-01 reform that ' +
+          'replaced it with a new 19% first reduced rate.',
+      },
+      {
+        rate: 19,
+        effectiveFrom: new Date('2025-01-01'),
+        sourceUrl: 'EC TEDB / Slovak Finance Ministry - Slovakia VAT rates',
+        legalBasis:
+          'Slovak "first reduced" VAT rate increased to 19% from 2025-01-01, replacing the ' +
+          'former 10% band under the 2024 fiscal consolidation package.',
       },
     ],
-    superReduced: [],
+    superReduced: [
+      {
+        rate: 5,
+        effectiveFrom: BASELINE,
+        sourceUrl: 'EC TEDB / Slovak Finance Ministry - Slovakia VAT rates',
+        legalBasis:
+          'Slovak "second reduced" VAT rate of 5%, retained from 2025-01-01 alongside the new ' +
+          '19% first reduced rate. Covers basic foodstuffs, medicines and books. Modelled in the ' +
+          'superReduced category so each band resolves to a single active value.',
+      },
+    ],
+    
   },
   SI: {
     name: 'Slovenia',

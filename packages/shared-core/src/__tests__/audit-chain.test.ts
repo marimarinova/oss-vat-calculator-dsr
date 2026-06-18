@@ -61,6 +61,7 @@ describe('HMAC-SHA256 Audit Chain', () => {
       expect(entry).toHaveProperty('keyEpoch');
       expect(entry).toHaveProperty('previousHash');
       expect(entry).toHaveProperty('hash');
+      expect(entry).toHaveProperty('rateDatasetVersion');
     });
 
     it('should use genesis hash for first entry', async () => {
@@ -368,6 +369,63 @@ describe('HMAC-SHA256 Audit Chain', () => {
       it('throws for an unregistered epoch', async () => {
         await expect(rotatedKeys.describeEpoch(999)).rejects.toThrow();
       });
+    });
+  });
+
+  describe('rateDatasetVersion (provenance field)', () => {
+    it('defaults rateDatasetVersion to empty string when not supplied', async () => {
+      const entry = await createAuditEntry({ amount: 100 }, '', testKey, testKeyEpoch, 1);
+      expect(entry.rateDatasetVersion).toBe('');
+    });
+
+    it('stores the supplied rateDatasetVersion on the entry', async () => {
+      const entry = await createAuditEntry(
+        { amount: 100 },
+        '',
+        testKey,
+        testKeyEpoch,
+        1,
+        undefined,
+        'v2.1.0',
+      );
+      expect(entry.rateDatasetVersion).toBe('v2.1.0');
+    });
+
+    it('includes rateDatasetVersion in HMAC — different values produce different hashes', async () => {
+      const entry1 = await createAuditEntry(
+        { amount: 100 },
+        '',
+        testKey,
+        testKeyEpoch,
+        1,
+        'fixed-id',
+        'v1.0.0',
+      );
+      const entry2 = await createAuditEntry(
+        { amount: 100 },
+        '',
+        testKey,
+        testKeyEpoch,
+        1,
+        'fixed-id',
+        'v2.0.0',
+      );
+      expect(entry1.hash).not.toBe(entry2.hash);
+    });
+
+    it('chain with rateDatasetVersion set verifies correctly', async () => {
+      const e1 = await createAuditEntry({ tx: 1 }, '', testKey, testKeyEpoch, 1, undefined, 'v1');
+      const e2 = await createAuditEntry(
+        { tx: 2 },
+        e1.hash,
+        testKey,
+        testKeyEpoch,
+        2,
+        undefined,
+        'v1',
+      );
+      const result = await verifyChain([e1, e2], keys);
+      expect(result.valid).toBe(true);
     });
   });
 

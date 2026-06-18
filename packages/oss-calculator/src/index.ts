@@ -31,6 +31,7 @@ export {
   verifyVATRate,
   getAllCountryCodes,
   isValidEUCountry,
+  assertNoOverlappingIntervals,
 } from './vat-rates';
 
 // ECB daily currency conversion (Art. 91(2) VAT Directive)
@@ -49,7 +50,13 @@ export {
 export { parseECBDailyXML } from './ecb-feed';
 
 // Tax calculation engine
-export { Transaction, VATCalculationResult, TaxEngineConfig, TaxEngine } from './tax-engine';
+export {
+  Transaction,
+  Correction,
+  VATCalculationResult,
+  TaxEngineConfig,
+  TaxEngine,
+} from './tax-engine';
 
 // Threshold monitoring
 export {

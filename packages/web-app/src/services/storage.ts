@@ -32,7 +32,7 @@ export interface LocationEvidenceItem {
 
 export interface StorageTransaction {
   id: string;
-  date: string; // ISO date (YYYY-MM-DD)
+  supplyDate: string; // ISO date (YYYY-MM-DD) — customer's local date in the Member State of consumption
   buyerCountry: string; // 2-letter code
   amount: number; // in cents to avoid float issues
   currency: string; // ISO 4217
@@ -102,7 +102,7 @@ export interface StorageCorrection {
 
 /** Raw shape of a transaction document as stored in Firestore. */
 interface FirestoreTransactionDoc {
-  date: string;
+  supplyDate: string;
   countryCode: string;
   amount: number;
   currency: string;
@@ -262,7 +262,7 @@ class FirestoreStorageService {
     const { previousHash, sequenceNumber } = await this.getChainHead(uid);
 
     const auditableData: Record<string, unknown> = {
-      date: tx.date,
+      supplyDate: tx.supplyDate,
       countryCode: tx.buyerCountry,
       amount: tx.amount,
       currency: tx.currency,
@@ -276,7 +276,7 @@ class FirestoreStorageService {
 
     const id = generateId('tx');
     const docData: FirestoreTransactionDoc = {
-      date: tx.date,
+      supplyDate: tx.supplyDate,
       countryCode: tx.buyerCountry,
       amount: tx.amount,
       currency: tx.currency,
@@ -308,7 +308,7 @@ class FirestoreStorageService {
     const endMonth = startMonth + 3;
 
     return transactions.filter((tx) => {
-      const date = new Date(tx.date);
+      const date = new Date(tx.supplyDate);
       return (
         date.getFullYear() === year && date.getMonth() >= startMonth && date.getMonth() < endMonth
       );
@@ -318,7 +318,7 @@ class FirestoreStorageService {
   private toStorageTransaction(id: string, data: FirestoreTransactionDoc): StorageTransaction {
     return {
       id,
-      date: data.date,
+      supplyDate: data.supplyDate,
       buyerCountry: data.countryCode,
       amount: data.amount,
       currency: data.currency,
